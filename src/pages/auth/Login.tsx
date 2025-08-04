@@ -1,5 +1,6 @@
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import AuthLayout from './AuthLayout';
 
 export default function Login() {
   const { login } = useAuth();
@@ -11,9 +12,11 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <button onClick={handleLogin}>Log in</button>
-    </div>
+    <AuthLayout>
+      <div>
+        <h2 className='text-primary'>Login</h2>
+        <button onClick={handleLogin}>Log in</button>
+      </div>
+    </AuthLayout>
   );
 }

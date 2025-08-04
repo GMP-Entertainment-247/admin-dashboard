@@ -1,4 +1,4 @@
-import Login from "@/pages/auth/Login";
+import Login from "../pages/auth/Login";
 import DashboardHome from "../pages/dashboard";
 import SettingsPage from "../pages/dashboard/settings";
 
