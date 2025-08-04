@@ -7,6 +7,10 @@ module.exports = {
     extend: {
       colors: {
         primary: "#BFA100",
+      },
+      fontFamily: {
+        montserrat: ["Montserrat", "sans-serif"],
+        league_spartan: ["League Spartan", 'sans-serif']
       }
     },
   },
