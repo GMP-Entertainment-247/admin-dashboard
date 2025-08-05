@@ -10,6 +10,10 @@ module.exports = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
         primary: "#BFA100",
+      },
+      fontFamily: {
+        montserrat: ["Montserrat", "sans-serif"],
+        league_spartan: ["League Spartan", 'sans-serif']
       }
     },
   },
