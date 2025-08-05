@@ -7,7 +7,8 @@ type AuthLayoutProps = {
 
 export default function AuthLayout ({children}: AuthLayoutProps) {
     return (
-        <div>
+        <div className='bg-gradient-radial from-[#7A6700] to-[#4D340C] '>
+
             {children}
         </div>
     )
