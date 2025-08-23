@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,6 +22,6 @@ h1, h2, h3, h4, h5, h6{
   font-family: 'League Spartan', sans-serif;
 }
 
-p, span, a, button, input{
+p, span, a, button, input, label{
   font-family: 'Montserrat', sans-serif;
 }

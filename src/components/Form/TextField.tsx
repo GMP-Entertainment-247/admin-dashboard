@@ -4,11 +4,12 @@ import { useSingleState } from "../../utils/hooks/useSingleState";
 import { ErrorWrapper } from "./ErrorWrapper";
 
 interface ITextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label?: string;
+    label: string;
     required?: boolean;
     type?: "text" | "number" | "password" | "email" | "tel" | "date" | "time";
     context?: boolean;
     extraClassName?: string;
+    placeholder?: string;
 }
 export function TextField({
     context = true,
@@ -29,7 +30,7 @@ export function TextField({
                         <div className="relative">
                             <input
                                 className={clsx([
-                                    "block w-full rounded-[12px] px-4 h-[52px] outline-none text-sm bg-transparent border border-[#F4F4F44D] text-[#F4F4F44D]",
+                                    "block w-full rounded-[12px] px-4 h-[52px] outline-none text-sm !bg-transparent border border-[#F4F4F44D] text-white placeholder:text-[#F4F4F44D]",
                                     hasError && "!border-red-400 border",
                                     extraClassName,
                                 ])}
@@ -47,6 +48,7 @@ export function TextField({
                                     focused.set(false);
                                     props.onBlur?.(e);
                                 }}
+                                autoComplete="off"
                             />
                             {props.type === "password" && (
                                 <button
