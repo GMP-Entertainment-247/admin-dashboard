@@ -53,3 +53,32 @@ export const formProps = <T,>(
         : props.onChange,
   };
 };
+
+export const startCountdown = (
+  timeInSeconds: number, 
+  onTick: (val: string) => void, 
+  onComplete?: () => void
+) => {
+  let remainingSeconds = timeInSeconds;
+
+  function formatTime(seconds: number) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  }
+
+  onTick(formatTime(remainingSeconds));
+
+  const interval = setInterval(() => {
+    remainingSeconds--;
+
+    if (remainingSeconds >= 0) {
+      onTick(formatTime(remainingSeconds));
+    }
+
+    if (remainingSeconds <= 0) {
+      clearInterval(interval);
+      if (onComplete) onComplete();
+    }
+  }, 1000);
+}
