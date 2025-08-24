@@ -29,6 +29,6 @@ export function useSingleState<S>(initialState: S | (() => S)) {
         },
         firstTime: firstTime,
       };
-    }, [data]);
+    }, [data, initialState]);
   return signal;
 }

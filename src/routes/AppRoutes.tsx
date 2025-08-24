@@ -1,5 +1,6 @@
 import ResetPassword from "../pages/auth/ResetPassword";
 import ForgotPassword from "../pages/auth/ForgotPassword";
+import IndexPage from "../pages";
 import Login from "../pages/auth/Login";
 import DashboardHome from "../pages/dashboard";
 import SettingsPage from "../pages/dashboard/settings";
@@ -27,6 +28,11 @@ export const appRoutes = [
     element: <ResetPassword />,
     isProtected: false,
   },
+  {
+    path: "/",
+    element: <IndexPage />,
+    isProtected: false,
+  },
 
   // ProtectedRoutes
   {
@@ -35,7 +41,7 @@ export const appRoutes = [
     isProtected: true,
   },
   {
-    path: "/dashboard/settings",
+    path: "/settings",
     element: <SettingsPage />,
     isProtected: true,
   },
