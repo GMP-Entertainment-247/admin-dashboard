@@ -55,7 +55,9 @@ export default function Verification() {
                     <p className="text-xs text-center text-white">
                         <span
                             className={clsx(canResend.get && "text-[#E6C200] cursor-pointer font-bold")}
-                            onClick={()=>triggerCountDown()}
+                            onClick={()=>{
+                                if(timer.get==="00:00") triggerCountDown()
+                            }}
                         >Resend code</span>
                         {" "} 
                         {

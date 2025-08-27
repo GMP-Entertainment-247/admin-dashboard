@@ -3,10 +3,13 @@ import { ProtectedRoute } from './routes/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { appRoutes } from './routes/AppRoutes';
 import "./index.css"
+import { ToastContainer } from 'react-toastify';
+
 
 function App() {
   return (
     <AuthProvider>
+      <ToastContainer theme="colored" />
       <Router>
         <Routes>
           {
