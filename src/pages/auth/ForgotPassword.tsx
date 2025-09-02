@@ -11,6 +11,7 @@ import Button from "../../components/Form/shared/Button";
 // import clsx from "clsx";
 import useMutation from "../../utils/hooks/useMutation";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 
 
@@ -19,6 +20,7 @@ export default function ForgotPassword() {
     // const timer = useSingleState("00:00")
     const navigate = useNavigate();
     const sendEmail = useMutation("/admin-forgot-password", "post")
+    const { setAuthEmail } = useAuth();
 
     // useEffect(()=>{
     //     triggerCountDown()
@@ -41,12 +43,14 @@ export default function ForgotPassword() {
         validateOnMount: true,
         validationSchema: forgotPasswordSchema,
         onSubmit: (values) => {
-            console.log(values)
             sendEmail.mutate({
                 ...values
             })
                 .then(resp => {
-                    if(resp?.status) navigate('/verify')
+                    if(resp?.status) {
+                        setAuthEmail(values.email);
+                        navigate('/verify');
+                    }
                 })
         },
     });

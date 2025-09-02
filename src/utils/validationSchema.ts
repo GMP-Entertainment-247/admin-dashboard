@@ -23,5 +23,5 @@ export const resetPasswordSchema = object({
 })
 
 export const verifyOTPSchema = object({
-      otp: string().required().label("OTP"),
+      otp: string().required().min(6, "Must be 6 characters").max(6, "Must be 6 characters").label("OTP"),
 })

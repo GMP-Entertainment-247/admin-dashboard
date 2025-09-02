@@ -7,12 +7,18 @@ import Button from "../../components/Form/shared/Button";
 import { useSingleState } from "../../utils/hooks/useSingleState";
 import { useEffect } from "react";
 import clsx from "clsx";
-
-
+import useMutation from "../../utils/hooks/useMutation";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import loader from "../../images/gif/white-loader.gif";
 
 export default function Verification() {
     const canResend = useSingleState(false);
     const timer = useSingleState("00:00")
+    const navigate = useNavigate();
+    const verifyOTP = useMutation("/admin-verify-password-otp", "post"); 
+    const resendOTP = useMutation("/admin-resend-password-otp", "post"); 
+    const { authEmail } = useAuth();
 
     useEffect(()=>{
         triggerCountDown()
@@ -35,9 +41,24 @@ export default function Verification() {
         validateOnMount: true,
         validationSchema: verifyOTPSchema,
         onSubmit: (values) => {
-            console.log(values)
+            verifyOTP.mutate({
+                otp: values.otp,
+                email: authEmail
+            })
+                .then(resp => {
+                    if(resp?.status) navigate('/reset-password')
+                })
         },
     });
+
+    const handleResend = () => {
+        resendOTP.mutate({
+            email: authEmail
+        })
+            .then(resp => {
+                if(resp?.status) triggerCountDown()
+            })
+    }
 
     return (
         <AuthLayout
@@ -46,28 +67,34 @@ export default function Verification() {
             authImage='/keyboard.png'
         >
             <FormikProvider value={form}>
-                <form>
+                <form onSubmit={form.handleSubmit}>
                     <TextField
                         label="Enter OTP"
                         placeholder="Enter code"
                         {...formProps("otp", form)}
                     />
-                    <p className="text-xs text-center text-white">
-                        <span
-                            className={clsx(canResend.get && "text-[#E6C200] cursor-pointer font-bold")}
-                            onClick={()=>{
-                                if(timer.get==="00:00") triggerCountDown()
-                            }}
-                        >Resend code</span>
-                        {" "} 
-                        {
-                            !canResend.get &&
-                            <span>in <span className="text-[#E6C200] font-medium">{timer.get}</span></span>
-                        }
-                    </p>
+                    {
+                        resendOTP.loading ?
+                        <img src={loader} alt="loader" className="block mx-auto w-4" />
+                        :
+                        <p className="text-xs text-center text-white">
+                            <span
+                                className={clsx(canResend.get && "text-[#E6C200] cursor-pointer font-bold")}
+                                onClick={()=>{
+                                    if(timer.get==="00:00") handleResend()
+                                }}
+                            >Resend code</span>
+                            {" "} 
+                            {
+                                !canResend.get &&
+                                <span>in <span className="text-[#E6C200] font-medium">{timer.get}</span></span>
+                            }
+                        </p>
+                    }
                     <Button 
                         text="Continue"
-                        // isLoading
+                        type="submit"
+                        isLoading={verifyOTP.loading}
                         extraClassName="mt-10"
                     />
                 </form>
