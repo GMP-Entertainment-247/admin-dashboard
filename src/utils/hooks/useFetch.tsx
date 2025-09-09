@@ -1,49 +1,25 @@
-import { useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { createApiClient } from "../api";
-import { useSingleState } from "./useSingleState";
 
-export default function useFetch <T = unknown> (url: string) {
-    const data = useSingleState<T | null>(null)
-    const loading = useSingleState<boolean>(false)
-    const error = useSingleState(null)
-    const attempts = useRef(0);
-    const MAX_ATTEMPTS = 4;
+export default function useFetch<T = unknown>(url: string) {
+  const fetcher = async (): Promise<T> => {
+    const response = await createApiClient().get<T>(url);
+    return response.data;
+  };
 
-    const getData = () => {
-        loading.set(true)
-        createApiClient().get<T>(url)
-            .then(response => {
-                data.set(response.data)
-                error.set(null)
-                attempts.current = 0; // reset on success
-            })
-            .catch((err)=>{
-                error.set(err)
-                if (attempts.current < MAX_ATTEMPTS - 1) {
-                    attempts.current += 1;
-                    getData();
-                }
-            })
-            .finally(()=>{
-                loading.set(false)
-            })
-    }
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [url],
+    queryFn: fetcher,
+    staleTime: 300000, // 5 minutes
+    // cacheTime: 300000, // 5 minutes
+    retry: 3, // retry up to 3 times on error
+    refetchOnWindowFocus: false,
+  });
 
-    useEffect(()=>{
-        attempts.current = 0;
-        getData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [url])
-
-    const refetch = () => {
-        attempts.current = 0;
-        getData()
-    } 
-
-    return {
-        data: data.get,
-        loading: loading.get,
-        error: error.get,
-        refetch,
-    }
+  return {
+    data,
+    loading: isLoading,
+    error,
+    refetch,
+  };
 }
