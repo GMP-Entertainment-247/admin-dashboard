@@ -14,17 +14,21 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const token = useSingleState("");
-  const userData = useSingleState<IUser | null>(null)
+  const getInitialToken = () => sessionStorage.getItem("token") || "";
+
+  const token = useSingleState(getInitialToken());
+  const userData = useSingleState<IUser | null>(null);
   const authEmail = useSingleState("");
 
   const login = (val: ILogin) => {
-    token.set(val.token ?? "")
-    userData.set(val.user ?? null)
-  }
+    token.set(val.token ?? "");
+    userData.set(val.user ?? null);
+    sessionStorage.setItem("token", val.token ?? "");
+  };
   const logout = () => {
-    token.set("")
-    userData.set(null)
+    token.set("");
+    userData.set(null);
+    sessionStorage.removeItem("token");
   };
 
   const setAuthEmail = (email: string) => {

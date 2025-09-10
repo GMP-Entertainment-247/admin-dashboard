@@ -90,9 +90,9 @@ export default function Table <TRow extends {}> ({
                                                 className="border-b border-b-solid border-[#E9E9E9] text-[#212121] text-sm"
                                             >
                                                 {
-                                                    rows.map((row)=>{
+                                                    rows.map((row, i)=>{
                                                         const view = row.view(item, itemIndex);
-                                                        return <td className="py-[12px] px-[10px] max-[769px]:whitespace-nowrap">{view}</td>
+                                                        return <td key={i} className="py-[12px] px-[10px] max-[769px]:whitespace-nowrap">{view}</td>
                                                     })
                                                 }
                                             </tr>
@@ -107,7 +107,7 @@ export default function Table <TRow extends {}> ({
                                 <div className="flex items-center justify-center">
                                     <Button 
                                         text="See More"
-                                        extraClassName="rounded-[8px] !font-bold w-[100px] min-h-10"
+                                        extraClassName="rounded-[8px] !font-bold !w-[100px] !min-h-10"
                                         onClick={()=>navigate(seeMoreLink)}
                                     />
                                 </div>
