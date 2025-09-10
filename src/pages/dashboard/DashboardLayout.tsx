@@ -7,7 +7,7 @@ type DashboardLayoutProps = {
 
 export default function DashboardLayout ({children}: DashboardLayoutProps) {
     return (
-        <div>
+        <div className='bg-[#F1F1F1] min-h-[100vh]'>
             {children}
         </div>
     )
