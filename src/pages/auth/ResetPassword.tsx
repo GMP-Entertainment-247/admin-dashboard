@@ -3,7 +3,7 @@ import AuthLayout from "./AuthLayout";
 import { resetPasswordSchema } from "../../utils/validationSchema";
 import { TextField } from "../../components/Form/TextField";
 import { formProps } from "../../utils/helpers";
-import Button from "../../components/Form/shared/Button";
+import Button from "../../components/shared/Button";
 import useMutation from "../../utils/hooks/useMutation";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";

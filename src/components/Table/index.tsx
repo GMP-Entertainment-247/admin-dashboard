@@ -2,7 +2,7 @@ import Pagination from "./Pagination";
 import { useDebouncedCallback } from "use-debounce";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Button from "../Form/shared/Button";
+import Button from "../shared/Button";
 
 interface ITable<TRow> {
     tableTitle: string;
