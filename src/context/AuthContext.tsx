@@ -1,22 +1,46 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
+import { ILogin, IUser } from '../interface/auth';
+import { useSingleState } from '../utils/hooks/useSingleState';
 
 type AuthContextType = {
-  isAuthenticated: boolean;
-  login: () => void;
+  token: string;
+  login: (val: ILogin) => void;
   logout: () => void;
+  authEmail: string;
+  setAuthEmail: (email: string) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setAuthenticated] = useState(false);
+  const token = useSingleState("");
+  const userData = useSingleState<IUser | null>(null)
+  const authEmail = useSingleState("");
 
-  const login = () => setAuthenticated(true);
-  const logout = () => setAuthenticated(false);
+  const login = (val: ILogin) => {
+    token.set(val.token ?? "")
+    userData.set(val.user ?? null)
+  }
+  const logout = () => {
+    token.set("")
+    userData.set(null)
+  };
+
+  const setAuthEmail = (email: string) => {
+    authEmail.set(email);
+  }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider 
+      value={{ 
+        token: token.get, 
+        login, 
+        logout, 
+        authEmail: authEmail.get,
+        setAuthEmail
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
