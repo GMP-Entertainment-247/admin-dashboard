@@ -4,10 +4,15 @@ import { resetPasswordSchema } from "../../utils/validationSchema";
 import { TextField } from "../../components/Form/TextField";
 import { formProps } from "../../utils/helpers";
 import Button from "../../components/Form/shared/Button";
-
-
+import useMutation from "../../utils/hooks/useMutation";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ResetPassword() {
+  const navigate = useNavigate();
+  const { authEmail } = useAuth();
+  const resetPassword = useMutation("/admin-change-password", "post");
+
   const form = useFormik({
     initialValues: {
       newPassword: "",
@@ -16,7 +21,17 @@ export default function ResetPassword() {
     validateOnMount: true,
     validationSchema: resetPasswordSchema,
     onSubmit: (values) => {
-      console.log(values)
+      resetPassword
+        .mutate({
+          email: authEmail,
+          newPassword: values.newPassword,
+          confirmPassword: values.confirmPassword,
+        })
+        .then((resp) => {
+          if (resp?.status) {
+            navigate("/login");
+          }
+        });
     },
   });
 
@@ -24,10 +39,10 @@ export default function ResetPassword() {
     <AuthLayout
       title="Set a new password"
       subText="Create a strong password to secure your account. Make sure it’s something you’ll remember."
-      authImage='/unsplash.png'
+      authImage="/unsplash.png"
     >
       <FormikProvider value={form}>
-        <form>
+        <form onSubmit={form.handleSubmit}>
           <TextField
             label="New password"
             placeholder="New password"
@@ -36,16 +51,16 @@ export default function ResetPassword() {
           />
           <div className="max-[560px]:mt-2.5">
             <TextField
-                label="Confirm password"
-                placeholder="Confirm password"
-                type="password"
-                {...formProps("confirmPassword", form)}
+              label="Confirm password"
+              placeholder="Confirm password"
+              type="password"
+              {...formProps("confirmPassword", form)}
             />
           </div>
-          <Button 
+          <Button
             text="Continue"
             type="submit"
-            // isLoading
+            isLoading={resetPassword.loading}
             extraClassName="mt-10"
           />
         </form>
