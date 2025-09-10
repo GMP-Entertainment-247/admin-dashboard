@@ -22,6 +22,33 @@ h1, h2, h3, h4, h5, h6{
   font-family: 'League Spartan', sans-serif;
 }
 
-p, span, a, button, input, label{
+p, span, a, button, input, label, table{
   font-family: 'Montserrat', sans-serif;
+}
+
+.loader-loop {
+  animation: 1.5s infinite loop cubic-bezier(0.420, 0.000, 0.580, 1.000);
+}
+@keyframes loop {
+  0% {
+    width: 0%;
+    transform: translateX(0%);
+  }
+  7% {
+    width: 10%;
+    transform: translateX(0%);
+  }
+  40% {
+    width: 60%;
+  }
+  50% {
+    transform: translateX(85%);
+  }
+  
+  75% {
+    width: 100%;
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }

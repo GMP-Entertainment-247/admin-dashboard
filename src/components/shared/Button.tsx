@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import loader from "../../../images/gif/white-loader.gif";
+import loader from "../../images/gif/white-loader.gif";
 interface IButtonProps {
     variant?: "primary" | "secondary";
     type?: "button" | "submit";

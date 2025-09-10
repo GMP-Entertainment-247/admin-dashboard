@@ -5,7 +5,7 @@ import AuthLayout from "./AuthLayout";
 import { loginSchema } from "../../utils/validationSchema";
 import { TextField } from "../../components/Form/TextField";
 import { formProps } from "../../utils/helpers";
-import Button from "../../components/Form/shared/Button";
+import Button from "../../components/shared/Button";
 // import useFetch from '../../utils/hooks/useFetch';
 import useMutation from '../../utils/hooks/useMutation';
 
