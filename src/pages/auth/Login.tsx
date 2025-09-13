@@ -1,22 +1,23 @@
-// import { useAuth } from "../../context/AuthContext";
-// import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { FormikProvider, useFormik } from "formik";
 import AuthLayout from "./AuthLayout";
 import { loginSchema } from "../../utils/validationSchema";
 import { TextField } from "../../components/Form/TextField";
 import { formProps } from "../../utils/helpers";
-import Button from "../../components/Form/shared/Button";
-
+import Button from "../../components/shared/Button";
+// import useFetch from '../../utils/hooks/useFetch';
+import useMutation from '../../utils/hooks/useMutation';
 
 
 export default function Login() {
-  // const { login } = useAuth();
-  // const navigate = useNavigate();
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const handleLogin = useMutation("/admin-login", "post")
 
-  // const handleLogin = () => {
-  //   login();
-  //   navigate('/dashboard');
-  // };
+  // const {data} = useFetch<{category: string}>("/joke/any")
+  // console.log(data)
+
   
   const form = useFormik({
     initialValues: {
@@ -27,7 +28,14 @@ export default function Login() {
     validateOnMount: true,
     validationSchema: loginSchema,
     onSubmit: (values) => {
-      console.log(values)
+      handleLogin.mutate({
+        email: values.email,
+        password: values.password,
+      })
+        .then(resp => {
+          login((resp as any).data)
+          navigate('/dashboard');
+        })
     },
   });
 
@@ -38,7 +46,7 @@ export default function Login() {
       authImage='/unsplash.png'
     >
       <FormikProvider value={form}>
-        <form>
+        <form onSubmit={form.handleSubmit}>
           <TextField
             label="Email address"
             placeholder="Email address"
@@ -66,11 +74,15 @@ export default function Login() {
               </div>
               <span className="bg-[#F4F4F4] font-medium "> Remember me </span>
             </div>
-            <p className="font-medium cursor-pointer">Forgot Password</p>
+            <p 
+              className="font-medium cursor-pointer"
+              onClick={()=>navigate('/forgot-password')}
+            >Forgot Password</p>
           </div>
           <Button 
             text="Login"
-            // isLoading
+            type="submit"
+            isLoading={handleLogin.loading}
             extraClassName="mt-10"
           />
         </form>

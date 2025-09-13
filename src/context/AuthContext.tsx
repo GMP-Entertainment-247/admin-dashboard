@@ -1,22 +1,50 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
+import { ILogin, IUser } from '../interface/auth';
+import { useSingleState } from '../utils/hooks/useSingleState';
 
 type AuthContextType = {
-  isAuthenticated: boolean;
-  login: () => void;
+  token: string;
+  login: (val: ILogin) => void;
   logout: () => void;
+  authEmail: string;
+  setAuthEmail: (email: string) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setAuthenticated] = useState(false);
+  const getInitialToken = () => sessionStorage.getItem("token") || "";
 
-  const login = () => setAuthenticated(true);
-  const logout = () => setAuthenticated(false);
+  const token = useSingleState(getInitialToken());
+  const userData = useSingleState<IUser | null>(null);
+  const authEmail = useSingleState("");
+
+  const login = (val: ILogin) => {
+    token.set(val.token ?? "");
+    userData.set(val.user ?? null);
+    sessionStorage.setItem("token", val.token ?? "");
+  };
+  const logout = () => {
+    token.set("");
+    userData.set(null);
+    sessionStorage.removeItem("token");
+  };
+
+  const setAuthEmail = (email: string) => {
+    authEmail.set(email);
+  }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider 
+      value={{ 
+        token: token.get, 
+        login, 
+        logout, 
+        authEmail: authEmail.get,
+        setAuthEmail
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
