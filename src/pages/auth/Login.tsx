@@ -64,7 +64,7 @@ export default function Login() {
                   <div className="bg-[#F4F4F4] rounded-full w-3 h-3" />
                 }
               </div>
-              <span>Remember me</span>
+              <span className="bg-[#F4F4F4] font-medium "> Remember me </span>
             </div>
             <p className="font-medium cursor-pointer">Forgot Password</p>
           </div>
