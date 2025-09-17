@@ -1,10 +1,9 @@
-import { useAuth } from "../../context/AuthContext"
+import DashboardLayout from "./DashboardLayout";
 
-export default function DashboardHome () {
-    const { logout } =useAuth()
-    return (
-        <div onClick={logout}>
-            DashboardHome
-        </div>
-    )
+export default function DashboardHome() {
+  return (
+    <DashboardLayout>
+      <div>DashboardHome</div>
+    </DashboardLayout>
+  );
 }

@@ -1,8 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -12,14 +10,19 @@ module.exports = {
         },
         black: {
           1: "#1A1A1A",
-        }
+        },
+        gold: {
+          35: "#B08A03",
+        },
+        brand: {
+          500: "#BFA100",
+        },
       },
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],
-        league_spartan: ["League Spartan", 'sans-serif']
+        league_spartan: ["League Spartan", "sans-serif"],
       },
     },
   },
   plugins: [],
-}
-
+};
