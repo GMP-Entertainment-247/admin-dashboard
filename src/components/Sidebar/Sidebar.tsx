@@ -29,13 +29,17 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
       )}
     >
       <div
-        className={clsx("flex items-center pt-8 px-3 mb-10 relative", {
-          "justify-center": !isSideNavOpen,
-          "justify-between": isSideNavOpen,
-        })}
+        className={clsx(
+          "flex items-center pt-8 px-3 mb-10 transition-all duration-300 ease-in-out",
+          {
+            "justify-center": !isSideNavOpen,
+            "justify-between": isSideNavOpen,
+          }
+        )}
       >
         <div
-          className={clsx("flex items-center gap-3", {
+          className={clsx("flex items-center", {
+            "gap-3": isSideNavOpen,
             "gap-0": !isSideNavOpen,
           })}
         >
@@ -47,9 +51,15 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
             />
           </div>
           <p
-            className={clsx("text-base font-semibold text-[#000000]", {
-              hidden: !isSideNavOpen,
-            })}
+            style={{
+              transitionProperty: "width",
+            }}
+            className={clsx(
+              "text-base font-semibold whitespace-nowrap text-[#000000] duration-300 ease-in-out",
+              {
+                "w-0 overflow-hidden": !isSideNavOpen,
+              }
+            )}
           >
             GMP
           </p>
@@ -57,7 +67,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
         <button
           type="button"
           className={clsx("text-gold-35 flex-shrink-0", {
-            "absolute right-3": !isSideNavOpen,
+            "absolute right-0 translate-x-1/2 hidden md:block": !isSideNavOpen,
           })}
           aria-label="Toggle sidebar"
           onClick={toggleSideNav}
@@ -66,7 +76,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
         </button>
       </div>
 
-      <nav>
+      <nav className="space-y-2">
         {navigationItems.map((item, index) => (
           <NavItem
             key={index}

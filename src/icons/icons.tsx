@@ -25,47 +25,39 @@ export const IconSidebarCollapse = () => (
 
 export const IconDashboard = () => (
   <svg
-    width="20"
-    height="20"
-    viewBox="0 0 20 20"
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect
-      x="3"
-      y="3"
-      width="5"
-      height="5"
+    <path
+      d="M16.5 8.175V3.075C16.5 1.95 16.02 1.5 14.8275 1.5H11.7975C10.605 1.5 10.125 1.95 10.125 3.075V8.175C10.125 9.3 10.605 9.75 11.7975 9.75H14.8275C16.02 9.75 16.5 9.3 16.5 8.175Z"
       stroke="currentColor"
       strokeWidth="1.5"
-      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <rect
-      x="12"
-      y="3"
-      width="5"
-      height="5"
+    <path
+      d="M16.5 14.925V13.575C16.5 12.45 16.02 12 14.8275 12H11.7975C10.605 12 10.125 12.45 10.125 13.575V14.925C10.125 16.05 10.605 16.5 11.7975 16.5H14.8275C16.02 16.5 16.5 16.05 16.5 14.925Z"
       stroke="currentColor"
       strokeWidth="1.5"
-      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <rect
-      x="3"
-      y="12"
-      width="5"
-      height="5"
+    <path
+      d="M7.875 9.825V14.925C7.875 16.05 7.395 16.5 6.2025 16.5H3.1725C1.98 16.5 1.5 16.05 1.5 14.925V9.825C1.5 8.7 1.98 8.25 3.1725 8.25H6.2025C7.395 8.25 7.875 8.7 7.875 9.825Z"
       stroke="currentColor"
       strokeWidth="1.5"
-      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <rect
-      x="12"
-      y="12"
-      width="5"
-      height="5"
+    <path
+      d="M7.875 3.075V4.425C7.875 5.55 7.395 6 6.2025 6H3.1725C1.98 6 1.5 5.55 1.5 4.425V3.075C1.5 1.95 1.98 1.5 3.1725 1.5H6.2025C7.395 1.5 7.875 1.95 7.875 3.075Z"
       stroke="currentColor"
       strokeWidth="1.5"
-      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -264,7 +256,7 @@ export const IconMenu = () => (
   </svg>
 );
 
-export const ArrowUp= () => (
+export const ArrowUp = () => (
   <svg
     width="10"
     height="8"
@@ -276,5 +268,17 @@ export const ArrowUp= () => (
       d="M0.500043 7.49981H9.50004C9.59116 7.49952 9.68048 7.47439 9.75838 7.42712C9.83628 7.37985 9.89981 7.31223 9.94214 7.23153C9.98447 7.15084 10.004 7.06013 9.9986 6.96917C9.9932 6.87821 9.96311 6.79044 9.91154 6.71531L5.41154 0.215309C5.22504 -0.0541914 4.77604 -0.0541914 4.58904 0.215309L0.0890427 6.71531C0.0369551 6.79028 0.0064098 6.87809 0.000725322 6.96921C-0.00495916 7.06032 0.0144347 7.15125 0.0567997 7.23211C0.0991647 7.31298 0.162881 7.38069 0.241025 7.42788C0.319169 7.47508 0.408753 7.49995 0.500043 7.49981Z"
       fill="currentColor"
     />
+  </svg>
+);
+
+export const CircleIcon = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle cx="6" cy="6" r="5.5" stroke="currentColor" fill="white" />
   </svg>
 );

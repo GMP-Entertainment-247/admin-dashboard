@@ -59,10 +59,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div
         style={{
           transitionProperty: "margin-left",
-          transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
         }}
         className={clsx(
-          "relative z-[1] duration-300",
+          "relative z-[1] duration-300 ease-in-out",
           {
             "md:ml-[60px] lg:ml-[60px]": !isSideNavOpen,
             "opacity-50 pointer-events-none md:ml-[235px] lg:ml-[256px]":

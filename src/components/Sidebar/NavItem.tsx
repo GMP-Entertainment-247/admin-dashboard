@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import clsx from "clsx";
 import { useDashboardLayout } from "../../context/DashboardLayoutContext";
 import useWindowWidth from "../../utils/hooks/useWindowsWidth";
-import { ArrowUp } from "../../icons/icons";
+import { CircleIcon } from "../../icons/icons";
+import NavItemContent from "./NavItemContent";
 
 interface DropdownItem {
   text: string;
@@ -34,16 +34,6 @@ export default function NavItem({
   const { isSideNavOpen, toggleSideNav } = useDashboardLayout();
   const { isMobile } = useWindowWidth();
 
-  const handleClick = () => {
-    if (isDropdown) {
-      setIsDropdownOpen(!isDropdownOpen);
-    } else {
-      if (isMobile && isSideNavOpen) {
-        toggleSideNav();
-      }
-    }
-  };
-
   // Check if current route matches the main link or any dropdown links
   const isCurrentlyActive =
     isActive ||
@@ -51,46 +41,88 @@ export default function NavItem({
     (isDropdown &&
       dropdownItems.some((item) => location.pathname === item.link));
 
-  const content = (
-    <div className="flex gap-1 relative">
-      <div className="w-[6px] " />
-      <div
-        className={clsx("absolute top-0 left-0 w-[6px] h-full rounded-r-md", {
-          "bg-brand-500": index === 4,
-        })}
-      />
-      <div
-        className={clsx(
-          "pl-[10px] pr-[18px] py-4 flex items-center justify-between flex-1",
-          {
-            "bg-brand-500 rounded-l-md": index === 4,
-          }
-        )}
-      >
-        <div
-          className={clsx("flex items-center gap-3", {
-            "text-white": index === 4,
-            "text-[#212121]": index !== 4,
-          })}
-        >
-          {icon}
-          <span className="text-sm font-normal">{text}</span>
-        </div>
-        {isDropdown && (
-          <div
-            className={clsx("transition-transform duration-300", {
-              "rotate-180": !isDropdownOpen,
-              "rotate-0": isDropdownOpen,
-              "text-white": index === 4,
-              "text-[#212121]": index !== 4,
-            })}
-          >
-            <ArrowUp />
-          </div>
-        )}
-      </div>
-    </div>
+  // Check if any child route is active
+  const isChildActive =
+    isDropdown && dropdownItems.some((item) => location.pathname === item.link);
+
+  // Auto-open dropdown if we're on a child route
+  useEffect(() => {
+    if (isDropdown && isChildActive) {
+      setIsDropdownOpen(true);
+    }
+  }, [isDropdown, isChildActive]);
+
+  const handleMainItemClick = () => {
+    if (isDropdown) {
+      // If we're already on the parent route, toggle dropdown
+      if (location.pathname === link) {
+        setIsDropdownOpen(!isDropdownOpen);
+      } else {
+        // Navigate to parent route and open dropdown
+        setIsDropdownOpen(true);
+      }
+    } else {
+      // For non-dropdown items, close sidebar on mobile
+      if (isMobile && isSideNavOpen) {
+        toggleSideNav();
+      }
+    }
+  };
+
+  const handleChildItemClick = () => {
+    // Close sidebar on mobile when clicking child items
+    if (isMobile && isSideNavOpen) {
+      toggleSideNav();
+    }
+  };
+
+  const mainItemContent = (
+    <NavItemContent
+      icon={icon}
+      text={text}
+      isActive={isCurrentlyActive}
+      isDropdown={isDropdown}
+      isDropdownOpen={isDropdownOpen}
+      showLeftBar={true}
+    />
   );
 
-  return content;
+  return (
+    <>
+      {/* Main Item */}
+      {link ? (
+        <Link to={link} onClick={handleMainItemClick} className="block">
+          {mainItemContent}
+        </Link>
+      ) : (
+        <button type="button" onClick={handleMainItemClick} className="block">
+          {mainItemContent}
+        </button>
+      )}
+
+      {/* Dropdown Items */}
+      {isDropdown && isDropdownOpen && (
+        <div className="ml-[10px] space-y-2">
+          {dropdownItems.map((item, childIndex) => {
+            const isChildCurrentlyActive = location.pathname === item.link;
+            return (
+              <Link
+                key={childIndex}
+                to={item.link}
+                onClick={handleChildItemClick}
+                className="block group"
+              >
+                <NavItemContent
+                  icon={<CircleIcon />}
+                  text={item.text}
+                  isActive={isChildCurrentlyActive}
+                  showLeftBar={false}
+                />
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </>
+  );
 }
