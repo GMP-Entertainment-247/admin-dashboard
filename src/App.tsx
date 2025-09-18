@@ -16,7 +16,7 @@ function App() {
         <Router>
           <Routes>
             {
-              appRoutes.map(({ path, element, isProtected })=>(
+              appRoutes.map(({ path, element, isProtected, children })=>(
                 <Route 
                   key={path}
                   path={path} 
@@ -26,7 +26,24 @@ function App() {
                     :
                     element
                   } 
-                />
+                >
+                  {children &&
+                    children.map(({ childPath, childElement, index }) => 
+                      index ? (
+                        <Route
+                          key="index"
+                          index
+                          element={isProtected ? <ProtectedRoute>{childElement}</ProtectedRoute> : childElement}
+                        />
+                      ) : (
+                        <Route
+                          key={path}
+                          path={childPath}
+                          element={isProtected ? <ProtectedRoute>{childElement}</ProtectedRoute> : childElement}
+                        />
+                      )
+                    )}
+                </Route>
               ))
             }
           </Routes>

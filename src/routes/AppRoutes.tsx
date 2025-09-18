@@ -5,8 +5,27 @@ import Login from "../pages/auth/Login";
 import DashboardHome from "../pages/dashboard";
 import SettingsPage from "../pages/dashboard/settings";
 import Verification from "../pages/auth/Verification";
+import FansHome from "../pages/dashboard/fans";
+import FanDetails from "../pages/dashboard/fans/details";
+import AllFans from "../pages/dashboard/fans/viewmore/AllFans";
+import AllTickets from "../pages/dashboard/fans/viewmore/AllTickets";
+import AllVotes from "../pages/dashboard/fans/viewmore/AllVotes";
+import { ReactElement } from "react";
+import FansLayout from "../pages/dashboard/fans/layout";
 
-export const appRoutes = [
+
+interface IRoutes {
+    path: string;
+    element: ReactElement<any, any>;
+    isProtected: boolean;
+    children?: {
+      index?: boolean;
+      childPath?: string;
+      childElement: ReactElement<any, any>;
+    }[]
+}
+
+export const appRoutes: IRoutes[] = [
   // Public Routes
   {
     path: "/login",
@@ -39,6 +58,33 @@ export const appRoutes = [
     path: "/dashboard",
     element: <DashboardHome />,
     isProtected: true,
+  },
+  {
+    path: "/fans",
+    element: <FansLayout />,
+    isProtected: true,
+    children: [
+      {
+        index: true,
+        childElement: <FansHome />,
+      },
+      {
+        childPath: ":id",
+        childElement: <FanDetails />,
+      },
+      {
+        childPath: "all",
+        childElement: <AllFans />,
+      },
+      {
+        childPath: "tickets",
+        childElement: <AllTickets />,
+      },
+      {
+        childPath: "votes",
+        childElement: <AllVotes />,
+      },
+  ]
   },
   {
     path: "/settings",
