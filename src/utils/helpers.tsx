@@ -82,3 +82,16 @@ export const startCountdown = (
     }
   }, 1000);
 }
+
+export const formatNumber = (num: number) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+export const imageProp = (
+  url: string | undefined,
+  defaultImg = "/images/no-image-found.jpeg"
+) => {
+  return {
+    src: url ? url : defaultImg
+  };
+};

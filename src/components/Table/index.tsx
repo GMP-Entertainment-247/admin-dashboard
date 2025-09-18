@@ -17,6 +17,7 @@ interface ITable<TRow> {
     totalPages?: number;
     isPreview?: boolean;
     seeMoreLink?: string;
+    hideSearch?: boolean;
 }
 
 export default function Table <TRow extends {}> ({
@@ -29,6 +30,7 @@ export default function Table <TRow extends {}> ({
     totalPages=1,
     isPreview=false,
     seeMoreLink="",
+    hideSearch=false,
 }: ITable<TRow>) {
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams();
@@ -42,17 +44,20 @@ export default function Table <TRow extends {}> ({
     return(
         <div className="bg-white rounded-xl">
             <div className="flex items-center px-5 py-4 max-[769px]:px-2.5 max-[769px]:flex-col max-[769px]:items-start">
-                <h4 className="text-[22px] font-semibold mr-10">{tableTitle}</h4>
+                <h4 className="text-[22px] font-semibold mr-10 whitespace-nowrap">{tableTitle}</h4>
                 <div className="flex gap-4 items-center justify-between w-full max-[769px]:flex-col max-[769px]:items-start">
-                    <div className="rounded flex w-[230px] max-[769px]:w-full h-9 items-center px-[6px] py-[2px] border border-solid border-[#BABABA] border-box">
-                        <MagnifyingGlassIcon className="w-4" />
-                        <input 
-                            placeholder={searchPlaceHolder} 
-                            onChange={debounced} 
-                            defaultValue={search}
-                            className="flex-1 bg-transparent outline-none border-0 pl-1 font-normal text-xs text-black placeholder:text-[#BFBFBF]"
-                        />
-                    </div>
+                    {
+                        !hideSearch &&
+                        <div className="rounded flex w-[230px] max-[769px]:w-full h-9 items-center px-[6px] py-[2px] border border-solid border-[#BABABA] border-box">
+                            <MagnifyingGlassIcon className="w-4" />
+                            <input 
+                                placeholder={searchPlaceHolder} 
+                                onChange={debounced} 
+                                defaultValue={search}
+                                className="flex-1 bg-transparent outline-none border-0 pl-1 font-normal text-xs text-black placeholder:text-[#BFBFBF]"
+                            />
+                        </div>
+                    }
                     <div>{slot}</div>
                 </div>
             </div>
