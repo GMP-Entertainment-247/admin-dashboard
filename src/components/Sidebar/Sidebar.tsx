@@ -20,7 +20,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
         transitionProperty: "width, transform",
       }}
       className={clsx(
-        "bg-white h-screen fixed left-0 top-0 w-[256px] z-[3] shadow-[1px_0_4px_0_rgba(0,0,0,0.1)] duration-300 ease-in-out",
+        "bg-white h-screen fixed left-0 top-0 w-[256px] shadow-[1px_0_4px_0_rgba(0,0,0,0.1)] duration-300 ease-in-out",
         {
           "-translate-x-full md:w-[78px]": !isSideNavOpen,
           "translate-x-0 md:w-[235px] lg:w-[256px]": isSideNavOpen,
