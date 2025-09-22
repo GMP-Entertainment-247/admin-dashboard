@@ -14,7 +14,7 @@ export default function FansHome () {
 
     return (
         <div>
-            <div className="grid grid-cols-4 gap-6">
+            <div className="grid grid-cols-4 gap-6 max-[1200px]:grid-cols-3 max-[992px]:grid-cols-2 max-[560px]:grid-cols-1">
                 {
                     [
                         {

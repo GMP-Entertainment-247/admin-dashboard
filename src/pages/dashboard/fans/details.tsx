@@ -11,7 +11,7 @@ export default function FanDetails () {
 
     return (
         <div>
-            <div className="bg-white rounded-lg flex gap-5 p-6">
+            <div className="bg-white rounded-lg flex gap-5 p-6 max-[1200px]:block">
                 <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center overflow-hidden">
                     <img {...imageProp("/images/profile-default.png")} alt="" className="w-full" />
                 </div>
@@ -22,7 +22,7 @@ export default function FanDetails () {
                             <span className="text-[#01BA4C] font-medium text-sm">Active</span>
                         </div>
                     </div>
-                    <div className="text-base grid grid-cols-4 gap-5 mt-6">
+                    <div className="text-base grid grid-cols-4 gap-5 mt-6 max-[1400px]:grid-cols-3 max-[992px]:grid-cols-2 max-[560px]:grid-cols-1">
                         {
                             [
                                 {
@@ -63,7 +63,7 @@ export default function FanDetails () {
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-7 mt-10">
+            <div className="grid grid-cols-2 gap-7 mt-10 max-[1200px]:grid-cols-1">
                 <Table 
                     tableTitle="Vote History"
                     searchPlaceHolder="Search any artist"
