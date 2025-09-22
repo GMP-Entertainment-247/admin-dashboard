@@ -29,13 +29,14 @@ export const Modal = ({
                     exit={{ opacity: 0 }}
                     className={clsx(
                         show ? " h-screen w-[100%] " : "h-0 w-0 opacity-0",
-                        "fixed top-0 left-0 z-50 bg-black-1 bg-opacity-70 flex justify-center mb-20 overflow-y-auto"
+                        "fixed top-0 left-0 z-[50] bg-black-1 bg-opacity-70 flex justify-center mb-20 overflow-y-auto"
                     )}
                 >
                     <motion.div
-                        initial={{ top: "100vh" }}
-                        animate={{ top: "20%" }}
-                        exit={{ top: "-100vh" }}
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.5, opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
                         className="absolute top-[20%] mx-auto pb-20"
                     >
                         <div
@@ -48,7 +49,7 @@ export const Modal = ({
                                     text="Cancel"
                                     type="button"
                                     onClick={()=>onClose()}
-                                    extraClassName="bg-[#E6E6E6] text-[#1A1A1A] rounded-[8px] font-semibold"
+                                    extraClassName="!bg-[#E6E6E6] !text-[#1A1A1A] rounded-[8px] font-semibold"
                                 />
                                 <Button 
                                     text="Confirm"
