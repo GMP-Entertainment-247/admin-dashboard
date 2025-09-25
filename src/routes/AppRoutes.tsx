@@ -5,8 +5,6 @@ import Login from "../pages/auth/Login";
 import DashboardHome from "../pages/dashboard";
 import SettingsPage from "../pages/dashboard/settings";
 import Verification from "../pages/auth/Verification";
-import Cards from "../components/shared/Cards";
-// import path from "path";
 
 export const appRoutes = [
   // Public Routes
@@ -46,10 +44,5 @@ export const appRoutes = [
     path: "/settings",
     element: <SettingsPage />,
     isProtected: true,
-  },
-  {
-    path: "/userdetails",
-    element: <Cards />,
-    // isProtected: true,
   },
 ];
