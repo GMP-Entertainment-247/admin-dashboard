@@ -1,23 +1,14 @@
 import React from "react";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
-import axios from "axios";
 import { Bell, Search } from "lucide-react";
 import avater from "../../../src/images/avatar.png";
 
+
 const Navbar = () => {
   const [query, setQuery] = useState("");
+  console.log(query)
 
-  const fetchResults = async (query: string) => {
-    const { data } = await axios.get(`/search?query=${query}`);
-    return data;
-  };
-  const { data } = useQuery({
-    queryKey: ["search", query],
-    queryFn: () => fetchResults(query),
-    enabled: !!query,
-  });
   const handleChange = useDebouncedCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setQuery(e.target.value);
@@ -27,31 +18,23 @@ const Navbar = () => {
 
   return (
     <div className="">
-      <div className=" flex justify-between gap-[200px] align-middle  h-[80px] my-[20px] mr-[20px] bg-[#FFFFFF] rounded-[8px] border  shadow-md">
-        <div
-          id="search"
-          className=" flex justify-around   rounded-[8px] opacity-1 "
-        >
-          <Search className="relative top-[30px] left-[30px] " />
+      <div className="flex items-center justify-between h-[80px] px-5 bg-[#FFFFFF] rounded-[8px] border shadow-md">
+        <div className="flex items-center gap-2.5 px-2.5 rounded-[8px] bg-[#F5F5F5] h-[46px] w-[360px]">
+          <Search className="w-6 h-6" />
           <input
-            type="search"
             onChange={handleChange}
-            name=""
-            id=""
-            placeholder="Search anything  |"
-            className="w-[376px] h-[46px] my-[17px]  pl-[48px] rounded-[8px] bg-[#F5F5F5] opacity-1 border outline-none"
+            placeholder="Search anything"
+            className="w-full bg-transparent outline-none placeholder:text-[#4D4D4D]"
           />
         </div>
         {/*right side*/}
-        <div className=" flex justify-between align-middle content-center gap-[2px] mt-[24px] mr-[20px] ">
-          <Bell className="mt-2 w-[24px] h-[24px]  " />
-          <div className="flex gap-[20px] ">
-            <p className="h-[46px] ">
-              {" "}
+        <div className="flex justify-between items-center gap-5">
+          <Bell className="w-[24px] h-[24px]" />
+          <div className="flex items-center gap-[20px]">
+            <p className="test-sm">
               Hi 🖐 <br />
               John Doe{" "}
             </p>
-
             <img
               src={avater}
               alt="profileAvatar"
@@ -60,25 +43,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
-      {data && query && (
-        <div className="absolute mt-2 bg-white border rounded-lg shadow-md w-[367px]">
-          {data.length > 0 ? (
-            <ul className="divide-y divide-gray-100">
-              {data.map((item: string, index: number) => (
-                <li
-                  key={index}
-                  className="p-2 hover:bg-purple-100 cursor-pointer"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="p-2 text-sm text-gray-500">No results found</p>
-          )}
-        </div>
-      )}
     </div>
   );
 };

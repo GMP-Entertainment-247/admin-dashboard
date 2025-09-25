@@ -76,7 +76,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           // min height is 100vh - 110px (if 110px is the height of the header when added)
         >  
             <Navbar />
-            <div>
+            <div className="mt-6">
                 {children}
             </div>
         </main>
