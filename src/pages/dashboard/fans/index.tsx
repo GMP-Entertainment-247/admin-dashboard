@@ -8,9 +8,13 @@ import ticket from "../../../images/svg/ticket.svg";
 import edit from "../../../images/svg/edit.svg";
 import { dataRows } from "../../../utils/constant";
 import { useNavigate } from "react-router-dom";
+import useFetch from '../../../utils/hooks/useFetch';
+
 
 export default function FansHome () {
     const navigate = useNavigate()
+    const {data} = useFetch<{category: string}>("/admin/list-fans")
+    console.log(data)
 
     return (
         <div>
