@@ -26,7 +26,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="w-[1144px] ml-[276px] ">
+    <div className="">
       <div className=" flex justify-between gap-[200px] align-middle  h-[80px] my-[20px] mr-[20px] bg-[#FFFFFF] rounded-[8px] border  shadow-md">
         <div
           id="search"

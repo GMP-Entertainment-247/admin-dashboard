@@ -1,11 +1,32 @@
+import Card from "../../components/shared/Card";
 import Dropdown from "../../components/shared/Dropdown";
+import Tabs from "../../components/shared/Tabs";
 import Table from "../../components/Table";
+import { dataRows } from "../../utils/constant";
 import DashboardLayout from "./DashboardLayout";
 
 export default function Settings () {
     return (
         <DashboardLayout>
             Settings
+            <div className="w-[25%]">
+                <Card 
+                    icon="/icon"
+                    iconBgColor="bg-[#000]"
+                    value="10000"
+                    title="Flex"
+                />
+            </div>
+            <div className="bg-white p-10">
+                <Tabs
+                    tabs={[
+                        { label: "Profile", key: "profile" },
+                        { label: "Management", key: `management` },
+                        { label: "Team", key: "team" },
+                    ]}
+                    // useAsLink
+                />
+            </div>
             <div className="m-5">
                 {/* table use case for other pages */}
                 <Table 
@@ -48,20 +69,3 @@ export default function Settings () {
         </DashboardLayout>
     )
 }
-
-let dataRows = [
-                {
-                    name: "Tobiloba",  
-                    email: "tobilobadddddd",
-                    phone: "08123456789",
-                    country: "Nigeria",
-                    date: "12th Aug, 2023",
-                },
-                {
-                    name: "Tobiloba",  
-                    email: "tobilobadddddd",
-                    phone: "08123456789",
-                    country: "Nigeria",
-                    date: "12th Aug, 2023",
-                },
-            ]
