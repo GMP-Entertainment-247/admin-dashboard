@@ -4,7 +4,7 @@ import DashboardLayout from "../DashboardLayout";
 export default function RapBattleLayout() {
   return (
     <DashboardLayout>
-      <Outlet />
+        <Outlet />
     </DashboardLayout>
   );
 }

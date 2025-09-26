@@ -12,8 +12,18 @@ import AllTickets from "../pages/dashboard/fans/viewmore/AllTickets";
 import AllVotes from "../pages/dashboard/fans/viewmore/AllVotes";
 import { ReactElement } from "react";
 import FansLayout from "../pages/dashboard/fans/layout";
-import RapBattleHome from "../pages/dashboard/rap-battle";
 import RapBattleLayout from "../pages/dashboard/rap-battle/layout";
+import RapBattleHome from "../pages/dashboard/rap-battle";
+import AllContestants from "../pages/dashboard/rap-battle/viewmore/AllContestant";
+import LivestreamHome from "../pages/dashboard/rap-battle/livestream";
+import AllLivestreams from "../pages/dashboard/rap-battle/viewmore/AllLivestream";
+import TicketHome from "../pages/dashboard/rap-battle/ticket";
+import VotesHome from "../pages/dashboard/rap-battle/vote";
+import AllRapBattleTickets from "../pages/dashboard/rap-battle/viewmore/AllTickets";
+import AllRapBattleVotes from "../pages/dashboard/rap-battle/viewmore/AllVotes";
+import CreateEvent from "../pages/dashboard/rap-battle/create/events";
+import CreateTicket from "../pages/dashboard/rap-battle/create/tickets";
+
 
 interface IRoutes {
   path: string;
@@ -85,12 +95,7 @@ export const appRoutes: IRoutes[] = [
         childPath: "votes",
         childElement: <AllVotes />,
       },
-    ],
-  },
-  {
-    path: "/settings",
-    element: <SettingsPage />,
-    isProtected: true,
+    ]
   },
   {
     path: "/rap-battle",
@@ -102,17 +107,46 @@ export const appRoutes: IRoutes[] = [
         childElement: <RapBattleHome />,
       },
       {
+        childPath: "all",
+        childElement: <AllContestants />,
+      },
+      {
         childPath: "livestream",
-        childElement: <p>You are on /rap-battle/livestream route</p>,
+        childElement: <LivestreamHome />,
+      },
+      {
+        childPath: "livestream/all",
+        childElement: <AllLivestreams />,
       },
       {
         childPath: "votes",
-        childElement: <p>You are on /rap-battle/votes route</p>,
+        childElement: <VotesHome />,
+      },
+      {
+        childPath: "votes/all",
+        childElement: <AllRapBattleVotes />,
       },
       {
         childPath: "tickets",
-        childElement: <p>You are on /rap-battle/tickets route</p>,
+        childElement: <TicketHome />,
       },
-    ],
+      {
+        childPath: "tickets/all",
+        childElement: <AllRapBattleTickets />,
+      },
+      {
+        childPath: "create-ticket",
+        childElement: <CreateTicket />,
+      },
+      {
+        childPath: "create-event",
+        childElement: <CreateEvent />,
+      },
+    ]
+  },
+  {
+    path: "/settings",
+    element: <SettingsPage />,
+    isProtected: true,
   },
 ];

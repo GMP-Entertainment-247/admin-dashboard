@@ -1,18 +1,13 @@
-import Dropdown from "../../../components/shared/Dropdown";
-import Table from "../../../components/Table";
-import { imageProp } from "../../../utils/helpers";
-import edit from "../../../images/svg/edit.svg";
-import IndexWrapper from "./components/indexWrapper";
-import Tabs from "../../../components/shared/Tabs";
+import Dropdown from "../../../../components/shared/Dropdown";
+import Tabs from "../../../../components/shared/Tabs";
+import Table from "../../../../components/Table";
+import edit from "../../../../images/svg/edit.svg";
+import { imageProp } from "../../../../utils/helpers";
 
-export default function RapBattleHome () {
-
+export default function AllContestants () {
     return (
-        <IndexWrapper
-            title="Rap Battle"
-            buttonText="Create Event"
-            buttonLink="/rap-battle/create-event"
-        >
+        <div>
+            <h2 className="text-[24px] font-semibold mb-3">All Rap Battles</h2>
             <div>
                 <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
                     <Tabs
@@ -67,10 +62,8 @@ export default function RapBattleHome () {
                             view: (item) => <img src={edit} alt="edit" className="w-6 ml-4" onClick={()=>{}} />
                         },
                     ]}
-                    isPreview
-                    seeMoreLink="/rap-battle/all"
                 />
             </div>
-        </IndexWrapper>
+        </div>
     )
 }

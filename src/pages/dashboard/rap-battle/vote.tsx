@@ -1,17 +1,14 @@
 import Dropdown from "../../../components/shared/Dropdown";
 import Table from "../../../components/Table";
 import { imageProp } from "../../../utils/helpers";
-import edit from "../../../images/svg/edit.svg";
 import IndexWrapper from "./components/indexWrapper";
 import Tabs from "../../../components/shared/Tabs";
 
-export default function RapBattleHome () {
+export default function VotesHome () {
 
     return (
         <IndexWrapper
-            title="Rap Battle"
-            buttonText="Create Event"
-            buttonLink="/rap-battle/create-event"
+            title="Votes"
         >
             <div>
                 <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
@@ -40,7 +37,7 @@ export default function RapBattleHome () {
                     }
                     rows={[
                         {
-                            header: "Names",
+                            header: "Voter’s Name",
                             view: (item) => (
                                 <div className="flex gap-2 items-center">
                                     <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
@@ -51,24 +48,20 @@ export default function RapBattleHome () {
                             )
                         },
                         {
-                            header: "Email",
-                            view: (item) => "johndoe007@gmail.com"
+                            header: "Contestant’s Name",
+                            view: (item) => "Tobilola Tunde"
                         },
                         {
-                            header: "Phone Number",
-                            view: (item) => "08101234567"
+                            header: "No. of Votes",
+                            view: (item) => "500"
                         },
                         {
-                            header: "Video Link",
-                            view: (item) => "www.abcgejdgjkded..."
-                        },
-                        {
-                            header: "Action",
-                            view: (item) => <img src={edit} alt="edit" className="w-6 ml-4" onClick={()=>{}} />
+                            header: "Amount",
+                            view: (item) => "₦100,000"
                         },
                     ]}
                     isPreview
-                    seeMoreLink="/rap-battle/all"
+                    seeMoreLink="/rap-battle/votes/all"
                 />
             </div>
         </IndexWrapper>

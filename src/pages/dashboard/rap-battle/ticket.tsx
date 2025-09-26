@@ -1,17 +1,16 @@
 import Dropdown from "../../../components/shared/Dropdown";
 import Table from "../../../components/Table";
 import { imageProp } from "../../../utils/helpers";
-import edit from "../../../images/svg/edit.svg";
 import IndexWrapper from "./components/indexWrapper";
 import Tabs from "../../../components/shared/Tabs";
 
-export default function RapBattleHome () {
+export default function TicketHome () {
 
     return (
         <IndexWrapper
-            title="Rap Battle"
-            buttonText="Create Event"
-            buttonLink="/rap-battle/create-event"
+            title="Tickets"
+            buttonText="Create Ticket"
+            buttonLink="/rap-battle/create-ticket"
         >
             <div>
                 <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
@@ -40,35 +39,39 @@ export default function RapBattleHome () {
                     }
                     rows={[
                         {
-                            header: "Names",
+                            header: "Title",
                             view: (item) => (
                                 <div className="flex gap-2 items-center">
                                     <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                                         <img {...imageProp("")} alt="" className="w-full" />
                                     </div>
-                                    <p>John Doe</p>
+                                    <p>Grand Finale</p>
                                 </div>
                             )
                         },
                         {
-                            header: "Email",
-                            view: (item) => "johndoe007@gmail.com"
+                            header: "No. of Tickets",
+                            view: (item) => "500"
                         },
                         {
-                            header: "Phone Number",
-                            view: (item) => "08101234567"
+                            header: "Ticket Type",
+                            view: (item) => "Regular"
                         },
                         {
-                            header: "Video Link",
-                            view: (item) => "www.abcgejdgjkded..."
+                            header: "Amount",
+                            view: (item) => "Regular"
                         },
                         {
-                            header: "Action",
-                            view: (item) => <img src={edit} alt="edit" className="w-6 ml-4" onClick={()=>{}} />
+                            header: "Date",
+                            view: (item) => "16/04/25"
+                        },
+                        {
+                            header: "Time",
+                            view: (item) => "11:25am"
                         },
                     ]}
                     isPreview
-                    seeMoreLink="/rap-battle/all"
+                    seeMoreLink="/rap-battle/tickets/all"
                 />
             </div>
         </IndexWrapper>

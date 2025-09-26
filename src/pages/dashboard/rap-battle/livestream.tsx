@@ -1,15 +1,14 @@
 import Dropdown from "../../../components/shared/Dropdown";
 import Table from "../../../components/Table";
 import { imageProp } from "../../../utils/helpers";
-import edit from "../../../images/svg/edit.svg";
 import IndexWrapper from "./components/indexWrapper";
 import Tabs from "../../../components/shared/Tabs";
 
-export default function RapBattleHome () {
+export default function LivestreamHome () {
 
     return (
         <IndexWrapper
-            title="Rap Battle"
+            title="Livestream"
             buttonText="Create Event"
             buttonLink="/rap-battle/create-event"
         >
@@ -40,35 +39,35 @@ export default function RapBattleHome () {
                     }
                     rows={[
                         {
-                            header: "Names",
+                            header: "Title",
                             view: (item) => (
                                 <div className="flex gap-2 items-center">
                                     <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                                         <img {...imageProp("")} alt="" className="w-full" />
                                     </div>
-                                    <p>John Doe</p>
+                                    <p>Grand Finale</p>
                                 </div>
                             )
                         },
                         {
-                            header: "Email",
-                            view: (item) => "johndoe007@gmail.com"
+                            header: "Description",
+                            view: (item) => "The GMP Season 2 Rap Battle Grand Finale would be going..."
                         },
                         {
-                            header: "Phone Number",
-                            view: (item) => "08101234567"
+                            header: "Location",
+                            view: (item) => "Lagos, Nigeria"
                         },
                         {
-                            header: "Video Link",
-                            view: (item) => "www.abcgejdgjkded..."
+                            header: "Date",
+                            view: (item) => "16/04/25"
                         },
                         {
-                            header: "Action",
-                            view: (item) => <img src={edit} alt="edit" className="w-6 ml-4" onClick={()=>{}} />
+                            header: "Time",
+                            view: (item) => "11:25am"
                         },
                     ]}
                     isPreview
-                    seeMoreLink="/rap-battle/all"
+                    seeMoreLink="/rap-battle/livestream/all"
                 />
             </div>
         </IndexWrapper>
