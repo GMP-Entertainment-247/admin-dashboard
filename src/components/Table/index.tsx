@@ -5,7 +5,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../shared/Button";
 
 interface ITable<TRow> {
-    tableTitle: string;
+    noTitle?: boolean;
+    tableTitle?: string;
     searchPlaceHolder?: string;
     slot?: React.ReactNode;
     isLoading?: boolean;
@@ -21,6 +22,7 @@ interface ITable<TRow> {
 }
 
 export default function Table <TRow extends {}> ({
+    noTitle=false,
     tableTitle,
     searchPlaceHolder="Search",
     slot,
@@ -44,7 +46,10 @@ export default function Table <TRow extends {}> ({
     return(
         <div className="bg-white rounded-xl">
             <div className="flex items-center px-5 py-4 max-[769px]:px-2.5 max-[769px]:flex-col max-[769px]:items-start">
-                <h4 className="text-[22px] font-semibold mr-10 whitespace-nowrap">{tableTitle}</h4>
+                {
+                    !noTitle &&
+                    <h4 className="text-[22px] font-semibold mr-10 whitespace-nowrap">{tableTitle}</h4>
+                }
                 <div className="flex gap-4 items-center justify-between w-full max-[769px]:flex-col max-[769px]:items-start">
                     {
                         !hideSearch &&
