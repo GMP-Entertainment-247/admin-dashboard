@@ -23,7 +23,8 @@ import AllRapBattleTickets from "../pages/dashboard/rap-battle/viewmore/AllTicke
 import AllRapBattleVotes from "../pages/dashboard/rap-battle/viewmore/AllVotes";
 import CreateEvent from "../pages/dashboard/rap-battle/create/events";
 import CreateTicket from "../pages/dashboard/rap-battle/create/tickets";
-
+import BlogsHome from "../pages/dashboard/blogs";
+import BlogsLayout from "../pages/dashboard/blogs/layout";
 
 interface IRoutes {
   path: string;
@@ -95,7 +96,7 @@ export const appRoutes: IRoutes[] = [
         childPath: "votes",
         childElement: <AllVotes />,
       },
-    ]
+    ],
   },
   {
     path: "/rap-battle",
@@ -142,7 +143,26 @@ export const appRoutes: IRoutes[] = [
         childPath: "create-event",
         childElement: <CreateEvent />,
       },
-    ]
+    ],
+  },
+  {
+    path: "/blogs",
+    element: <BlogsLayout />,
+    isProtected: true,
+    children: [
+      {
+        index: true,
+        childElement: <BlogsHome />,
+      },
+      {
+        childPath: "create-blog",
+        childElement: <div>Create Blog</div>,
+      },
+      {
+        childPath: "edit-blog",
+        childElement: <div>Edit Blog</div>,
+      },
+    ],
   },
   {
     path: "/settings",
