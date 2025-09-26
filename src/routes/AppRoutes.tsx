@@ -12,18 +12,18 @@ import AllTickets from "../pages/dashboard/fans/viewmore/AllTickets";
 import AllVotes from "../pages/dashboard/fans/viewmore/AllVotes";
 import { ReactElement } from "react";
 import FansLayout from "../pages/dashboard/fans/layout";
-import DashboardLayout from "../pages/dashboard/DashboardLayout";
-
+import RapBattleHome from "../pages/dashboard/rap-battle";
+import RapBattleLayout from "../pages/dashboard/rap-battle/layout";
 
 interface IRoutes {
-    path: string;
-    element: ReactElement<any, any>;
-    isProtected: boolean;
-    children?: {
-      index?: boolean;
-      childPath?: string;
-      childElement: ReactElement<any, any>;
-    }[]
+  path: string;
+  element: ReactElement<any, any>;
+  isProtected: boolean;
+  children?: {
+    index?: boolean;
+    childPath?: string;
+    childElement: ReactElement<any, any>;
+  }[];
 }
 
 export const appRoutes: IRoutes[] = [
@@ -85,7 +85,7 @@ export const appRoutes: IRoutes[] = [
         childPath: "votes",
         childElement: <AllVotes />,
       },
-  ]
+    ],
   },
   {
     path: "/settings",
@@ -94,42 +94,25 @@ export const appRoutes: IRoutes[] = [
   },
   {
     path: "/rap-battle",
-    element: (
-      <DashboardLayout>
-        <h1 className="text-2xl font-bold">Rap Battle Page</h1>
-        <p>You are on /rap-battle route</p>
-      </DashboardLayout>
-    ),
+    element: <RapBattleLayout />,
     isProtected: true,
-  },
-  {
-    path: "/rap-battle/livestream",
-    element: (
-      <DashboardLayout>
-        <h1 className="text-2xl font-bold">Livestream Page</h1>
-        <p>You are on /rap-battle/livestream route</p>
-      </DashboardLayout>
-    ),
-    isProtected: true,
-  },
-  {
-    path: "/rap-battle/votes",
-    element: (
-      <DashboardLayout>
-        <h1 className="text-2xl font-bold">Votes Page</h1>
-        <p>You are on /rap-battle/votes route</p>
-      </DashboardLayout>
-    ),
-    isProtected: true,
-  },
-  {
-    path: "/rap-battle/tickets",
-    element: (
-      <DashboardLayout>
-        <h1 className="text-2xl font-bold">Tickets Page</h1>
-        <p>You are on /rap-battle/tickets route</p>
-      </DashboardLayout>
-    ),
-    isProtected: true,
+    children: [
+      {
+        index: true,
+        childElement: <RapBattleHome />,
+      },
+      {
+        childPath: "livestream",
+        childElement: <p>You are on /rap-battle/livestream route</p>,
+      },
+      {
+        childPath: "votes",
+        childElement: <p>You are on /rap-battle/votes route</p>,
+      },
+      {
+        childPath: "tickets",
+        childElement: <p>You are on /rap-battle/tickets route</p>,
+      },
+    ],
   },
 ];

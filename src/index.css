@@ -52,3 +52,7 @@ p, span, a, button, input, label, table{
     transform: translateX(100%);
   }
 }
+
+.page-title {
+  @apply text-xl md:text-2xl text-[#000] font-semibold whitespace-nowrap capitalize;
+}
