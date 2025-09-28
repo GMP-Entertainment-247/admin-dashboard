@@ -13,7 +13,6 @@ interface SidebarProps {
 
 const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
   const { isSideNavOpen, toggleSideNav } = useDashboardLayout();
-
   return (
     <aside
       ref={ref}

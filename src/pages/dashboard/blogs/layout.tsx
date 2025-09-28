@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
 import DashboardLayout from "../DashboardLayout";
 
-export default function RapBattleLayout() {
+export default function BlogsLayout() {
   return (
     <DashboardLayout>
-        <Outlet />
+      <Outlet />
     </DashboardLayout>
   );
 }

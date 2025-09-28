@@ -8,6 +8,8 @@ import {
   IconBell,
 } from "../../icons/icons";
 
+import { Settings, Music4, FileText } from "lucide-react";
+
 export interface NavigationItem {
   icon: React.ReactNode;
   text: string;
@@ -69,5 +71,20 @@ export const navigationItems: NavigationItem[] = [
     icon: <IconBell />,
     text: "Notifications",
     link: "/notifications",
+  },
+  {
+    icon: <Music4 className="w-[18px] h-[18px]" />,
+    text: "Beats",
+    link: "/beats",
+  },
+  {
+    icon: <FileText className="w-[18px] h-[18px]" />,
+    text: "News & Blogs",
+    link: "/blogs",
+  },
+  {
+    icon: <Settings className="w-[18px] h-[18px]" />,
+    text: "Settings",
+    link: "/settings",
   },
 ];
