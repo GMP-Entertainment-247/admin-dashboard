@@ -88,12 +88,8 @@ export const appRoutes: IRoutes[] = [
     ],
   },
   {
-    path: "/settings",
-    element: <SettingsPage />,
-    isProtected: true,
-  },
-  {
     path: "/rap-battle",
+    element: <RapBattleLayout />,
     element: <RapBattleLayout />,
     isProtected: true,
     children: [
