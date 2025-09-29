@@ -6,7 +6,7 @@ import avater from "../../../src/images/avatar.png";
 
 const Navbar = () => {
   const [query, setQuery] = useState("");
-  // console.log(query);
+  console.log(query);
 
   const handleChange = useDebouncedCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
