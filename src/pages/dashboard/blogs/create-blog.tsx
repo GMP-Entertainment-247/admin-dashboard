@@ -1,4 +1,4 @@
-export default function CreateBlog({}) {
+export default function CreateBlog() {
   return (
     <div className="bg-[#fff] p-5 rounded-2xl">
       <h2>Create Blog</h2>
