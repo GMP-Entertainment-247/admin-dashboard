@@ -1,4 +1,4 @@
-interface RapBattleCardProps {
+interface BlogCardProps {
   image: string;
   title: string;
   description: string;
@@ -6,12 +6,12 @@ interface RapBattleCardProps {
   // link: string;
 }
 
-export default function RapBattleCard({
+export default function BlogCard({
   image,
   title,
   description,
   time,
-}: RapBattleCardProps) {
+}: BlogCardProps) {
   return (
     <div className="w-full aspect-[1.054] rounded-2xl bg-white p-3">
       <div className="w-full aspect-[1.91] object-cover rounded-xl mb-4 relative overflow-hidden">

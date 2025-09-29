@@ -41,7 +41,7 @@ export default function Tabs ({
     }
     
     return (
-        <div className="flex gap-5 overflow-x-scroll box-border border-b-[1px] border-solid border-[#E9E9E9]">
+        <div className="flex gap-5 overflow-auto box-border border-b-[1px] border-solid border-[#E9E9E9]">
             {
                 tabs.map(item=>(
                     <div>

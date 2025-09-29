@@ -3,6 +3,7 @@ import { useDashboardLayout } from "../../context/DashboardLayoutContext";
 import logo from "../../images/gmp-logo.jpg";
 import { IconSidebarCollapse } from "../../icons/icons";
 import NavItem from "./NavItem";
+import { ArrowRight } from "lucide-react";
 import { navigationItems } from "./navigationData";
 import clsx from "clsx";
 
@@ -12,7 +13,6 @@ interface SidebarProps {
 
 const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
   const { isSideNavOpen, toggleSideNav } = useDashboardLayout();
-
   return (
     <aside
       ref={ref}
@@ -20,7 +20,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
         transitionProperty: "width, transform",
       }}
       className={clsx(
-        "bg-white h-screen fixed left-0 top-0 w-[256px] shadow-[1px_0_4px_0_rgba(0,0,0,0.1)] duration-300 ease-in-out",
+        "bg-white h-screen fixed left-0 top-0 w-[256px] shadow-[1px_0_4px_0_rgba(0,0,0,0.1)] duration-300 ease-in-out z-[3]",
         {
           "-translate-x-full md:w-[78px]": !isSideNavOpen,
           "translate-x-0 md:w-[235px] lg:w-[256px]": isSideNavOpen,
@@ -66,13 +66,15 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
         </div>
         <button
           type="button"
-          className={clsx("text-gold-35 flex-shrink-0", {
-            "absolute right-0 translate-x-1/2 hidden md:block": !isSideNavOpen,
+          className={clsx("flex-shrink-0", {
+            "absolute right-0 translate-x-1/2 hidden md:block bg-gold-35 text-white rounded-full p-1":
+              !isSideNavOpen,
+            "text-gold-35": isSideNavOpen,
           })}
           aria-label="Toggle sidebar"
           onClick={toggleSideNav}
         >
-          <IconSidebarCollapse />
+          {isSideNavOpen ? <IconSidebarCollapse /> : <ArrowRight size={20} />}
         </button>
       </div>
 

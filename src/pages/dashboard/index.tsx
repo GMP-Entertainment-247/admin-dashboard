@@ -1,5 +1,5 @@
 import DashboardLayout from "./DashboardLayout";
-import RapBattleCard from "../../components/RapBattleCard";
+import BlogCard from "../../components/BlogCard";
 import image from "../../images/rap-battle.jpg";
 
 export default function DashboardHome() {
@@ -7,7 +7,7 @@ export default function DashboardHome() {
     <DashboardLayout>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: 10 }).map((_, index) => (
-          <RapBattleCard
+          <BlogCard
             key={index}
             image={image}
             title="GMP Entertainment 247 to commence 4th Rap Battle Audition"
