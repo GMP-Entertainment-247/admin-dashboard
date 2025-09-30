@@ -6,16 +6,11 @@ import user from "../../../images/svg/user.svg";
 import money from "../../../images/svg/money.svg";
 import ticket from "../../../images/svg/ticket.svg";
 import edit from "../../../images/svg/edit.svg";
+import { dataRows } from "../../../utils/constant";
 import { useNavigate } from "react-router-dom";
-import useFetch from '../../../utils/hooks/useFetch';
-import { IFan } from "../../../interface/fans.interface";
-import dayjs from "dayjs";
 
-
-export default function FansHome () {
-    const navigate = useNavigate()
-    const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
-    console.log(data)
+export default function FansHome() {
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -59,8 +54,8 @@ export default function FansHome () {
         <Table
           tableTitle="Fans"
           searchPlaceHolder="Search any artist"
-          isLoading={loading}
-          data={data?.data ?? []}
+          isLoading={false}
+          data={dataRows}
           slot={<Dropdown triggerText="This month" options={[]} />}
           rows={[
             {
@@ -76,7 +71,7 @@ export default function FansHome () {
             },
             {
               header: "Email",
-              view: (item) => <span className="lowercase">{item.email}</span>,
+              view: (item) => item.email,
             },
             {
               header: "Phone Number",
@@ -84,7 +79,7 @@ export default function FansHome () {
             },
             {
               header: "Date Joined",
-              view: (item) => <span>{dayjs(item.created_at).format("DD MMM, YYYY")}</span>,
+              view: (item) => item.date,
             },
             {
               header: "Action",
@@ -93,7 +88,7 @@ export default function FansHome () {
                   src={edit}
                   alt="edit"
                   className="w-6 ml-4"
-                  onClick={() => navigate(`/fans/${item.id}`)}
+                  onClick={() => navigate("/fans/userId")}
                 />
               ),
             },

@@ -4,13 +4,8 @@ import { imageProp } from "../../../utils/helpers";
 import edit from "../../../images/svg/edit.svg";
 import IndexWrapper from "./components/indexWrapper";
 import Tabs from "../../../components/shared/Tabs";
-import useFetch from "../../../utils/hooks/useFetch";
-import { IAudition } from "../../../interface/rapbattle.interface";
-import { useQueryParams } from "../../../utils/hooks/useQueryParams";
 
 export default function RapBattleHome () {
-    const {data, loading} = useFetch<{data: IAudition[]}>("/admin/audition/list")
-    const queryParam = useQueryParams()
 
     return (
         <IndexWrapper
@@ -35,11 +30,8 @@ export default function RapBattleHome () {
                 <Table 
                     noTitle={true}
                     searchPlaceHolder="Search any contestant"
-                    isLoading={loading}
-                    data={
-                        queryParam.get("tab")==="all" ? data?.data ?? []
-                        : []
-                    }
+                    isLoading={false}
+                    data={[1,2,3,4,5,6]}
                     slot={
                         <Dropdown 
                             triggerText="Season 1"
@@ -54,25 +46,21 @@ export default function RapBattleHome () {
                                     <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                                         <img {...imageProp("")} alt="" className="w-full" />
                                     </div>
-                                    <p>{item.name}</p>
+                                    <p>John Doe</p>
                                 </div>
                             )
                         },
                         {
                             header: "Email",
-                            view: (item) => <span className="lowercase">{item.email}</span>,
+                            view: (item) => "johndoe007@gmail.com"
                         },
                         {
                             header: "Phone Number",
-                            view: (item) => item.phone
+                            view: (item) => "08101234567"
                         },
                         {
                             header: "Video Link",
-                            view: (item) => (
-                                <div className="max-w-[150px] truncate lowercase">
-                                    <a href={item.link} target="_blank" rel="noreferrer">{item.link}</a>
-                                </div>
-                            )
+                            view: (item) => "www.abcgejdgjkded..."
                         },
                         {
                             header: "Action",

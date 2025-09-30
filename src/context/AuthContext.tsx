@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import { ILogin, IUser } from '../interface/auth.interface';
+import { ILogin, IUser } from '../interface/auth';
 import { useSingleState } from '../utils/hooks/useSingleState';
 
 type AuthContextType = {
