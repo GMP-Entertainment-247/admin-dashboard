@@ -6,11 +6,16 @@ import user from "../../../images/svg/user.svg";
 import money from "../../../images/svg/money.svg";
 import ticket from "../../../images/svg/ticket.svg";
 import edit from "../../../images/svg/edit.svg";
-import { dataRows } from "../../../utils/constant";
 import { useNavigate } from "react-router-dom";
+import useFetch from '../../../utils/hooks/useFetch';
+import { IFan } from "../../../interface/fans.interface";
+import dayjs from "dayjs";
 
-export default function FansHome() {
-  const navigate = useNavigate();
+
+export default function FansHome () {
+    const navigate = useNavigate()
+    const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+    console.log(data)
 
   return (
     <div>
@@ -54,8 +59,8 @@ export default function FansHome() {
         <Table
           tableTitle="Fans"
           searchPlaceHolder="Search any artist"
-          isLoading={false}
-          data={dataRows}
+          isLoading={loading}
+          data={data?.data ?? []}
           slot={<Dropdown triggerText="This month" options={[]} />}
           rows={[
             {
@@ -71,7 +76,7 @@ export default function FansHome() {
             },
             {
               header: "Email",
-              view: (item) => item.email,
+              view: (item) => <span className="lowercase">{item.email}</span>,
             },
             {
               header: "Phone Number",
@@ -79,7 +84,7 @@ export default function FansHome() {
             },
             {
               header: "Date Joined",
-              view: (item) => item.date,
+              view: (item) => <span>{dayjs(item.created_at).format("DD MMM, YYYY")}</span>,
             },
             {
               header: "Action",
@@ -88,7 +93,7 @@ export default function FansHome() {
                   src={edit}
                   alt="edit"
                   className="w-6 ml-4"
-                  onClick={() => navigate("/fans/userId")}
+                  onClick={() => navigate(`/fans/${item.id}`)}
                 />
               ),
             },
