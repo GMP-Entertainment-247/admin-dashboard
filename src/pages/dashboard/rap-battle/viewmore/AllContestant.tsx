@@ -3,8 +3,14 @@ import Tabs from "../../../../components/shared/Tabs";
 import Table from "../../../../components/Table";
 import edit from "../../../../images/svg/edit.svg";
 import { imageProp } from "../../../../utils/helpers";
+import useFetch from "../../../../utils/hooks/useFetch";
+import { IAudition } from "../../../../interface/rapbattle.interface";
+import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
 
 export default function AllContestants() {
+  const {data, loading} = useFetch<{data: IAudition[]}>("/admin/audition/list")
+  const queryParam = useQueryParams()
+
   return (
     <div>
       <h2 className="page-title mb-3">All Rap Battles</h2>
@@ -25,8 +31,11 @@ export default function AllContestants() {
         <Table
           noTitle={true}
           searchPlaceHolder="Search any contestant"
-          isLoading={false}
-          data={[1, 2, 3, 4, 5, 6]}
+          isLoading={loading}
+          data={
+              queryParam.get("tab")==="all" ? data?.data ?? []
+              : []
+          }
           slot={<Dropdown triggerText="Season 1" options={[]} />}
           rows={[
             {
@@ -36,21 +45,25 @@ export default function AllContestants() {
                   <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                     <img {...imageProp("")} alt="" className="w-full" />
                   </div>
-                  <p>John Doe</p>
+                  <p>{item.name}</p>
                 </div>
               ),
             },
             {
               header: "Email",
-              view: (item) => "johndoe007@gmail.com",
+              view: (item) => <span className="lowercase">{item.email}</span>,
             },
             {
               header: "Phone Number",
-              view: (item) => "08101234567",
+              view: (item) => item.phone
             },
             {
               header: "Video Link",
-              view: (item) => "www.abcgejdgjkded...",
+              view: (item) => (
+                <div className="max-w-[150px] truncate lowercase">
+                  <a href={item.link} target="_blank" rel="noreferrer">{item.link}</a>
+                </div>
+              )
             },
             {
               header: "Action",

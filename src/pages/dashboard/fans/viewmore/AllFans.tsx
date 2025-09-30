@@ -1,18 +1,22 @@
+import dayjs from "dayjs";
 import Dropdown from "../../../../components/shared/Dropdown";
 import Table from "../../../../components/Table";
 import edit from "../../../../images/svg/edit.svg";
-import { dataRows } from "../../../../utils/constant";
+import { IFan } from "../../../../interface/fans.interface";
 import { imageProp } from "../../../../utils/helpers";
+import useFetch from "../../../../utils/hooks/useFetch";
 
 export default function AllFans () {
+    const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+
     return (
         <div>
             <h2 className="text-[24px] font-semibold mb-3">All Fans</h2>
             <Table 
                 tableTitle="Fans"
                 searchPlaceHolder="Search any artist"
-                isLoading={false}
-                data={dataRows}
+                isLoading={loading}
+                data={data?.data ?? []}
                 slot={
                     <div className="flex gap-5">
                         <Dropdown 
@@ -39,7 +43,7 @@ export default function AllFans () {
                     },
                     {
                         header: "Email",
-                        view: (item) => item.email
+                        view: (item) => <span className="lowercase">{item.email}</span>,
                     },
                     {
                         header: "Phone Number",
@@ -47,7 +51,7 @@ export default function AllFans () {
                     },
                     {
                         header: "Date Joined",
-                        view: (item) => item.date
+                        view: (item) => <span>{dayjs(item.created_at).format("DD MMM, YYYY")}</span>,
                     },
                     {
                         header: "Action",

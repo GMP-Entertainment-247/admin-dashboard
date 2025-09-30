@@ -56,3 +56,57 @@ p, span, a, button, input, label, table{
 .page-title {
   @apply text-xl md:text-2xl text-[#000] font-semibold whitespace-nowrap capitalize;
 }
+
+.event-calendar .react-calendar {
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  width: 100%;
+  height: 100% !important;
+  background-color: white;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.event-calendar .react-calendar__navigation__prev-button:hover, .event-calendar .react-calendar__navigation__next-button:hover {
+  background: none;
+}
+
+.event-calendar .react-calendar__navigation__prev2-button, .event-calendar .react-calendar__navigation__next2-button {
+  display: none;
+}
+
+.event-calendar .react-calendar__navigation__label{
+  font-weight: 600;
+  font-size: 14px;
+  color: #000000;
+}
+
+.event-calendar .react-calendar__viewContainer {
+  margin: 0 10px 20px 10px;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  margin-bottom: 15px;
+  color: #737373;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+}
+
+.react-calendar__tile:enabled:hover {
+  border-radius: 6px;
+}
+
+
+.react-calendar__tile--active {
+  background-color: #BFA100 !important;
+  border-radius: 6px;
+}
+
+  
