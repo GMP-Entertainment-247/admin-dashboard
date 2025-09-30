@@ -37,13 +37,24 @@ export default function NavItem({
   // Check if current route matches the main link or any dropdown links
   const isCurrentlyActive =
     isActive ||
-    (link && location.pathname === link) ||
+    (link &&
+      (location.pathname === link ||
+        location.pathname.startsWith(link + "/"))) ||
     (isDropdown &&
-      dropdownItems.some((item) => location.pathname === item.link));
+      dropdownItems.some(
+        (item) =>
+          location.pathname === item.link ||
+          location.pathname.startsWith(item.link + "/")
+      ));
 
   // Check if any child route is active
   const isChildActive =
-    isDropdown && dropdownItems.some((item) => location.pathname === item.link);
+    isDropdown &&
+    dropdownItems.some(
+      (item) =>
+        location.pathname === item.link ||
+        location.pathname.startsWith(item.link + "/")
+    );
 
   // Auto-open dropdown if we're on a child route
   useEffect(() => {
@@ -104,7 +115,9 @@ export default function NavItem({
       {isDropdown && isDropdownOpen && (
         <div className="ml-[10px] space-y-2">
           {dropdownItems.map((item, childIndex) => {
-            const isChildCurrentlyActive = location.pathname === item.link;
+            const isChildCurrentlyActive =
+              location.pathname === item.link ||
+              location.pathname.startsWith(item.link + "/");
             return (
               <Link
                 key={childIndex}

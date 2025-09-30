@@ -6,6 +6,7 @@ import useWindowWidth from "../../utils/hooks/useWindowsWidth";
 import useOutsideClick from "../../utils/hooks/useOutsideClick";
 // import { useLocation } from "react-router-dom";
 import { DashboardLayoutContext } from "../../context/DashboardLayoutContext";
+import Navbar from "../../components/shared/Navbar";
 
 type DashboardLayoutProps = {
   children: ReactNode;
@@ -63,19 +64,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         className={clsx(
           "relative z-[1] duration-300 ease-in-out",
           {
-            "md:ml-[60px] lg:ml-[60px]": !isSideNavOpen,
+            "md:ml-[78px] lg:ml-[78px]": !isSideNavOpen,
             "opacity-50 pointer-events-none md:ml-[235px] lg:ml-[256px]":
               isSideNavOpen,
           },
           "md:opacity-100 md:pointer-events-auto"
         )}
       >
-        <main
-          className={clsx("min-h-[calc(100vh-110px)] bg-[#F1F1F1] p-5")}
-          // min height is 100vh - 110px (if 110px is the height of the header when added)
+        <div
+          className={clsx("min-h-[calc(100vh-40px)] bg-[#F1F1F1] p-5")}
+          // min height is 100vh - 40px (padding)
         >
-          {children}
-        </main>
+          <Navbar />
+          <main className="mt-6">{children}</main>
+        </div>
       </div>
     </DashboardLayoutContext.Provider>
   );
