@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,28 +6,39 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-h1, h2, h3, h4, h5, h6{
-  font-family: 'League Spartan', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "League Spartan", sans-serif;
 }
 
-p, span, a, button, input, label, table{
-  font-family: 'Montserrat', sans-serif;
+p,
+span,
+a,
+button,
+input,
+label,
+table {
+  font-family: "Montserrat", sans-serif;
 }
 
 .loader-loop {
-  animation: 1.5s infinite loop cubic-bezier(0.420, 0.000, 0.580, 1.000);
+  animation: 1.5s infinite loop cubic-bezier(0.42, 0, 0.58, 1);
 }
 @keyframes loop {
   0% {
@@ -44,7 +55,7 @@ p, span, a, button, input, label, table{
   50% {
     transform: translateX(85%);
   }
-  
+
   75% {
     width: 100%;
   }
@@ -59,7 +70,7 @@ p, span, a, button, input, label, table{
 
 .event-calendar .react-calendar {
   border: none;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   width: 100%;
   height: 100% !important;
   background-color: white;
@@ -70,15 +81,17 @@ p, span, a, button, input, label, table{
   padding: 10px 0;
 }
 
-.event-calendar .react-calendar__navigation__prev-button:hover, .event-calendar .react-calendar__navigation__next-button:hover {
+.event-calendar .react-calendar__navigation__prev-button:hover,
+.event-calendar .react-calendar__navigation__next-button:hover {
   background: none;
 }
 
-.event-calendar .react-calendar__navigation__prev2-button, .event-calendar .react-calendar__navigation__next2-button {
+.event-calendar .react-calendar__navigation__prev2-button,
+.event-calendar .react-calendar__navigation__next2-button {
   display: none;
 }
 
-.event-calendar .react-calendar__navigation__label{
+.event-calendar .react-calendar__navigation__label {
   font-weight: 600;
   font-size: 14px;
   color: #000000;
@@ -103,10 +116,11 @@ p, span, a, button, input, label, table{
   border-radius: 6px;
 }
 
-
 .react-calendar__tile--active {
-  background-color: #BFA100 !important;
+  background-color: #bfa100 !important;
   border-radius: 6px;
 }
 
-  
+.outline-auto {
+  outline-style: auto;
+}
