@@ -20,7 +20,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
         transitionProperty: "width, transform",
       }}
       className={clsx(
-        "bg-white h-screen fixed left-0 top-0 w-[256px] shadow-[1px_0_4px_0_rgba(0,0,0,0.1)] duration-300 ease-in-out z-[3]",
+        "bg-white h-screen fixed left-0 top-0 w-[256px] shadow-[1px_0_4px_0_rgba(0,0,0,0.1)] duration-300 ease-in-out z-[3] flex flex-col gap-10 [&>*]:w-full",
         {
           "-translate-x-full md:w-[78px]": !isSideNavOpen,
           "translate-x-0 md:w-[235px] lg:w-[256px]": isSideNavOpen,
@@ -30,7 +30,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
     >
       <div
         className={clsx(
-          "flex items-center pt-8 px-3 mb-10 transition-all duration-300 ease-in-out",
+          "flex items-center pt-8 px-3 transition-all duration-300 ease-in-out",
           {
             "justify-center": !isSideNavOpen,
             "justify-between": isSideNavOpen,
@@ -78,7 +78,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
         </button>
       </div>
 
-      <nav className="space-y-2">
+      <nav className="space-y-2 flex-1 overflow-auto">
         {navigationItems.map((item, index) => (
           <NavItem
             key={index}

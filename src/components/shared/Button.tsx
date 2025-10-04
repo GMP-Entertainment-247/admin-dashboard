@@ -9,6 +9,7 @@ interface IButtonProps {
   text: string;
   onClick?: () => void;
   href?: string;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -54,7 +55,7 @@ export default function Button({
           : "bg-grey-1 text-black-1",
         props.isLoading && "opacity-70"
       )}
-      disabled={props.isLoading}
+      disabled={props.isLoading || props.disabled}
       onClick={props.onClick}
     >
       {content}
