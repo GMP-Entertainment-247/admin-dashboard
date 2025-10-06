@@ -7,6 +7,7 @@ module.exports = {
         primary: "#BFA100",
         grey: {
           1: "#E6E6E6",
+          normal: "#212121",
         },
         black: {
           1: "#1A1A1A",
@@ -16,6 +17,10 @@ module.exports = {
         },
         brand: {
           500: "#BFA100",
+        },
+        red: {
+          normal: "#FF0000",
+          light: "#FFE5E5",
         },
       },
       fontFamily: {
