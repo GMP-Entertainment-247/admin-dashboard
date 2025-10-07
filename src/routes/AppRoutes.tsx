@@ -26,6 +26,7 @@ import CreateTicket from "../pages/dashboard/rap-battle/create/tickets";
 import BlogsHome from "../pages/dashboard/blogs";
 import BlogsLayout from "../pages/dashboard/blogs/layout";
 import CreateBlog from "../pages/dashboard/blogs/create-blog";
+import EditBlog from "../pages/dashboard/blogs/edit-blog";
 import ContestantDetails from "../pages/dashboard/rap-battle/user";
 
 interface IRoutes {
@@ -165,8 +166,8 @@ export const appRoutes: IRoutes[] = [
         childElement: <CreateBlog />,
       },
       {
-        childPath: "edit-blog",
-        childElement: <div>Edit Blog</div>,
+        childPath: "edit-blog/:blogId",
+        childElement: <EditBlog />,
       },
     ],
   },
