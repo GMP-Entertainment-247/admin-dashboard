@@ -1,34 +1,57 @@
+import React from "react";
 import Card from "../../components/shared/Card";
 import Dropdown from "../../components/shared/Dropdown";
 import Tabs from "../../components/shared/Tabs";
 import Table from "../../components/Table";
 import { dataRows } from "../../utils/constant";
 import DashboardLayout from "./DashboardLayout";
+import Profile from "../../pages/dashboard/profile";
+// import { useState } from "react";
 
 export default function Settings () {
+    // const [activeTab, setActiveTab] = useState('profile');
     return (
         <DashboardLayout>
-            Settings
+            
             <div className="w-[25%]">
-                <Card 
-                    icon="/icon"
-                    iconBgColor="bg-[#000]"
-                    value="10000"
-                    title="Flex"
-                />
+                
             </div>
-            <div className="bg-white p-10">
+            <div className="bg-white p-8">
                 <Tabs
                     tabs={[
                         { label: "Profile", key: "profile" },
                         { label: "Management", key: `management` },
                         { label: "Team", key: "team" },
+                        { label: "Others", key: "others" },
                     ]}
-                    // useAsLink
+                    
+        //      activeTab={activeTab}
+        //   onTabChange={setActiveTab}
                 />
             </div>
-            <div className="m-5">
+
+               
+
+
+
+            <div className=" ">
+                <Profile />
                 {/* table use case for other pages */}
+                {/* {activeTab === 'profile' &&<div><Profile /></div>}    
+                {activeTab === 'management' && <div>Management Content</div>}   
+                {activeTab === 'team' && <div>Team Content</div>}
+                {activeTab === 'others' && <div>Othrs contnt</div>}
+                */}
+              
+                </div>
+  <Card 
+                    icon="/icon"
+                    iconBgColor="bg-[#000]"
+                    value="10000"
+                    title="Flex"
+                />
+                
+                <div className="">
                 <Table 
                     tableTitle="Fans"
                     searchPlaceHolder="Search any artist"
