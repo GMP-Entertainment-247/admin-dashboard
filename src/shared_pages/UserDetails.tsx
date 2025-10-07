@@ -21,7 +21,7 @@ export default function UserDetails ({
     const queryClient = useQueryClient();
 
     const nextStageApi = useMutation("/admin/audition/move-to-next-stage", "post")
-console.log(params.id)
+
     const handleNextStage = () => {
         nextStageApi.mutate({
             id: params.id || ""
