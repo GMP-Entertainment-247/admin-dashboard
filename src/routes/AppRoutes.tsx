@@ -26,6 +26,7 @@ import CreateTicket from "../pages/dashboard/rap-battle/create/tickets";
 import BlogsHome from "../pages/dashboard/blogs";
 import BlogsLayout from "../pages/dashboard/blogs/layout";
 import CreateBlog from "../pages/dashboard/blogs/create-blog";
+import ContestantDetails from "../pages/dashboard/rap-battle/user";
 
 interface IRoutes {
   path: string;
@@ -111,6 +112,10 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: "all",
         childElement: <AllContestants />,
+      },
+      {
+        childPath: "user/:id",
+        childElement: <ContestantDetails />,
       },
       {
         childPath: "livestream",

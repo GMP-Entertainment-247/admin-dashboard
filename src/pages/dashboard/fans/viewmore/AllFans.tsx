@@ -5,9 +5,14 @@ import edit from "../../../../images/svg/edit.svg";
 import { IFan } from "../../../../interface/fans.interface";
 import { imageProp } from "../../../../utils/helpers";
 import useFetch from "../../../../utils/hooks/useFetch";
+import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
 
 export default function AllFans () {
-    const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+    const queryParam = useQueryParams()
+    const {data, loading} = useFetch<{data: IFan[], last_page: number;}>(
+        "/admin/list-fans", 
+        { page: queryParam.get("page") || 1 }
+    )
 
     return (
         <div>
@@ -17,6 +22,7 @@ export default function AllFans () {
                 searchPlaceHolder="Search any artist"
                 isLoading={loading}
                 data={data?.data ?? []}
+                totalPages={data?.last_page || 1}
                 slot={
                     <div className="flex gap-5">
                         <Dropdown 
