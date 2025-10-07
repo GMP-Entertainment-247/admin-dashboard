@@ -13,9 +13,8 @@ import dayjs from "dayjs";
 
 
 export default function FansHome () {
-    const navigate = useNavigate()
-    const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
-    console.log(data)
+  const navigate = useNavigate()
+  const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
 
   return (
     <div>

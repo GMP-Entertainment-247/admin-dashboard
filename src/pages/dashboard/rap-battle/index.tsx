@@ -5,12 +5,24 @@ import edit from "../../../images/svg/edit.svg";
 import IndexWrapper from "./components/indexWrapper";
 import Tabs from "../../../components/shared/Tabs";
 import useFetch from "../../../utils/hooks/useFetch";
-import { IAudition } from "../../../interface/rapbattle.interface";
+import { IAudition, IAuditionStage } from "../../../interface/rapbattle.interface";
 import { useQueryParams } from "../../../utils/hooks/useQueryParams";
+import { useNavigate } from "react-router-dom";
 
 export default function RapBattleHome () {
-    const {data, loading} = useFetch<{data: IAudition[]}>("/admin/audition/list")
     const queryParam = useQueryParams()
+    // const {data, loading} = useFetch<{data: IAudition[]}>("/admin/audition/list")
+    const {data: auditionStages} = useFetch<IAuditionStage[]>("/admin/audition/list-stages")
+    const {data, loading} = useFetch<{data: IAudition[], last_page: number;}>(
+        "/admin/audition/fetch-by-stage",{
+            stage: queryParam.get("tab") || ""
+        }
+    )
+    const tabOptions = auditionStages?.map(item => ({
+        label: item.name,
+        key: item.id.toString(),
+    }))
+    const navigate = useNavigate()
 
     return (
         <IndexWrapper
@@ -22,12 +34,8 @@ export default function RapBattleHome () {
                 <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
                     <Tabs
                         tabs={[
-                            { label: "All Entries", key: "all" },
-                            { label: "Audition", key: `audition` },
-                            { label: "Stage 1", key: "stage-1" },
-                            { label: "Stage 2", key: "stage-2" },
-                            { label: "Stage 3", key: "stage-3" },
-                            { label: "Finale", key: "finale" },
+                            { label: "All Entries", key: "" },
+                            ...(tabOptions || []),
                         ]}
                         // useAsLink
                     />
@@ -36,10 +44,7 @@ export default function RapBattleHome () {
                     noTitle={true}
                     searchPlaceHolder="Search any contestant"
                     isLoading={loading}
-                    data={
-                        queryParam.get("tab")==="all" ? data?.data ?? []
-                        : []
-                    }
+                    data={data?.data ?? []}
                     slot={
                         <Dropdown 
                             triggerText="Season 1"
@@ -76,7 +81,7 @@ export default function RapBattleHome () {
                         },
                         {
                             header: "Action",
-                            view: (item) => <img src={edit} alt="edit" className="w-6 ml-4" onClick={()=>{}} />
+                            view: (item) => <img src={edit} alt="edit" className="w-6 ml-4" onClick={()=>navigate(`/rap-battle/user/${item.id}`)} />
                         },
                     ]}
                     isPreview
