@@ -59,7 +59,7 @@ const TextArea: React.FC<TextAreaProps> = ({
     ],
     content: value,
     editable: !disabled,
-    onUpdate: ({ editor }) => {
+    onUpdate: ({ editor }:{editor: any}) => {
       const html = editor.getHTML();
       onChange?.(html);
     },

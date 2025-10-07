@@ -4,12 +4,24 @@ import Table from "../../../../components/Table";
 import edit from "../../../../images/svg/edit.svg";
 import { imageProp } from "../../../../utils/helpers";
 import useFetch from "../../../../utils/hooks/useFetch";
-import { IAudition } from "../../../../interface/rapbattle.interface";
+import { IAudition, IAuditionStage } from "../../../../interface/rapbattle.interface";
 import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
+import { useNavigate } from "react-router-dom";
 
 export default function AllContestants() {
-  const {data, loading} = useFetch<{data: IAudition[]}>("/admin/audition/list")
+  // const {data, loading} = useFetch<{data: IAudition[]}>("/admin/audition/list")
   const queryParam = useQueryParams()
+  const {data: auditionStages} = useFetch<IAuditionStage[]>("/admin/audition/list-stages")
+  const {data, loading} = useFetch<{data: IAudition[], last_page: number;}>(
+      "/admin/audition/fetch-by-stage",{
+          stage: queryParam.get("tab") || ""
+      }
+  )
+  const tabOptions = auditionStages?.map(item => ({
+      label: item.name,
+      key: item.id.toString(),
+  }))
+  const navigate = useNavigate()
 
   return (
     <div>
@@ -18,12 +30,8 @@ export default function AllContestants() {
         <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
           <Tabs
             tabs={[
-              { label: "All Entries", key: "all" },
-              { label: "Audition", key: `audition` },
-              { label: "Stage 1", key: "stage-1" },
-              { label: "Stage 2", key: "stage-2" },
-              { label: "Stage 3", key: "stage-3" },
-              { label: "Finale", key: "finale" },
+                { label: "All Entries", key: "" },
+                ...(tabOptions || []),
             ]}
             // useAsLink
           />
@@ -32,10 +40,7 @@ export default function AllContestants() {
           noTitle={true}
           searchPlaceHolder="Search any contestant"
           isLoading={loading}
-          data={
-              queryParam.get("tab")==="all" ? data?.data ?? []
-              : []
-          }
+          data={data?.data ?? []}
           slot={<Dropdown triggerText="Season 1" options={[]} />}
           rows={[
             {
@@ -72,7 +77,7 @@ export default function AllContestants() {
                   src={edit}
                   alt="edit"
                   className="w-6 ml-4"
-                  onClick={() => {}}
+                  onClick={() => navigate(`/rap-battle/user/${item.id}`)}
                 />
               ),
             },
