@@ -28,7 +28,7 @@ import BlogsLayout from "../pages/dashboard/blogs/layout";
 import CreateBlog from "../pages/dashboard/blogs/create-blog";
 import EditBlog from "../pages/dashboard/blogs/edit-blog";
 import ContestantDetails from "../pages/dashboard/rap-battle/user";
-
+import Profile from "../pages/dashboard/settings/profile"
 interface IRoutes {
   path: string;
   element: ReactElement<any, any>;
@@ -175,5 +175,11 @@ export const appRoutes: IRoutes[] = [
     path: "/settings",
     element: <SettingsPage />,
     isProtected: true,
+    children: [
+      { 
+        index: true,
+        childElement: <Profile /> 
+      },
+    ],
   },
 ];
