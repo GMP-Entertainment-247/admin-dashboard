@@ -1,12 +1,11 @@
- import React from "react";
-import avater from "../../../src/images/avatar.png";
+import avater from "../../../../src/images/avatar.png";
 import Button from "../../../components/shared/Button";
 
-const profile = () => {
+const Profile = () => {
   return (
-    <div className="bg-[#FFFFFF]">
+    <div>
       <div>
-        <div className="flex bg-[#FFFFFF] align-middle items-center justify-between">
+        <div className="flex align-middle items-center justify-between">
           <div className=" px-[20px] ">
             <div className="flex gap-[20px] " id="">
               <div className="grid">
@@ -15,7 +14,6 @@ const profile = () => {
                   type="text"
                   name="firstName"
                   placeholder="First Name"
-             
                   className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
                 />
               </div>
@@ -140,4 +138,4 @@ const profile = () => {
   );
 };
 
-export default profile;
+export default Profile;
