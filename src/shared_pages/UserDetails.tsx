@@ -8,6 +8,8 @@ import { useSingleState } from "../utils/hooks/useSingleState";
 import useMutation from "../utils/hooks/useMutation";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import useFetch from "../utils/hooks/useFetch";
+import { IFan } from "../interface/fans.interface";
 
 
 export default function UserDetails ({
@@ -20,6 +22,11 @@ export default function UserDetails ({
     const params = useParams()
     const queryClient = useQueryClient();
 
+    const {data} = useFetch<IFan>(
+        "/admin/profile",{
+            id: params.id || ""
+        }
+    )
     const nextStageApi = useMutation("/admin/audition/move-to-next-stage", "post")
 
     const handleNextStage = () => {
@@ -36,6 +43,8 @@ export default function UserDetails ({
             })
     }
 
+    console.log(data)
+
     return (
         <div>
             <div className="bg-white rounded-lg flex gap-5 p-6 max-[1200px]:block">
@@ -43,8 +52,8 @@ export default function UserDetails ({
                     <img {...imageProp("/images/profile-default.png")} alt="" className="w-full" />
                 </div>
                 <div className="w-full">
-                    <div className="flex gap-2">
-                        <p className="text-[24px] font-semibold">John Doe</p>
+                    <div className="flex gap-2 flex-wrap">
+                        <p className="text-[24px] font-semibold">{data?.name || ""}</p>
                         <div className="bg-[#01BA4C1A] w-fit rounded-full py-0.5 px-2.5">
                             <span className="text-[#01BA4C] font-medium text-sm">Active</span>
                         </div>
@@ -54,35 +63,35 @@ export default function UserDetails ({
                             [
                                 {
                                     title: "Email",
-                                    value: "johndoe007@gmail.com",
+                                    value: data?.email || "---",
                                 },
                                 {
                                     title: "Phone Number",
-                                    value: "08101234567",
+                                    value: data?.phone || "---",
                                 },
                                 {
                                     title: "Location",
-                                    value: "Lagos, Nigeria",
+                                    value: "---",
                                 },
                                 {
                                     title: "Fan Since",
-                                    value: "Dec 10, 2020",
+                                    value: "---",
                                 },
                                 {
                                     title: "Favorite Artists",
-                                    value: "OG Mazii",
+                                    value: "---",
                                 },
                                 {
                                     title: "Votes Cast",
-                                    value: "1,021",
+                                    value: "---",
                                 },
                                 {
                                     title: "Tickets Bought",
-                                    value: "1,021",
+                                    value: "---",
                                 },
                                 {
                                     title: "Video Link",
-                                    value: "linktr.ee/johndoe",
+                                    value: "---",
                                     hide: !isContestant
                                 },
                             ].map((item, i)=>(
