@@ -5,7 +5,7 @@ import Tabs from "../../components/shared/Tabs";
 import Table from "../../components/Table";
 import { dataRows } from "../../utils/constant";
 import DashboardLayout from "./DashboardLayout";
-import Profile from "../../pages/dashboard/profile";
+
 // import { useState } from "react";
 
 export default function Settings () {
@@ -35,7 +35,7 @@ export default function Settings () {
 
 
             <div className=" ">
-                <Profile />
+             
                 {/* table use case for other pages */}
                 {/* {activeTab === 'profile' &&<div><Profile /></div>}    
                 {activeTab === 'management' && <div>Management Content</div>}   
