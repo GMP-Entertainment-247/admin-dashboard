@@ -1,74 +1,79 @@
-import React from "react";
-import avater from "../../../src/images/avatar.png";
+import avater from "../../../../src/images/avatar.png";
 import Button from "../../../components/shared/Button";
 
 const profile = () => {
-return (
+  return (
     <div className="bg-[#FFFFFF]">
-    <div>
+      <div>
         <div className="flex bg-[#FFFFFF] align-middle items-center justify-between">
-            <div className=" px-[20px] ">
-                <div className="flex gap-[20px] " id="">
-                    <div className="grid">
-                        <label htmlFor="firstName">First Name</label>
-                        <input
-                        type="text"
-                        name="firstName"
-                        placeholder="First Name"
-                        className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
-                        />
-                    </div>
-                    <div className="grid">
-                        <label htmlFor="lastName">Last Name</label>
-                        <input
-                        type="text"
-                        name="lastName"
-                        placeholder="Last Name"
-                        className="w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
-                        />
-                    </div>
-                </div>
-                <div className="flex gap-[20px] mt-[20px] " id="">
-                    <div className="grid">
-                        <label htmlFor="email">Email</label>
-                        <input
-                        type="email"
-                        name="email"
-                        placeholder="Input your Email"
-                        className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
-                        />
-                    </div>
-                    <div className="grid">
-                        <label htmlFor="location">Location</label>
-                        <input
-                        type="text"
-                        name="location"
-                        placeholder="Input your location "
-                        className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
-                        />
-                    </div>
-                </div>
-                <div className="flex gap-[20px] mt-[20px]  " id="">
-                    <div className="grid">
-                        <label htmlFor="firstName">Contact</label>
-                        <input
-                        type="tel"
-                        name="phone"
-                        placeholder="input phone number"
-                        className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
-                        />
-                    </div>
-                    <div className="grid">
-                        <label htmlFor="roles">Roles</label>
-                        <input
-                        type="text"
-                        name="roles"
-                        placeholder="Input your role"
-                        className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
-                        />
-                    </div>
-                </div>
+          <div className=" px-[20px] ">
+            <div className="flex gap-[20px] " id="">
+              <div className="grid">
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder="First Name"
+             
+                  className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
+                />
+              </div>
+              <div className="grid">
+                <label htmlFor="lastName">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder="Last Name"
+               
+                  className="w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
+                />
+              </div>
             </div>
+            <div className="flex gap-[20px] mt-[20px] " id="">
+              <div className="grid">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Input your Email"
+                
+                  className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
+                />
+              </div>
+              <div className="grid">
+                <label htmlFor="location">Location</label>
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="Input your location "
+                  
+                  className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
+                />
+              </div>
+            </div>
+            <div className="flex gap-[20px] mt-[20px]  " id="">
+              <div className="grid">
+                <label htmlFor="firstName">Contact</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="input phone number"
+                 
+                  className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
+                />
+              </div>
+              <div className="grid">
+                <label htmlFor="roles">Roles</label>
+                <input
+                  type="text"
+                  name="roles"
+                  placeholder="Input your role"
+            
+                  className=" w-[360px] h-[50px] border border-[#999999] rounded-[8px] mt-[12px] pl-[8px] "
+                />
+              </div>
+            </div>
+          </div>
 
             <div className="mr-[124px] flex flex-col justify-center items-center">
                 <img

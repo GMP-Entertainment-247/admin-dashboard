@@ -6,17 +6,18 @@ export default function SettingsLayout() {
   return (
     <DashboardLayout>
         <div className="bg-white p-8 rounded-t-[16px] ">
-            <Tabs
+          <Tabs
             tabs={[
-                { label: "Profile", key: "profile" },
-                { label: "Management", key: `management` }, 
-                { label: "Team", key: "team" },
-                { label: "Others", key: "others" },
+                { label: "Profile", key: "/settings/profile" },
+                { label: "Management", key: `/settings/management` }, 
+                { label: "Team", key: "/settings/team" },
+                { label: "Others", key: "/settings/others" },
             ]}
-        />
+            useAsLink
+          />
         </div>
-        <div className="">
-        <Outlet />
+        <div className="pb-8 bg-white rounded-b-[16px]">
+          <Outlet />
         </div>
     </DashboardLayout>
   );
