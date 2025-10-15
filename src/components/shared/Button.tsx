@@ -1,12 +1,13 @@
 import clsx from "clsx";
 import loader from "../../images/gif/white-loader.gif";
 import { Link } from "react-router-dom";
+import { ReactNode } from "react";
 interface IButtonProps {
   variant?: "primary" | "secondary";
   type?: "button" | "submit";
   extraClassName?: string;
   isLoading?: boolean;
-  text: string;
+  text: ReactNode;
   onClick?: () => void;
   href?: string;
   disabled?: boolean;

@@ -10,12 +10,14 @@ interface ITextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   context?: boolean;
   extraClassName?: string;
   placeholder?: string;
+  labelColor?: string;
 }
 export function TextField({
   context = true,
   label,
   required,
   extraClassName,
+  labelColor,
   ...props
 }: ITextFieldProps) {
   const focused = useSingleState(false);
@@ -26,7 +28,12 @@ export function TextField({
       <ErrorWrapper show={context} name={props.name}>
         {({ hasError }: { hasError: boolean }) => (
           <div className="flex flex-col relative w-full">
-            <label className="text-white font-medium text-base mb-1.5">
+            <label 
+              className={clsx(
+                "font-medium text-base mb-1.5",
+                !!labelColor ? labelColor:"text-white"
+              )}
+            >
               {label}
             </label>
             <div className="relative">

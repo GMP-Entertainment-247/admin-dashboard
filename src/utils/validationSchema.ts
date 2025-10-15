@@ -1,4 +1,4 @@
-import { object, ref, string } from "yup";
+import { array, object, ref, string } from "yup";
 
 export const loginSchema = object({
       email: string().required().email().label("Email address"),
@@ -24,4 +24,12 @@ export const resetPasswordSchema = object({
 
 export const verifyOTPSchema = object({
       otp: string().required().min(6, "Must be 6 characters").max(6, "Must be 6 characters").label("OTP"),
+})
+
+export const inviteAdminSchema = object({
+      firstName: string().required().label("First Name"),
+      lastName: string().required().label("Last Name"),
+      email: string().required().email().label("Email address"),
+      phone: string().required().label("Phone Number"),
+      roles: array().of(string()).min(1, "Please select at least one role")
 })
