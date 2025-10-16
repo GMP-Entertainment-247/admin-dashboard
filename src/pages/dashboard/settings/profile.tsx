@@ -126,7 +126,7 @@ const profile = () => {
                 <Button
                 text="Update Password"
                 type="submit"
-                extraClassName="w-[169px] mt-14 "
+                extraClassName="w-[169px] mt-14 px-5 rounded-2 bg-[#998100] "
                 />
             </div>
         </div>
