@@ -10,6 +10,7 @@ module.exports = {
           normal: "#212121",
         },
         black: {
+          default: "#000000",
           1: "#1A1A1A",
         },
         gold: {

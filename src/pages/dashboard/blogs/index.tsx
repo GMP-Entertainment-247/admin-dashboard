@@ -4,6 +4,7 @@ import AutoResizingGrid from "../../../components/shared/AutoResizingGrid";
 import BlogCard from "../../../components/BlogCard";
 import image from "../../../images/rap-battle.jpg";
 import { Link } from "react-router-dom";
+import Dropdown from "../../../components/shared/Dropdown";
 
 export default function BlogsHome() {
   return (
@@ -17,7 +18,7 @@ export default function BlogsHome() {
           extraClassName="rounded-[8px] font-bold !w-fit px-5 !min-h-[unset]"
         />
       </div>
-      <div className="bg-white px-5 py-7 rounded-t-xl">
+      <div className="bg-white px-5 py-7 rounded-xl">
         <Tabs
           tabs={[
             { label: "All Blogs", key: "all" },
@@ -25,7 +26,21 @@ export default function BlogsHome() {
             { label: "Artists", key: "artists" },
             { label: "Investors", key: "investors" },
           ]}
-          // useAsLink
+          className="border-b-0"
+          slot={
+            <div className="ml-auto flex gap-4">
+              <Dropdown
+                triggerText="Date"
+                options={[
+                  { label: "Today", value: "today" },
+                  { label: "This week", value: "this-week" },
+                  { label: "This month", value: "this-month" },
+                  { label: "This year", value: "this-year" },
+                ]}
+              />
+              <Dropdown triggerText="All Activities" options={[]} />
+            </div>
+          }
         />
       </div>
       <AutoResizingGrid minWidth={344}>
