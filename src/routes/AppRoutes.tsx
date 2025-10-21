@@ -28,6 +28,7 @@ import BlogsLayout from "../pages/dashboard/blogs/layout";
 import CreateBlog from "../pages/dashboard/blogs/create-blog";
 import EditBlog from "../pages/dashboard/blogs/edit-blog";
 import ContestantDetails from "../pages/dashboard/rap-battle/user";
+import PreviewBlog from "../pages/dashboard/blogs/preview-blog";
 
 interface IRoutes {
   path: string;
@@ -168,6 +169,10 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: "edit-blog/:blogId",
         childElement: <EditBlog />,
+      },
+      {
+        childPath: ":blogId",
+        childElement: <PreviewBlog />,
       },
     ],
   },
