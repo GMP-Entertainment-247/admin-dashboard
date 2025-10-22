@@ -10,6 +10,7 @@ interface ModalProp {
     extraClassname?: string;
     submitClick: Function,
     submitLoading: boolean,
+    submitText?: string,
 }
 
 export const Modal = ({
@@ -19,6 +20,7 @@ export const Modal = ({
     extraClassname,
     submitClick,
     submitLoading,
+    submitText,
 }: ModalProp) => {
     return (
         <AnimatePresence>
@@ -52,7 +54,7 @@ export const Modal = ({
                                     extraClassName="!bg-[#E6E6E6] !text-[#1A1A1A] rounded-[8px] font-semibold"
                                 />
                                 <Button 
-                                    text="Confirm"
+                                    text={submitText || "Confirm"}
                                     type="button"
                                     isLoading={submitLoading}
                                     onClick={()=>submitClick()}
