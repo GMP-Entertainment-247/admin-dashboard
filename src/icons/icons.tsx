@@ -298,3 +298,4 @@ export const UploadIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     />
   </svg>
 );
+
