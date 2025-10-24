@@ -76,7 +76,7 @@ const Comment: React.FC<CommentProps> = ({
 
           <div className="space-y-4">
             {replies.map((reply, index) => (
-              <div key={reply.id}>
+              <div key={reply.id + index * Math.random() + Math.random()}>
                 <Comment {...reply} />
                 {index !== replies.length - 1 && (
                   <div className="h-[1px] bg-[#E9E9E9] w-full my-4" />

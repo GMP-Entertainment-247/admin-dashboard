@@ -51,43 +51,19 @@ const EditBlog = () => {
     }
   }, [blogId]);
 
-  const handleSubmit = async (data: {
-    category: string;
-    title: string;
-    content: string;
-    newImages: File[];
-    deletedImages: string[];
-  }) => {
+  const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
 
     try {
-      // Create FormData for API call
-      const formData = new FormData();
-      formData.append("category", data.category);
-      formData.append("title", data.title);
-      formData.append("content", data.content);
+      console.log("Updating blog with FormData:");
 
-      // Add new images
-      data.newImages.forEach((file, index) => {
-        formData.append(`images`, file);
-      });
-
-      // Add deleted image URLs
-      data.deletedImages.forEach((imageUrl, index) => {
-        formData.append(`deletedImages[${index}]`, imageUrl);
-      });
-
-      console.log("Updating blog with data:", {
-        blogId,
-        category: data.category,
-        title: data.title,
-        content: data.content,
-        newImages: data.newImages,
-        deletedImages: data.deletedImages,
+      // Log form data for debugging
+      Array.from(formData.entries()).forEach(([key, value]) => {
+        console.log(`${key}:`, value);
       });
 
       // TODO: Make API call here
-      // const response = await updateBlog(id, formData);
+      // const response = await updateBlog(blogId, formData);
       // console.log('Blog updated:', response);
     } catch (error) {
       console.error("Error updating blog:", error);

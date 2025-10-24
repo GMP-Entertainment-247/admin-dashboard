@@ -66,7 +66,6 @@ export interface TextAreaProps {
   required?: boolean;
   placeholder?: string;
   onChange?: (value: string) => void;
-  inputClassName?: string;
   disabled?: boolean;
   minHeight?: number;
 }

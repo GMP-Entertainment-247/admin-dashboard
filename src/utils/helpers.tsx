@@ -35,14 +35,13 @@ export const flatten = (
   return obj;
 };
 
-
 export const formProps = <T,>(
   name: string,
   form: FormikContextType<T>,
   field: "input" | "select" | "date" | "phone" | "upload" = "input"
 ) => {
   const props = form.getFieldProps(name);
-  
+
   return {
     ...props,
     context: true,
@@ -55,8 +54,8 @@ export const formProps = <T,>(
 };
 
 export const startCountdown = (
-  timeInSeconds: number, 
-  onTick: (val: string) => void, 
+  timeInSeconds: number,
+  onTick: (val: string) => void,
   onComplete?: () => void
 ) => {
   let remainingSeconds = timeInSeconds;
@@ -64,7 +63,10 @@ export const startCountdown = (
   function formatTime(seconds: number) {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
+      2,
+      "0"
+    )}`;
   }
 
   onTick(formatTime(remainingSeconds));
@@ -81,17 +83,29 @@ export const startCountdown = (
       if (onComplete) onComplete();
     }
   }, 1000);
-}
+};
 
 export const formatNumber = (num: number) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+};
 
 export const imageProp = (
   url: string | undefined,
   defaultImg = "/images/no-image-found.jpeg"
 ) => {
   return {
-    src: url ? url : defaultImg
+    src: url ? url : defaultImg,
   };
+};
+
+export const formatTimeAgo = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) return `${diffInSeconds} secs ago`;
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} mins ago`;
+  if (diffInSeconds < 86400)
+    return `${Math.floor(diffInSeconds / 3600)} hrs ago`;
+  return `${Math.floor(diffInSeconds / 86400)} days ago`;
 };

@@ -89,7 +89,7 @@ const PreviewBlog = () => {
             <div className="my-5 h-[1px] bg-[#E9E9E9]" />
             <div>
               {comments.map((comment, idx) => (
-                <div key={comment.id}>
+                <div key={comment.id + idx * Math.random() + Math.random()}>
                   <Comment {...comment} />
                   {idx !== comments.length - 1 && (
                     <>
