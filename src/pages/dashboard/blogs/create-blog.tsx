@@ -1,43 +1,44 @@
 import BlogForm from "../../../components/BlogForm";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { createBlog, BlogCreateResponse } from "./data";
+import { flattenErrorMessage } from "../../../utils/errorHelpers";
 
 export default function CreateBlog() {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = async (data: {
-    category: string;
-    title: string;
-    content: string;
-    newImages: File[];
-    deletedImages: string[];
-  }) => {
+  const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
+    console.log(formData);
 
     try {
-      // Create FormData for API call
-      const formData = new FormData();
-      formData.append("category", data.category);
-      formData.append("title", data.title);
-      formData.append("content", data.content);
+      const response: BlogCreateResponse = await createBlog(formData);
 
-      // Add new images
-      data.newImages.forEach((file, index) => {
-        formData.append(`images`, file);
-      });
-
-      console.log("Creating blog with data:", {
-        category: data.category,
-        title: data.title,
-        content: data.content,
-        newImages: data.newImages,
-        deletedImages: data.deletedImages,
-      });
-
-      // TODO: Make API call here
-      // const response = await createBlog(formData);
-      // console.log('Blog created:', response);
-    } catch (error) {
+      if (response.status) {
+        // Success
+        toast.success(
+          (response.message as string) || "Blog created successfully!"
+        );
+        navigate("/blogs");
+      } else {
+        // Error - handle message structure
+        const errorMessage = flattenErrorMessage(response.message);
+        toast.error(errorMessage);
+      }
+    } catch (error: any) {
       console.error("Error creating blog:", error);
+
+      // Handle network or other errors
+      const errorMessage = error.response?.data?.message
+        ? flattenErrorMessage(
+            error.response.data.message,
+            "An error occurred while creating the blog"
+          )
+        : "An error occurred while creating the blog";
+
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
