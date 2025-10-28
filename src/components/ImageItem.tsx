@@ -6,6 +6,7 @@ interface ImageItemProps {
   alt: string;
   onRemove: () => void;
   className?: string;
+  hideRemove?: boolean;
 }
 
 const ImageItem: React.FC<ImageItemProps> = ({
@@ -13,6 +14,7 @@ const ImageItem: React.FC<ImageItemProps> = ({
   alt,
   onRemove,
   className,
+  hideRemove,
 }) => {
   return (
     <div
@@ -27,14 +29,16 @@ const ImageItem: React.FC<ImageItemProps> = ({
         className="absolute inset-0 w-full h-full object-cover"
       />
       {/* Remove button */}
-      <button
-        type="button"
-        onClick={onRemove}
-        className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
-        title="Remove image"
-      >
-        <X className="w-3 h-3" />
-      </button>
+      {!hideRemove && (
+        <button
+          type="button"
+          onClick={onRemove}
+          className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+          title="Remove image"
+        >
+          <X className="w-3 h-3" />
+        </button>
+      )}
     </div>
   );
 };

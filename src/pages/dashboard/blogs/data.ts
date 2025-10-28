@@ -1,15 +1,24 @@
 import type { CommentProps } from "../../../components/Comment";
 import commenter from "../../../images/commenter.png";
 import { createApiClient } from "../../../utils/api";
+import type {
+  BlogCreateResponse,
+  BlogDetailsResponse,
+  ApiResponse,
+} from "../../../interface/blog.interface";
 
-// API Response Types
-export interface ApiResponse<T = any> {
-  status: boolean;
-  message: string | Record<string, string | string[]>;
-  data: T;
-}
+// Centralized blog categories and tabs
+export const BLOG_CATEGORIES: { value: string; label: string }[] = [
+  { value: "rap-battle", label: "Rap Battle" },
+  { value: "artists", label: "Artists" },
+  { value: "celebrities", label: "Celebrities" },
+  { value: "investors", label: "Investors" },
+];
 
-export interface BlogCreateResponse extends ApiResponse<null> {}
+export const BLOG_TABS: { label: string; key: string }[] = [
+  { label: "All Blogs", key: "all" },
+  ...BLOG_CATEGORIES.map((c) => ({ label: c.label, key: c.value })),
+];
 
 const SingleComment: CommentProps = {
   id: "4",
@@ -62,6 +71,41 @@ export const createBlog = async (
     headers: {
       "Content-Type": "multipart/form-data",
     },
+  });
+  return response.data;
+};
+
+// Update blog
+export const updateBlog = async (
+  formData: FormData
+): Promise<BlogCreateResponse> => {
+  const response = await createApiClient().post(
+    "/admin/blog/update",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
+};
+
+export const getBlogDetails = async (
+  blogId: string | number
+): Promise<BlogDetailsResponse> => {
+  const response = await createApiClient().get("/admin/blog/details", {
+    params: { blog_id: String(blogId) },
+  });
+  return response.data;
+};
+
+// Delete existing blog image by image id
+export const deleteBlogImage = async (
+  imageId: number
+): Promise<ApiResponse<null>> => {
+  const response = await createApiClient().post("/admin/blog/delete-image", {
+    id: imageId,
   });
   return response.data;
 };

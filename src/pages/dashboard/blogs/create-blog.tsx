@@ -2,7 +2,8 @@ import BlogForm from "../../../components/BlogForm";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createBlog, BlogCreateResponse } from "./data";
+import { createBlog } from "./data";
+import { BlogCreateResponse } from "../../../interface/blog.interface";
 import { flattenErrorMessage } from "../../../utils/errorHelpers";
 
 export default function CreateBlog() {
@@ -11,7 +12,7 @@ export default function CreateBlog() {
 
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
-    console.log(formData);
+    // console.log(formData);
 
     try {
       const response: BlogCreateResponse = await createBlog(formData);

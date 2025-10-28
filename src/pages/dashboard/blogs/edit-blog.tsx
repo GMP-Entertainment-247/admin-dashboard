@@ -1,16 +1,22 @@
 import BlogForm from "../../../components/BlogForm";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { getBlogDetails, updateBlog, deleteBlogImage } from "./data";
+import { toast } from "react-toastify";
+import { flattenErrorMessage } from "../../../utils/errorHelpers";
+import LoadingSpinner from "../../../components/shared/LoadingSpinner";
+import StateContainer from "../../../components/shared/StateContainer";
 
 interface BlogData {
   category: string;
   title: string;
   content: string;
-  images: string[];
+  images: { id: number; file: string }[];
 }
 
 const EditBlog = () => {
   const { blogId } = useParams<{ blogId: string }>();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [blogData, setBlogData] = useState<BlogData | undefined>(undefined);
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -20,27 +26,34 @@ const EditBlog = () => {
     const fetchBlogData = async () => {
       try {
         setIsLoadingData(true);
-
-        // TODO: Replace with actual API call
-        // const response = await getBlogById(id);
-        // setBlogData(response.data);
-
-        // Mock data for now
-        const mockData: BlogData = {
-          category: "tech",
-          title: "Sample Blog Post",
-          content:
-            "<p>This is a sample blog post content with <strong>HTML formatting</strong>.</p>",
-          images: [
-            "https://via.placeholder.com/300x200/FF6B6B/FFFFFF?text=Image+1",
-            "https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Image+2",
-            "https://via.placeholder.com/300x200/45B7D1/FFFFFF?text=Image+3",
-          ],
-        };
-
-        setBlogData(mockData);
+        if (!blogId) return;
+        const response = await getBlogDetails(blogId);
+        if (response.status && response.data) {
+          const mapped: BlogData = {
+            category: response.data.category,
+            title: response.data.title,
+            content: response.data.content,
+            images: (response.data.pictures || []).map((p) => ({
+              id: p.id,
+              file: p.file,
+            })),
+          };
+          setBlogData(mapped);
+        } else {
+          const errorMessage = flattenErrorMessage(
+            response.message,
+            "Failed to load blog"
+          );
+          toast.error(errorMessage);
+        }
       } catch (error) {
-        console.error("Error fetching blog data:", error);
+        const errorMessage = (error as any)?.response?.data?.message
+          ? flattenErrorMessage(
+              (error as any).response.data.message,
+              "Failed to load blog"
+            )
+          : "Failed to load blog";
+        toast.error(errorMessage);
       } finally {
         setIsLoadingData(false);
       }
@@ -55,18 +68,43 @@ const EditBlog = () => {
     setIsLoading(true);
 
     try {
-      console.log("Updating blog with FormData:");
+      // Proceed with update first (so backend sees at least one image if new ones were added)
+      const response = await updateBlog(formData);
+      if (response.status) {
+        toast.success(
+          (response.message as string) || "Blog updated successfully"
+        );
 
-      // Log form data for debugging
-      Array.from(formData.entries()).forEach(([key, value]) => {
-        console.log(`${key}:`, value);
-      });
+        // After successful update, delete any images that were removed in the UI
+        const ids: string[] = [];
+        for (const [key, value] of Array.from(formData.entries())) {
+          if (key.startsWith("deleted_image_ids")) ids.push(String(value));
+        }
 
-      // TODO: Make API call here
-      // const response = await updateBlog(blogId, formData);
-      // console.log('Blog updated:', response);
-    } catch (error) {
-      console.error("Error updating blog:", error);
+        if (ids.length > 0) {
+          for (const id of ids) {
+            try {
+              await deleteBlogImage(Number(id));
+            } catch (e) {
+              // Surface but do not block navigation
+              toast.error("Failed to delete an image after update");
+            }
+          }
+        }
+
+        navigate("/blogs");
+      } else {
+        const errorMessage = flattenErrorMessage(response.message);
+        toast.error(errorMessage);
+      }
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message
+        ? flattenErrorMessage(
+            error.response.data.message,
+            "An error occurred while updating the blog"
+          )
+        : "An error occurred while updating the blog";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -98,22 +136,14 @@ const EditBlog = () => {
   };
 
   if (isLoadingData) {
-    return (
-      <div className="bg-[#fff] p-5 rounded-2xl">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Loading blog data...</div>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading blog..." />;
   }
 
   if (!blogData) {
     return (
-      <div className="bg-[#fff] p-5 rounded-2xl">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-red-500">Blog not found</div>
-        </div>
-      </div>
+      <StateContainer>
+        <p className="text-gray-600">Blog not found</p>
+      </StateContainer>
     );
   }
 
@@ -124,6 +154,7 @@ const EditBlog = () => {
       onSubmit={handleSubmit}
       onDelete={handleDelete}
       isLoading={isLoading}
+      blogId={blogId}
     />
   );
 };

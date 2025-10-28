@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Input from "./Form/Input";
 import Select from "./Form/Select";
 import TextArea from "./Form/TextArea";
@@ -8,12 +8,13 @@ import { PlusIcon } from "lucide-react";
 import Button from "./shared/Button";
 import { useFileUpload } from "../utils/hooks/useFileUpload";
 import InnerLayout from "../pages/dashboard/blogs/inner-layout";
+import { BLOG_CATEGORIES } from "../pages/dashboard/blogs/data";
 
-interface BlogData {
+export interface BlogData {
   category: string;
   title: string;
   content: string;
-  images: string[]; // URLs of existing images
+  images: { id: number; file: string }[];
 }
 
 interface BlogFormProps {
@@ -22,6 +23,7 @@ interface BlogFormProps {
   onSubmit: (formData: FormData) => void;
   onDelete?: () => void;
   isLoading?: boolean;
+  blogId?: string | number;
 }
 
 const BlogForm: React.FC<BlogFormProps> = ({
@@ -30,6 +32,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
   onSubmit,
   onDelete,
   isLoading = false,
+  blogId,
 }) => {
   // File upload hook for new images
   const fileUpload = useFileUpload({
@@ -43,16 +46,17 @@ const BlogForm: React.FC<BlogFormProps> = ({
   const formRef = useRef<HTMLFormElement>(null);
   const textAreaRef = useRef<any>(null); // Ref for TextArea editor
 
-  // Track deleted images
-  const [deletedImages, setDeletedImages] = useState<string[]>([]);
+  // Track existing images locally for edit mode (with ids when provided)
+  const [existingImages, setExistingImages] = useState<
+    { id?: number; file: string }[]
+  >(initialData?.images || []);
+  const [removedImageIds, setRemovedImageIds] = useState<number[]>([]);
 
-  // Example options for the category select
-  const categoryOptions = [
-    { value: "rap-battle", label: "Rap Battle" },
-    { value: "artists", label: "Artists" },
-    { value: "celebrities", label: "Celebrities" },
-    { value: "investors", label: "Investors" },
-  ];
+  useEffect(() => {
+    setExistingImages(initialData?.images || []);
+  }, [initialData?.images]);
+
+  const resolvedCategoryOptions = BLOG_CATEGORIES;
 
   const handleBrowseFiles = () => {
     fileInputRef.current?.click();
@@ -62,8 +66,14 @@ const BlogForm: React.FC<BlogFormProps> = ({
     fileUpload.removeFile(index);
   };
 
-  const handleExistingImageRemove = (imageUrl: string) => {
-    setDeletedImages((prev) => [...prev, imageUrl]);
+  const handleExistingImageRemove = async (imageUrl: string) => {
+    const found = existingImages.find((img) => img.file === imageUrl);
+    if (found?.id != null) {
+      setRemovedImageIds((prev) =>
+        Array.from(new Set([...prev, found.id as number]))
+      );
+    }
+    setExistingImages((prev) => prev.filter((img) => img.file !== imageUrl));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -79,15 +89,20 @@ const BlogForm: React.FC<BlogFormProps> = ({
       formData.append(`picture[${index}]`, file);
     });
 
-    // Add deleted images
-    deletedImages.forEach((imageUrl, index) => {
-      formData.append(`deletedImages[${index}]`, imageUrl);
+    // Include deleted image ids for parent to handle on submit
+    removedImageIds.forEach((id, index) => {
+      formData.append(`deleted_image_ids[${index}]`, String(id));
     });
 
     // Get HTML content from TextArea editor
     if (textAreaRef.current?.editor) {
       const htmlContent = textAreaRef.current.editor.getHTML();
       formData.set("content", htmlContent);
+    }
+
+    // Include blog_id on edit
+    if (mode === "edit" && blogId != null) {
+      formData.set("blog_id", String(blogId));
     }
 
     onSubmit(formData);
@@ -108,7 +123,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
               label="Category"
               id="category"
               placeholder="Select Category"
-              options={categoryOptions}
+              options={resolvedCategoryOptions}
               defaultValue={initialData?.category}
             />
             <Input
@@ -160,12 +175,15 @@ const BlogForm: React.FC<BlogFormProps> = ({
             {/* Image Gallery */}
             <div className="flex items-center gap-3 [&>*]:flex-shrink-0 max-w-full overflow-auto">
               {/* Display existing images */}
-              {initialData?.images?.map((imageUrl, index) => (
+              {existingImages.map((img, index) => (
                 <ImageItem
                   key={`existing-${index}`}
-                  src={imageUrl}
+                  src={img.file}
                   alt={`Existing image ${index + 1}`}
-                  onRemove={() => handleExistingImageRemove(imageUrl)}
+                  onRemove={() => handleExistingImageRemove(img.file)}
+                  // hideRemove={
+
+                  // }
                 />
               ))}
 
@@ -176,6 +194,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
                   src={URL.createObjectURL(file)}
                   alt={`Uploaded image ${index + 1}`}
                   onRemove={() => handleImageRemove(index)}
+                  // hideRemove={false}
                 />
               ))}
 

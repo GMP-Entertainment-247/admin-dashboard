@@ -42,3 +42,33 @@ export interface BlogListResponse {
   message: string;
   data: BlogListData;
 }
+
+// Blog details (single fetch) interfaces
+export interface BlogDetailsPicture {
+  id: number;
+  blog_id: string;
+  file: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface BlogDetailsData {
+  id: number;
+  category: string;
+  title: string;
+  content: string;
+  pictures: BlogDetailsPicture[];
+  created_at?: string;
+}
+
+// Generic API response and specific responses
+export interface ApiResponse<T = any> {
+  status: boolean;
+  message: string | Record<string, string | string[]>;
+  data: T;
+}
+
+export interface BlogCreateResponse extends ApiResponse<null> {}
+
+export interface BlogDetailsResponse
+  extends ApiResponse<BlogDetailsData | null> {}

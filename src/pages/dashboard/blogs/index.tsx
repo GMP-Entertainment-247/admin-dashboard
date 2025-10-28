@@ -9,6 +9,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import Dropdown from "../../../components/shared/Dropdown";
 import useFetch from "../../../utils/hooks/useFetch";
 import { BlogListData } from "../../../interface/blog.interface";
+import { BLOG_TABS } from "./data";
 
 export default function BlogsHome() {
   const [searchParams] = useSearchParams();
@@ -99,13 +100,7 @@ export default function BlogsHome() {
 
       <div className="bg-white px-3 md:px-4 lg:px-5 py-4 md:py-5 lg:py-7 rounded-xl">
         <Tabs
-          tabs={[
-            { label: "All Blogs", key: "all" },
-            { label: "Rap Battle", key: `rap-battle` },
-            { label: "Artists", key: "artists" },
-            { label: "Celebrities", key: "celebrities" },
-            { label: "Investors", key: "investors" },
-          ]}
+          tabs={BLOG_TABS}
           className="!border-b-0"
           tabName="tab"
           slot={
@@ -118,16 +113,6 @@ export default function BlogsHome() {
                   { label: "This week", value: "this-week" },
                   { label: "This month", value: "this-month" },
                   { label: "This year", value: "this-year" },
-                ]}
-              />
-              <Dropdown
-                triggerText="All Activities"
-                options={[
-                  { label: "All Blogs", value: "all" },
-                  { label: "Rap Battle", value: `rap-battle` },
-                  { label: "Artists", value: "artists" },
-                  { label: "Celebrities", value: "celebrities" },
-                  { label: "Investors", value: "investors" },
                 ]}
               />
             </div>
