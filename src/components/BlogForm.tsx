@@ -50,6 +50,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
   const categoryOptions = [
     { value: "rap-battle", label: "Rap Battle" },
     { value: "artists", label: "Artists" },
+    { value: "celebrities", label: "Celebrities" },
     { value: "investors", label: "Investors" },
   ];
 

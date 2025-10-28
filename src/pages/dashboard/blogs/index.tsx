@@ -103,6 +103,7 @@ export default function BlogsHome() {
             { label: "All Blogs", key: "all" },
             { label: "Rap Battle", key: `rap-battle` },
             { label: "Artists", key: "artists" },
+            { label: "Celebrities", key: "celebrities" },
             { label: "Investors", key: "investors" },
           ]}
           className="!border-b-0"
@@ -119,7 +120,16 @@ export default function BlogsHome() {
                   { label: "This year", value: "this-year" },
                 ]}
               />
-              <Dropdown triggerText="All Activities" options={[]} />
+              <Dropdown
+                triggerText="All Activities"
+                options={[
+                  { label: "All Blogs", value: "all" },
+                  { label: "Rap Battle", value: `rap-battle` },
+                  { label: "Artists", value: "artists" },
+                  { label: "Celebrities", value: "celebrities" },
+                  { label: "Investors", value: "investors" },
+                ]}
+              />
             </div>
           }
         />
