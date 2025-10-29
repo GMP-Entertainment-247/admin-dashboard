@@ -39,7 +39,7 @@ export function TextField({
             <div className="relative">
               <input
                 className={clsx([
-                  "block w-full rounded-[12px] px-4 h-[52px] outline-none text-sm !bg-transparent border border-[#F4F4F44D] text-white placeholder:text-[#F4F4F44D]",
+                  "block w-full rounded-[12px] px-4 h-[52px] outline-none text-sm bg-transparent border border-[#F4F4F44D] text-white placeholder:text-[#F4F4F44D]",
                   hasError && "!border-red-400 border",
                   extraClassName,
                 ])}
