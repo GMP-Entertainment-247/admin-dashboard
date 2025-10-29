@@ -238,7 +238,7 @@
 // export default Profile;
 
 
-import avater from "../../../images/svg/avater.svg";
+import avater from "../../../images/svg/avatar.svg";
 import { TextField } from "../../../components/Form/TextField";
 import Button from "../../../components/shared/Button";
 import { FormikProvider, useFormik } from "formik";

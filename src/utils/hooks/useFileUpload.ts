@@ -128,6 +128,8 @@ export function useFileUpload({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
       if (files) handleFiles(files);
+      // Clear the input value to allow reselecting the same file
+      event.target.value = "";
     },
     [handleFiles]
   );
