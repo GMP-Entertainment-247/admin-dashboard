@@ -17,7 +17,7 @@ export default function useMutation (
 ) {
     const loading = useSingleState<boolean>(false)
 
-    const mutate = (body?: Record<string, string>, params?: Record<string, string>) => {
+    const mutate = (body?: Record<string, string | number | string[]>, params?: Record<string, string>) => {
         loading.set(true)
         return createApiClient().request({
             url,
