@@ -1,5 +1,5 @@
 import Button from "../../../components/shared/Button";
-import Bin from "..//../../images/svg/bin.png";
+import Bin from "..//../../images/svg/bin.svg";
 
 export default function SettingsManagement() {
   return (
