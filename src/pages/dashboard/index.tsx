@@ -1,11 +1,12 @@
 import DashboardLayout from "./DashboardLayout";
-import BlogCard from "../../components/BlogCard";
-import image from "../../images/rap-battle.jpg";
+// import BlogCard from "../../components/BlogCard";
+// import image from "../../images/rap-battle.jpg";
 
 export default function DashboardHome() {
   return (
     <DashboardLayout>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      Hello World
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: 10 }).map((_, index) => (
           <BlogCard
             key={index}
@@ -15,7 +16,7 @@ export default function DashboardHome() {
             time="20 Secs ago"
           />
         ))}
-      </div>
+      </div> */}
     </DashboardLayout>
   );
 }

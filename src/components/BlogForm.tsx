@@ -8,26 +8,22 @@ import { PlusIcon } from "lucide-react";
 import Button from "./shared/Button";
 import { useFileUpload } from "../utils/hooks/useFileUpload";
 import InnerLayout from "../pages/dashboard/blogs/inner-layout";
+import { BLOG_CATEGORIES } from "../pages/dashboard/blogs/data";
 
-interface BlogData {
+export interface BlogData {
   category: string;
   title: string;
   content: string;
-  images: string[]; // URLs of existing images
+  images: { id: number; file: string }[];
 }
 
 interface BlogFormProps {
   mode: "create" | "edit";
   initialData?: BlogData;
-  onSubmit: (data: {
-    category: string;
-    title: string;
-    content: string;
-    newImages: File[];
-    deletedImages: string[];
-  }) => void;
+  onSubmit: (formData: FormData) => void;
   onDelete?: () => void;
   isLoading?: boolean;
+  blogId?: string | number;
 }
 
 const BlogForm: React.FC<BlogFormProps> = ({
@@ -36,54 +32,31 @@ const BlogForm: React.FC<BlogFormProps> = ({
   onSubmit,
   onDelete,
   isLoading = false,
+  blogId,
 }) => {
   // File upload hook for new images
   const fileUpload = useFileUpload({
     accept: ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"],
-    maxSizeKb: 5 * 1024, // 5MB
+    maxSizeKb: 2 * 1024, // 2MB
     multiple: true,
+    maxFiles: 10, // Maximum 5 images
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const textAreaRef = useRef<any>(null); // Ref for TextArea editor
 
-  // Form state
-  const [formData, setFormData] = useState<BlogData>({
-    category: initialData?.category || "",
-    title: initialData?.title || "",
-    content: initialData?.content || "",
-    images: initialData?.images || [],
-  });
+  // Track existing images locally for edit mode (with ids when provided)
+  const [existingImages, setExistingImages] = useState<
+    { id?: number; file: string }[]
+  >(initialData?.images || []);
+  const [removedImageIds, setRemovedImageIds] = useState<number[]>([]);
 
-  // Track deleted images
-  const [deletedImages, setDeletedImages] = useState<string[]>([]);
-
-  // Example options for the category select
-  const categoryOptions = [
-    { value: "tech", label: "Technology" },
-    { value: "lifestyle", label: "Lifestyle" },
-    { value: "business", label: "Business" },
-    { value: "entertainment", label: "Entertainment" },
-    { value: "sports", label: "Sports" },
-  ];
-
-  // Update form data when initialData changes (for edit mode)
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
-    }
-  }, [initialData]);
+    setExistingImages(initialData?.images || []);
+  }, [initialData?.images]);
 
-  const handleCategoryChange = (value: string | number) => {
-    setFormData((prev) => ({ ...prev, category: value as string }));
-  };
-
-  const handleTitleChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, title: value }));
-  };
-
-  const handleContentChange = (htmlContent: string) => {
-    setFormData((prev) => ({ ...prev, content: htmlContent }));
-  };
+  const resolvedCategoryOptions = BLOG_CATEGORIES;
 
   const handleBrowseFiles = () => {
     fileInputRef.current?.click();
@@ -93,24 +66,46 @@ const BlogForm: React.FC<BlogFormProps> = ({
     fileUpload.removeFile(index);
   };
 
-  const handleExistingImageRemove = (imageUrl: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((img) => img !== imageUrl),
-    }));
-    setDeletedImages((prev) => [...prev, imageUrl]);
+  const handleExistingImageRemove = async (imageUrl: string) => {
+    const found = existingImages.find((img) => img.file === imageUrl);
+    if (found?.id != null) {
+      setRemovedImageIds((prev) =>
+        Array.from(new Set([...prev, found.id as number]))
+      );
+    }
+    setExistingImages((prev) => prev.filter((img) => img.file !== imageUrl));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    onSubmit({
-      category: formData.category,
-      title: formData.title,
-      content: formData.content,
-      newImages: fileUpload.files,
-      deletedImages: deletedImages,
+    if (!formRef.current) return;
+
+    // Create FormData from the form
+    const formData = new FormData(formRef.current);
+
+    // Add new images as an array
+    fileUpload.files.forEach((file, index) => {
+      formData.append(`picture[${index}]`, file);
     });
+
+    // Include deleted image ids for parent to handle on submit
+    removedImageIds.forEach((id, index) => {
+      formData.append(`deleted_image_ids[${index}]`, String(id));
+    });
+
+    // Get HTML content from TextArea editor
+    if (textAreaRef.current?.editor) {
+      const htmlContent = textAreaRef.current.editor.getHTML();
+      formData.set("content", htmlContent);
+    }
+
+    // Include blog_id on edit
+    if (mode === "edit" && blogId != null) {
+      formData.set("blog_id", String(blogId));
+    }
+
+    onSubmit(formData);
   };
 
   const handleDelete = () => {
@@ -121,31 +116,29 @@ const BlogForm: React.FC<BlogFormProps> = ({
 
   return (
     <InnerLayout title={mode === "create" ? "Create Blog" : "Edit Blog"}>
-      <form onSubmit={handleSubmit}>
+      <form ref={formRef} onSubmit={handleSubmit}>
         <div className="w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10 mb-10">
           <div className="space-y-5 lg:w-[56%]">
             <Select
               label="Category"
               id="category"
               placeholder="Select Category"
-              options={categoryOptions}
-              value={formData.category}
-              onChange={handleCategoryChange}
+              options={resolvedCategoryOptions}
+              defaultValue={initialData?.category}
             />
             <Input
               label="Post Title"
-              id="post-title"
+              id="title"
               placeholder="Text"
-              value={formData.title}
-              onChange={handleTitleChange}
+              defaultValue={initialData?.title}
             />
             <TextArea
-              id="post-content"
+              ref={textAreaRef}
+              id="content"
               label="Post Content"
               placeholder="Write here..."
               minHeight={200}
-              value={formData.content}
-              onChange={handleContentChange}
+              value={initialData?.content}
             />
           </div>
 
@@ -182,12 +175,15 @@ const BlogForm: React.FC<BlogFormProps> = ({
             {/* Image Gallery */}
             <div className="flex items-center gap-3 [&>*]:flex-shrink-0 max-w-full overflow-auto">
               {/* Display existing images */}
-              {formData.images.map((imageUrl, index) => (
+              {existingImages.map((img, index) => (
                 <ImageItem
                   key={`existing-${index}`}
-                  src={imageUrl}
+                  src={img.file}
                   alt={`Existing image ${index + 1}`}
-                  onRemove={() => handleExistingImageRemove(imageUrl)}
+                  onRemove={() => handleExistingImageRemove(img.file)}
+                  // hideRemove={
+
+                  // }
                 />
               ))}
 
@@ -198,6 +194,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
                   src={URL.createObjectURL(file)}
                   alt={`Uploaded image ${index + 1}`}
                   onRemove={() => handleImageRemove(index)}
+                  // hideRemove={false}
                 />
               ))}
 
@@ -205,7 +202,8 @@ const BlogForm: React.FC<BlogFormProps> = ({
               <button
                 type="button"
                 className={`w-[147px] h-[100px] rounded-lg flex items-center justify-center border border-dashed border-[#999999] cursor-pointer hover:border-brand-500 transition-colors duration-200 ${
-                  formData.images.length + fileUpload.files.length > 0
+                  (initialData?.images?.length || 0) + fileUpload.files.length >
+                  0
                     ? "lg:flex"
                     : "lg:hidden"
                 }`}
@@ -232,7 +230,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
           <Button
             text={mode === "create" ? "Create Post" : "Update Post"}
             type="submit"
-            extraClassName="!w-fit !min-h-[unset] py-4 px-5 !rounded-[8px] !font-bold"
+            extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
             isLoading={isLoading}
           />
 
@@ -240,7 +238,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
             <Button
               text="Delete Post"
               type="button"
-              extraClassName="!w-fit !min-h-[unset] py-4 px-5 bg-red-light !text-red-normal !rounded-[8px] !font-bold"
+              extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 bg-red-light !text-red-normal !rounded-[8px] !font-bold"
               onClick={handleDelete}
               disabled={isLoading}
             />

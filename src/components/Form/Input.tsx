@@ -73,7 +73,7 @@ const Input: React.FC<InputProps> = ({
           }}
           // Input styles
           className={clsx(
-            "p-4 text-xs md:text-sm font-normal rounded-lg w-full border border-solid border-[#999999] hover:border-[#00000099] transition-colors duration-300 ease-in-out focus-within:outline-brand-500",
+            "p-3 md:p-4 text-xs md:text-sm font-normal rounded-lg w-full border border-solid border-[#999999] hover:border-[#00000099] transition-colors duration-300 ease-in-out focus-within:outline-brand-500",
             {
               "cursor-not-allowed": disabled,
             },
