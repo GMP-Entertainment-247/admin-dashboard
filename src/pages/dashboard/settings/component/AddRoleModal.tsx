@@ -1,6 +1,6 @@
 import { FormikProvider, useFormik } from "formik";
 import { Modal } from "../../../../components/Modal"
-import { inviteAdminSchema } from "../../../../utils/validationSchema";
+// import { inviteAdminSchema } from "../../../../utils/validationSchema";
 import { formProps } from "../../../../utils/helpers";
 import { TextField } from "../../../../components/Form/TextField";
 import Select from "../../../../components/Form/Select";

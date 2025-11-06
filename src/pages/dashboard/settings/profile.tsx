@@ -23,6 +23,7 @@ const Profile = () => {
 
   useEffect(() => {
     setProfile(data ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {

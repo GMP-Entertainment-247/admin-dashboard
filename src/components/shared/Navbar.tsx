@@ -13,10 +13,9 @@ const Navbar = () => {
   const {data} = useFetch<IProfile>("/admin/info")
   const { setProfile, profile } = useProfile();
 
-  console.log("Navbar profile:", profile);
-
   useEffect(() => {
     setProfile(data ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const handleChange = useDebouncedCallback(
