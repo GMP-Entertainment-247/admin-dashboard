@@ -23,15 +23,18 @@ export default function SettingsLayout() {
         <div 
           className={clsx(
             "py-8 bg-white rounded-b-[16px] h-fit",
-            location.pathname === "/settings/others" && "mb-[100px]"
+            (
+              location.pathname === "/settings/others" ||
+              location.pathname === "/settings/profile"
+            ) && "mb-[100px]"
           )}
         >
           <Outlet />
         </div>
-        <div className=" flex justify-end items-center align-middle gap-4 mt-8 mb-5 px-5 h-[83px] bg-white rounded-[16px] ">
+        {/* <div className=" flex justify-end items-center align-middle gap-4 mt-8 mb-5 px-5 h-[83px] bg-white rounded-[16px] ">
                 <Button text=" Discard Changes" extraClassName="w-[143px] h-[51px] text-[#FF0000] bg-[#FFE5E5] rounded-2 "/>
                 <Button text="Save Changes" extraClassName="w-[143px] h-[51px] bg-[#998100] "/>
-            </div>
+            </div> */}
     </DashboardLayout>
   );
 }

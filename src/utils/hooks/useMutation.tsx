@@ -17,14 +17,25 @@ export default function useMutation (
 ) {
     const loading = useSingleState<boolean>(false)
 
-    const mutate = (body?: Record<string, string>, params?: Record<string, string>) => {
+    const mutate = (body?: Record<string, any> | FormData, params?: Record<string, string>) => {
         loading.set(true)
-        return createApiClient().request({
+
+        const isFormData = body instanceof FormData;
+        const requestConfig: any = {
             url,
             method,
             data: body,
-            params
-        })
+            params,
+        };
+
+        if (isFormData) {
+            requestConfig.headers = {
+                // Let axios set the boundary if needed, but set multipart type
+                "Content-Type": "multipart/form-data",
+            };
+        }
+
+        return createApiClient().request(requestConfig)
         .then(response => {
             showSuccessToast && toast.success(response.data.message)
             return Promise.resolve(response.data as AxiosResponse<any>);

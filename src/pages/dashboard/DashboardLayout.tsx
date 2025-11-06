@@ -72,7 +72,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         )}
       >
         <div
-          className={clsx("min-h-[calc(100vh-40px)] bg-[#F1F1F1] p-5")}
+          className={clsx("min-h-[100vh] bg-[#F1F1F1] p-5")}
           // min height is 100vh - 40px (padding)
         >
           <Navbar />
