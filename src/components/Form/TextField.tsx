@@ -11,6 +11,7 @@ interface ITextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   extraClassName?: string;
   placeholder?: string;
   labelColor?: string;
+  passwordIconClassName?: string;
 }
 export function TextField({
   context = true,
@@ -18,6 +19,7 @@ export function TextField({
   required,
   extraClassName,
   labelColor,
+  passwordIconClassName,
   ...props
 }: ITextFieldProps) {
   const focused = useSingleState(false);
@@ -66,9 +68,9 @@ export function TextField({
                   className="absolute top-[17px] right-4"
                 >
                   {showText.get ? (
-                    <EyeSlashIcon className="h-5 w-5 text-white" />
+                    <EyeSlashIcon className={clsx("h-5 w-5 text-white", passwordIconClassName)} />
                   ) : (
-                    <EyeIcon className="h-5 w-5 text-white" />
+                    <EyeIcon className={clsx("h-5 w-5 text-white", passwordIconClassName)} />
                   )}
                 </button>
               )}

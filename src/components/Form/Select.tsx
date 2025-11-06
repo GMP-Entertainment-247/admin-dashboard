@@ -109,12 +109,13 @@ const Select: React.FC<SelectProps> = ({
         <div
           role="button"
           className={clsx(
-            "p-4 text-xs md:text-sm font-normal rounded-lg w-full custom-primary-outline border border-solid border-[#999999] hover:border-[#00000099] transition-colors duration-300 ease-in-out flex items-center justify-between",
+            "p-3 md:p-4 text-xs md:text-sm font-normal rounded-lg w-full custom-primary-outline border border-solid border-[#999999] hover:border-[#00000099] transition-colors duration-300 ease-in-out flex items-center justify-between",
             {
               "cursor-not-allowed": disabled,
               "cursor-pointer": !disabled,
               "outline-auto outline-brand-500": isOpen,
-            }
+            },
+            inputClassName,
           )}
           onClick={() => !disabled && setIsOpen(!isOpen)}
         >

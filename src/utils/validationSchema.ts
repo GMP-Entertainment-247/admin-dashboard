@@ -33,3 +33,17 @@ export const inviteAdminSchema = object({
       phone: string().required().label("Phone Number"),
       roles: array().of(string()).min(1, "Please select at least one role")
 })
+
+export const changePasswordSchema = object({
+      current_password: string().required().label("Current Password"),
+      new_password: string()
+            .required()
+            .label("New Password")
+            .matches(/^(?=.*[a-z])(?=.*[0-9]).{8,}$/, {
+                  message: "Password must contain at least 8 characters, a letter and a number",
+            }),
+      password_confirmation: string()
+            .required()
+            .oneOf([ref("new_password")], "Password doesn't match")
+            .label("Confirm Password"),
+})

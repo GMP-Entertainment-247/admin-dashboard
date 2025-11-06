@@ -28,11 +28,14 @@ import BlogsLayout from "../pages/dashboard/blogs/layout";
 import CreateBlog from "../pages/dashboard/blogs/create-blog";
 import EditBlog from "../pages/dashboard/blogs/edit-blog";
 import ContestantDetails from "../pages/dashboard/rap-battle/user";
+import PreviewBlog from "../pages/dashboard/blogs/preview-blog";
 import Profile from "../pages/dashboard/settings/profile"
 import SettingsLayout from "../pages/dashboard/settings/layout";
 import SettingsManagement from "../pages/dashboard/settings/management";
 import SettingsTeam from "../pages/dashboard/settings/team";
 import SettingsOthers from "../pages/dashboard/settings/others";
+import BookingsLayout from "../pages/dashboard/bookings/layout";
+import BookingsHome from "../pages/dashboard/bookings";
 interface IRoutes {
   path: string;
   element: ReactElement<any, any>;
@@ -172,6 +175,21 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: "edit-blog/:blogId",
         childElement: <EditBlog />,
+      },
+      {
+        childPath: ":blogId",
+        childElement: <PreviewBlog />,
+      },
+    ],
+  },
+  {
+    path: "/bookings",
+    element: <BookingsLayout />,
+    isProtected: true,
+    children: [
+      {
+        index: true,
+        childElement: <BookingsHome />,
       },
     ],
   },

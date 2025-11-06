@@ -4,6 +4,7 @@ interface FileUploadOptions {
   accept?: string[]; // Optional array of accepted file types
   maxSizeKb?: number; // in kb
   multiple?: boolean;
+  maxFiles?: number; // Maximum number of files allowed
 }
 
 interface UploadOptions {
@@ -21,6 +22,7 @@ export function useFileUpload({
   accept = [],
   maxSizeKb = 5 * 1024, // 5MB default
   multiple = false,
+  maxFiles = 10, // Default to 10 files
 }: FileUploadOptions) {
   const [state, setState] = useState<FileUploadState>({
     files: [],
@@ -86,6 +88,20 @@ export function useFileUpload({
         return;
       }
 
+      // Check if adding these files would exceed the maximum
+      if (multiple) {
+        const currentFileCount = state.files.length;
+        const newFileCount = fileArray.length;
+
+        if (currentFileCount + newFileCount > maxFiles) {
+          setState((prev) => ({
+            ...prev,
+            error: `Maximum ${maxFiles} files allowed. You currently have ${currentFileCount} files and are trying to add ${newFileCount} more.`,
+          }));
+          return;
+        }
+      }
+
       const validFiles = fileArray.filter(isValidFile);
 
       if (validFiles.length > 0) {
@@ -95,7 +111,7 @@ export function useFileUpload({
         }));
       }
     },
-    [multiple, isValidFile]
+    [multiple, isValidFile, maxFiles, state.files.length]
   );
 
   const handleDrop = useCallback(
@@ -128,6 +144,8 @@ export function useFileUpload({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
       if (files) handleFiles(files);
+      // Clear the input value to allow reselecting the same file
+      event.target.value = "";
     },
     [handleFiles]
   );
