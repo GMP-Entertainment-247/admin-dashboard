@@ -34,6 +34,8 @@ import SettingsLayout from "../pages/dashboard/settings/layout";
 import SettingsManagement from "../pages/dashboard/settings/management";
 import SettingsTeam from "../pages/dashboard/settings/team";
 import SettingsOthers from "../pages/dashboard/settings/others";
+import BookingsLayout from "../pages/dashboard/bookings/layout";
+import BookingsHome from "../pages/dashboard/bookings";
 interface IRoutes {
   path: string;
   element: ReactElement<any, any>;
@@ -177,6 +179,17 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: ":blogId",
         childElement: <PreviewBlog />,
+      },
+    ],
+  },
+  {
+    path: "/bookings",
+    element: <BookingsLayout />,
+    isProtected: true,
+    children: [
+      {
+        index: true,
+        childElement: <BookingsHome />,
       },
     ],
   },

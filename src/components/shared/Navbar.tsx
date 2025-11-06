@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { Bell, Search } from "lucide-react";
 import avater from "../../../src/images/avatar.png";
+import useFetch from "../../utils/hooks/useFetch";
+import { IProfile } from "../../interface/settings.interface";
+import { useProfile } from "../../context/ProfileContext";
 
 const Navbar = () => {
   const [query, setQuery] = useState("");
   console.log(query);
+  const {data} = useFetch<IProfile>("/admin/info")
+  const { setProfile, profile } = useProfile();
+
+  useEffect(() => {
+    setProfile(data ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   const handleChange = useDebouncedCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,10 +41,10 @@ const Navbar = () => {
         <div className="flex items-center gap-2.5 sm:gap-5">
           <p className="test-sm line-clamp-2">
             Hi 🖐 <br />
-            John Doe{" "}
+            {profile?.first_name}{" "}{profile?.last_name}{" "}
           </p>
           <img
-            src={avater}
+            src={profile?.profile_picture_url || avater}
             alt="profileAvatar"
             className="w-[40px] h-[40px] rounded-[50%]"
           />

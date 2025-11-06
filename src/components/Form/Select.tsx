@@ -114,7 +114,8 @@ const Select: React.FC<SelectProps> = ({
               "cursor-not-allowed": disabled,
               "cursor-pointer": !disabled,
               "outline-auto outline-brand-500": isOpen,
-            }
+            },
+            inputClassName,
           )}
           onClick={() => !disabled && setIsOpen(!isOpen)}
         >

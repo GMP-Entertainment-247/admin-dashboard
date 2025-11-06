@@ -22,7 +22,10 @@ export default function SettingsLayout() {
         <div 
           className={clsx(
             "py-8 bg-white rounded-b-[16px] h-fit",
-            location.pathname === "/settings/others" && "mb-[100px]"
+            (
+              location.pathname === "/settings/others" ||
+              location.pathname === "/settings/profile"
+            ) && "mb-[100px]"
           )}
         >
           <Outlet />
