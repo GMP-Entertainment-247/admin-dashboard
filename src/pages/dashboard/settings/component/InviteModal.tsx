@@ -75,18 +75,22 @@ export default function InviteModal ({
     });
 
     const handleRole = (id: string) => {
-        if(form.values.roles.includes(id)){
-            const rem = form.values.roles.filter(item => item!==id)
-            form.setFieldValue(
-                "roles",
-                rem
-            )
-        } else {
-            form.setFieldValue(
-                "roles",
-                [...form.values.roles, id]
-            )
-        }
+        form.setFieldValue(
+            "roles",
+            id
+        )
+        // if(form.values.roles.includes(id)){
+        //     const rem = form.values.roles.filter(item => item!==id)
+        //     form.setFieldValue(
+        //         "roles",
+        //         rem
+        //     )
+        // } else {
+        //     form.setFieldValue(
+        //         "roles",
+        //         [...form.values.roles, id]
+        //     )
+        // }
     }
 
     return (

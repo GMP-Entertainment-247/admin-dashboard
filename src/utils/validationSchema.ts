@@ -1,4 +1,4 @@
-import { array, object, ref, string } from "yup";
+import { array, mixed, object, ref, string } from "yup";
 
 export const loginSchema = object({
       email: string().required().email().label("Email address"),
@@ -46,4 +46,10 @@ export const changePasswordSchema = object({
             .required()
             .oneOf([ref("new_password")], "Password doesn't match")
             .label("Confirm Password"),
+})
+
+export const addRoleSchema = object({
+      title: string().required().label("Title"),
+      description: string().required().label("Description"),
+      permissions: array().of(mixed().required()).min(1, "Select at least 1 permission").label("Permissions"),
 })

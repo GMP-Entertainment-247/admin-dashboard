@@ -17,3 +17,14 @@ export interface IProfile {
     profile_pic: string;
     profile_picture_url: string;
 }
+
+export interface IRole {
+    id: number;
+    name: string;
+    permissions: IPermissions[];
+}
+
+export interface IPermissions {
+    id: number;
+    name: string;
+}

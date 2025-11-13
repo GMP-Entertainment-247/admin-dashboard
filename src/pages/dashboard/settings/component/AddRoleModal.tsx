@@ -1,11 +1,13 @@
 import { FormikProvider, useFormik } from "formik";
 import { Modal } from "../../../../components/Modal"
-// import { inviteAdminSchema } from "../../../../utils/validationSchema";
+import { addRoleSchema } from "../../../../utils/validationSchema";
 import { formProps } from "../../../../utils/helpers";
 import { TextField } from "../../../../components/Form/TextField";
-import Select from "../../../../components/Form/Select";
 import Label from "../../../../components/Form/Label";
 import { ErrorWrapper } from "../../../../components/Form/ErrorWrapper";
+import PermissionSelectDropdown from "./PermissionSelectDropdown";
+import useMutation from "../../../../utils/hooks/useMutation";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 type TAddRoleModalProps = {
@@ -16,45 +18,60 @@ type TAddRoleModalProps = {
 export default function AddRoleModal ({
     show, closeModal
 }:TAddRoleModalProps) {
+    const createRole = useMutation("/admin/roles/create", "post")
+    const queryClient = useQueryClient();
+
     const form = useFormik({
         initialValues: {
             title: "",
             description: "",
-            permissions: [] as string[],
+            permissions: [] as { label:string, value:string }[],
         },
-        // validateOnMount: true,
-        // validationSchema: inviteAdminSchema,
+        validateOnMount: true,
+        validationSchema: addRoleSchema,
         onSubmit: (values) => {
+            console.log("Submitted values", values);
+            const payload = {
+                name: values.title,
+                // description: values.description,
+                permission: values.permissions.map(p => p.label)
+            }
+            createRole.mutate(payload)
+            .then(res => {
+                queryClient.invalidateQueries({queryKey: [
+                    "/admin/roles"
+                ]})
+            })
         },
     });
 
-    const handlePermission = (item: string) => {
-        if(form.values.permissions.includes(item)){
-            const rem = form.values.permissions.filter(x => x!==item)
-            form.setFieldValue(
-                "permissions",
-                rem
-            )
-        } else {
-            form.setFieldValue(
-                "permissions",
-                [...form.values.permissions, item]
-            )
-        }
-    }
+    // const handlePermission = (item: string) => {
+    //     if(form.values.permissions.includes(item)){
+    //         const rem = form.values.permissions.filter(x => x!==item)
+    //         form.setFieldValue(
+    //             "permissions",
+    //             rem
+    //         )
+    //     } else {
+    //         form.setFieldValue(
+    //             "permissions",
+    //             [...form.values.permissions, item]
+    //         )
+    //     }
+    // }
 
     return (
         <Modal
             show={show}
             onClose={closeModal}
             submitText="Confirm"
-            submitClick={()=>console.log("submit")}
-            submitLoading={false}
-            extraClassname="min-w-[500px]"
+            submitClick={()=>form.submitForm()}
+            submitLoading={createRole.loading}
+            extraClassname="w-[500px]"
         >
             <p className="text-base font-semibold -mt-5 mb-6">Add Role</p>
             <FormikProvider value={form}>
-                <form onSubmit={form.handleSubmit} className="w-full mb-6 max-h-[350px] overflow-y-auto">
+                <form onSubmit={form.handleSubmit} className="w-full mb-6 "> {/* max-h-[350px] overflow-y-auto */}
                     <div className="grid grid-cols-1 gap-x-5">
                         <TextField
                             label="Role Title"
@@ -79,7 +96,7 @@ export default function AddRoleModal ({
                             )}
                         </ErrorWrapper>
                         <Label id="roles">Available Permissions </Label>
-                        <Select 
+                        {/* <Select 
                             id="roles" 
                             className="!-mt-1"
                             inputClassName="!bg-[#F5F5F5] !border-transparent !text-[#999999] !h-[52px]"
@@ -89,6 +106,12 @@ export default function AddRoleModal ({
                                 {value: "can_view_booking_request", label: "Can view booking request"},
                             ]}
                             onChange={(value)=> handlePermission(value as string)}
+                        /> */}
+                        <PermissionSelectDropdown 
+                            values={form.values.permissions}
+                            onChange={(values: {label:string, value:string}[])=>{
+                                form.setFieldValue("permissions", values)
+                            }}
                         />
                     </div>
                 </form>
