@@ -4,14 +4,14 @@ import Bin from "..//../../images/svg/bin.svg";
 import { useSingleState } from "../../../utils/hooks/useSingleState";
 import AddRoleModal from "./component/AddRoleModal";
 import useFetch from "../../../utils/hooks/useFetch";
-import useMutation from "../../../utils/hooks/useMutation";
+// import useMutation from "../../../utils/hooks/useMutation";
 import { IPermissions, IRole } from "../../../interface/settings.interface";
 
 export default function SettingsManagement() {
   const showModal = useSingleState(false)
   const {data: allRoles} = useFetch<IRole[]>("/admin/roles")
-  const createRole = useMutation("/admin/roles/create", "post")
-  const updateRole = useMutation("/admin/roles/update", "post")
+  // const createRole = useMutation("/admin/roles/create", "post")
+  // const updateRole = useMutation("/admin/roles/update", "post")
   const {data: allPermissions} = useFetch<IPermissions[]>("/admin/permissions")
 
   console.log("All roles", allRoles);
