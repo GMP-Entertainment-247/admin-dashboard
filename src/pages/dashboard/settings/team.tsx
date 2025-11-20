@@ -5,9 +5,13 @@ import Dropdown from "../../../components/shared/Dropdown";
 import Button from "../../../components/shared/Button";
 import { useSingleState } from "../../../utils/hooks/useSingleState";
 import InviteModal from "./component/InviteModal";
+import useFetch from "../../../utils/hooks/useFetch";
+import { ITeamMember } from "../../../interface/settings.interface";
 
 export default function SettingsTeam () {
     const showInvite = useSingleState(false)
+    const {data: team, loading} = useFetch<{data: ITeamMember[]}>("/admin/teams")
+    const editDetails = useSingleState<ITeamMember | null>(null)
 
     return (
         <div className="-mt-6">
@@ -15,14 +19,8 @@ export default function SettingsTeam () {
                 noTitle={true}
                 tableTitle=""
                 searchPlaceHolder="Search any team member"
-                isLoading={false}
-                data={[
-                    {
-                        name: "Tobiloba Olugbemi",
-                        email: "tibesti@gmail.com",
-                        phone: "08152332222"
-                    }
-                ]}
+                isLoading={loading}
+                data={team?.data || []}
                 slot={
                     <Button
                         text={
@@ -39,12 +37,12 @@ export default function SettingsTeam () {
                 rows={[
                     {
                         header: "Team Member",
-                        view: (item: any) => (
+                        view: (item) => (
                             <div className="flex gap-2 items-center">
                                 <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                                     <img {...imageProp("")} alt="" className="w-full" />
                                 </div>
-                                <p>{item.name}</p>
+                                <p>{item.first_name} {item.last_name}</p>
                             </div>
                         )
                     },
@@ -58,7 +56,7 @@ export default function SettingsTeam () {
                     },
                     {
                         header: "Admin Role",
-                        view: (item) => "Manager",
+                        view: (item) => "---",
                     },
                     {
                         header: "Action",
@@ -72,7 +70,11 @@ export default function SettingsTeam () {
                                     },
                                     {
                                         label: "Edit Role",
-                                        value: ""
+                                        value: "",
+                                        action: () => {
+                                            editDetails.set(item)
+                                            showInvite.set(true)
+                                        }
                                     },
                                     {
                                         label: "Delete",
@@ -86,7 +88,11 @@ export default function SettingsTeam () {
             />
             <InviteModal 
                 show={showInvite.get}
-                closeModal={()=>showInvite.set(false)}
+                closeModal={()=>{
+                    showInvite.set(false)
+                    editDetails.set(null)
+                }}
+                edit={editDetails.get}
             />
         </div>
     )
