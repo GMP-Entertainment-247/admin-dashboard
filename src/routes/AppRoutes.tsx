@@ -36,6 +36,18 @@ import SettingsTeam from "../pages/dashboard/settings/team";
 import SettingsOthers from "../pages/dashboard/settings/others";
 import BookingsLayout from "../pages/dashboard/bookings/layout";
 import BookingsHome from "../pages/dashboard/bookings";
+import ArtistLayout from "../pages/dashboard/artists/layout";
+import ArtistsHome from "../pages/dashboard/artists";
+import AllArtists from "../pages/dashboard/artists/tables/allArtists";
+import AllOffers from "../pages/dashboard/artists/tables/allOffers";
+import AllBookings from "../pages/dashboard/artists/tables/allBookings";
+import AllUploads from "../pages/dashboard/artists/tables/allUploads";
+import ArtistDetails from "../pages/dashboard/artists/details";
+import CelebrityLayout from "../pages/dashboard/celebrities/layout";
+import CelebrityHome from "../pages/dashboard/celebrities";
+import CelebrityDetails from "../pages/dashboard/celebrities/details";
+import AllCelebrities from "../pages/dashboard/celebrities/tables/allCelebrities";
+import AllCelebrityBookings from "../pages/dashboard/celebrities/tables/allBookings";
 interface IRoutes {
   path: string;
   element: ReactElement<any, any>;
@@ -80,6 +92,60 @@ export const appRoutes: IRoutes[] = [
     path: "/dashboard",
     element: <DashboardHome />,
     isProtected: true,
+  },
+  {
+    path: "/artists",
+    element: <ArtistLayout />,
+    isProtected: true,
+    children: [
+      {
+        index: true,
+        childElement: <ArtistsHome />,
+      },
+      {
+        childPath: ":id",
+        childElement: <ArtistDetails />,
+      },
+      {
+        childPath: "all",
+        childElement: <AllArtists />,
+      },
+      {
+        childPath: "offers",
+        childElement: <AllOffers />,
+      },
+      {
+        childPath: "bookings",
+        childElement: <AllBookings />,
+      },
+      {
+        childPath: "uploads",
+        childElement: <AllUploads />,
+      },
+    ],
+  },
+  {
+    path: "/celebrities",
+    element: <CelebrityLayout />,
+    isProtected: true,
+    children: [
+      {
+        index: true,
+        childElement: <CelebrityHome />,
+      },
+      {
+        childPath: ":id",
+        childElement: <CelebrityDetails />,
+      },
+      {
+        childPath: "all",
+        childElement: <AllCelebrities />,
+      },
+      {
+        childPath: "bookings",
+        childElement: <AllCelebrityBookings />,
+      },
+    ],
   },
   {
     path: "/fans",
