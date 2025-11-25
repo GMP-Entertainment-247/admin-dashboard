@@ -9,9 +9,6 @@ import BreadCrumbs from "../../../../components/shared/Breadcrumbs";
 import dayjs from "dayjs";
 
 export default function AllUploads () {
-  const navigate = useNavigate()
-  const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
-
   return (
     <div>
       <div className="my-2.5">
