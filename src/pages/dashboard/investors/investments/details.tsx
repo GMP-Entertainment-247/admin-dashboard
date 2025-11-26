@@ -1,6 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import useFetch from '../../../../utils/hooks/useFetch';
-import { IFan } from "../../../../interface/fans.interface";
 import BreadCrumbs from "../../../../components/shared/Breadcrumbs";
 import Button from "../../../../components/shared/Button";
 import clsx from "clsx";
@@ -8,7 +6,6 @@ import clsx from "clsx";
 
 export default function InvestmentDetail () {
     const navigate = useNavigate()
-    const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
 
     return (
         <div>
