@@ -3,8 +3,6 @@ import Card from "../../components/shared/Card";
 import Dropdown from "../../components/shared/Dropdown";
 import Table from "../../components/Table";
 import { formatNumber, imageProp } from "../../utils/helpers";
-import edit from "../../images/svg/edit.svg";
-import { useNavigate } from "react-router-dom";
 import useFetch from '../../utils/hooks/useFetch';
 import { IFan } from "../../interface/fans.interface";
 import LineChartComponent from "../../components/Charts/LineChart";
@@ -21,7 +19,6 @@ import dayjs from "dayjs";
 
 
 export default function DashboardHome() {
-  const navigate = useNavigate()
   const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
   const [lineChartDataKeys, setLineChartDataKeys] = useState([
     {label: 'voting', color: "#00BF00", isActive: true, handleChange: handleLineChartDataKeyChange},
@@ -97,14 +94,8 @@ export default function DashboardHome() {
           </div>
           <div className="">
             <EventCalendar
-              topSlot={
-                <div className='absolute top-[60px] left-0 w-full h-[35px] z-10 border-b border-solid border-[#E9E9E9] flex flex-col justify-end'>
-                    <div className="flex items-center gap-2 mb-2 ml-2.5">
-                      <div className="bg-[#FF0000] w-2.5 h-2.5 rounded-full" />
-                      <p className="text-[#737373] text-sm">Event</p>
-                    </div>
-                </div>
-              }
+              markedByCategory={{ event: ['2025-11-20', '2025-11-22'], booking: ['2025-11-20'] }} 
+              categoryColors={{ event: '#FF0000', booking: '#3BDC54' }} 
             />
           </div>
         </div>
