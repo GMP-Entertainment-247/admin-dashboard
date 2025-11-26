@@ -1,7 +1,3 @@
-import Dropdown from "../../../../components/shared/Dropdown";
-import Table from "../../../../components/Table";
-import { imageProp } from "../../../../utils/helpers";
-import edit from "../../../../images/svg/edit.svg";
 import { useNavigate } from "react-router-dom";
 import useFetch from '../../../../utils/hooks/useFetch';
 import { IFan } from "../../../../interface/fans.interface";
