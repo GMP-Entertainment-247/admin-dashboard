@@ -89,14 +89,7 @@ export default function IndexWrapper({
         </div>
         <div className="">
           <EventCalendar
-            topSlot={
-              <div className='absolute top-[60px] left-0 w-full h-[35px] z-10 border-b border-solid border-[#E9E9E9] flex flex-col justify-end'>
-                  <div className="flex items-center gap-2 mb-2 ml-2.5">
-                    <div className="bg-[#FF0000] w-2.5 h-2.5 rounded-full" />
-                    <p className="text-[#737373] text-sm">Event</p>
-                  </div>
-              </div>
-            }
+            categoryColors={{ event: '#FF0000' }} 
           />
         </div>
       </div>
