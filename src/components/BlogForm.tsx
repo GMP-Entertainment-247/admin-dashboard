@@ -116,7 +116,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
 
   return (
     <InnerLayout title={mode === "create" ? "Create Blog" : "Edit Blog"}>
-      <form ref={formRef} onSubmit={handleSubmit}>
+      <form className="bg-white" ref={formRef} onSubmit={handleSubmit}>
         <div className="w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10 mb-10">
           <div className="space-y-5 lg:w-[56%]">
             <Select

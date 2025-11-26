@@ -1,4 +1,5 @@
 import Button from "../../../components/shared/Button";
+import PageTitle from "../../../components/shared/PageTitle";
 import Tabs from "../../../components/shared/Tabs";
 import AutoResizingGrid from "../../../components/shared/AutoResizingGrid";
 import BlogCard from "../../../components/BlogCard";
@@ -90,7 +91,7 @@ export default function BlogsHome() {
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="page-title">News & Blogs</h1>
+        <PageTitle as="h1">News & Blogs</PageTitle>
         <Button
           text="Create Blog"
           href="/blogs/create-blog"
