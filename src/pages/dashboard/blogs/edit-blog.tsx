@@ -1,11 +1,12 @@
 import BlogForm from "../../../components/BlogForm";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getBlogDetails, updateBlog, deleteBlogImage } from "./data";
+import { getBlogDetails } from "./data";
 import { toast } from "react-toastify";
 import { flattenErrorMessage } from "../../../utils/errorHelpers";
 import LoadingSpinner from "../../../components/shared/LoadingSpinner";
 import StateContainer from "../../../components/shared/StateContainer";
+import { useBlogDraft } from "./BlogDraftContext";
 
 interface BlogData {
   category: string;
@@ -17,9 +18,9 @@ interface BlogData {
 const EditBlog = () => {
   const { blogId } = useParams<{ blogId: string }>();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
   const [blogData, setBlogData] = useState<BlogData | undefined>(undefined);
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const { setDraft } = useBlogDraft();
 
   // Fetch blog data on component mount
   useEffect(() => {
@@ -64,75 +65,13 @@ const EditBlog = () => {
     }
   }, [blogId]);
 
-  const handleSubmit = async (formData: FormData) => {
-    setIsLoading(true);
-
-    try {
-      // Proceed with update first (so backend sees at least one image if new ones were added)
-      const response = await updateBlog(formData);
-      if (response.status) {
-        toast.success(
-          (response.message as string) || "Blog updated successfully"
-        );
-
-        // After successful update, delete any images that were removed in the UI
-        const ids: string[] = [];
-        for (const [key, value] of Array.from(formData.entries())) {
-          if (key.startsWith("deleted_image_ids")) ids.push(String(value));
-        }
-
-        if (ids.length > 0) {
-          for (const id of ids) {
-            try {
-              await deleteBlogImage(Number(id));
-            } catch (e) {
-              // Surface but do not block navigation
-              toast.error("Failed to delete an image after update");
-            }
-          }
-        }
-
-        navigate("/blogs");
-      } else {
-        const errorMessage = flattenErrorMessage(response.message);
-        toast.error(errorMessage);
-      }
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message
-        ? flattenErrorMessage(
-            error.response.data.message,
-            "An error occurred while updating the blog"
-          )
-        : "An error occurred while updating the blog";
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDelete = async () => {
+  const handlePreview = (formData: FormData) => {
     if (!blogId) return;
-
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this blog post? This action cannot be undone."
-    );
-    if (!confirmed) return;
-
-    setIsLoading(true);
-
-    try {
-      console.log("Deleting blog with id:", blogId);
-
-      // TODO: Make API call here
-      // await deleteBlog(id);
-      // console.log('Blog deleted successfully');
-
-      // TODO: Redirect to blogs list or show success message
-    } catch (error) {
-      console.error("Error deleting blog:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    setDraft({
+      mode: "edit",
+      formData,
+    });
+    navigate("/blogs/preview");
   };
 
   if (isLoadingData) {
@@ -151,9 +90,8 @@ const EditBlog = () => {
     <BlogForm
       mode="edit"
       initialData={blogData}
-      onSubmit={handleSubmit}
-      onDelete={handleDelete}
-      isLoading={isLoading}
+      onSubmit={handlePreview}
+      onCancel={() => navigate(-1)}
       blogId={blogId}
     />
   );

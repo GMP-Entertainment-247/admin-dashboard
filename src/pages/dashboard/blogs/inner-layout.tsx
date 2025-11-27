@@ -5,11 +5,11 @@ const BlogInnerLayout: React.FC<{
   title: string;
 }> = ({ title, children }) => {
   return (
-    <div className="p-5 rounded-2xl">
+    <div className="space-y-5">
       <PageTitle as="h2" showBackButton>
         {title}
       </PageTitle>
-      <div className="h-[0.5px] bg-[#E9E9E9] my-5 w-[calc(100%+40px)] mx-[-20px]" />
+      <div className="h-[0.5px] bg-[#E9E9E9] w-full" />
       {children}
     </div>
   );

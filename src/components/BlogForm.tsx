@@ -21,8 +21,8 @@ interface BlogFormProps {
   mode: "create" | "edit";
   initialData?: BlogData;
   onSubmit: (formData: FormData) => void;
-  onDelete?: () => void;
-  isLoading?: boolean;
+  onCancel?: () => void;
+  primaryButtonLabel?: string;
   blogId?: string | number;
 }
 
@@ -30,8 +30,8 @@ const BlogForm: React.FC<BlogFormProps> = ({
   mode,
   initialData,
   onSubmit,
-  onDelete,
-  isLoading = false,
+  onCancel,
+  primaryButtonLabel,
   blogId,
 }) => {
   // File upload hook for new images
@@ -108,143 +108,137 @@ const BlogForm: React.FC<BlogFormProps> = ({
     onSubmit(formData);
   };
 
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete();
-    }
-  };
-
   return (
     <InnerLayout title={mode === "create" ? "Create Blog" : "Edit Blog"}>
-      <form className="bg-white" ref={formRef} onSubmit={handleSubmit}>
-        <div className="w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10 mb-10">
-          <div className="space-y-5 lg:w-[56%]">
-            <Select
-              label="Category"
-              id="category"
-              placeholder="Select Category"
-              options={resolvedCategoryOptions}
-              defaultValue={initialData?.category}
-            />
-            <Input
-              label="Post Title"
-              id="title"
-              placeholder="Text"
-              defaultValue={initialData?.title}
-            />
-            <TextArea
-              ref={textAreaRef}
-              id="content"
-              label="Post Content"
-              placeholder="Write here..."
-              minHeight={200}
-              value={initialData?.content}
-            />
-          </div>
-
-          <div className="lg:flex-1 space-y-7 lg:space-y-10 overflow-hidden">
-            {/* Drag and Drop Area */}
-            <div
-              className={`h-[259px] items-center justify-center border border-dashed rounded-lg lg:mt-[42px] hidden lg:flex cursor-pointer transition-colors duration-200 ${
-                fileUpload.isDragOver
-                  ? "border-brand-500 bg-brand-50"
-                  : "border-[#999999] hover:border-brand-500"
-              }`}
-              onDrop={fileUpload.handleDrop}
-              onDragOver={fileUpload.handleDragOver}
-              onDragLeave={fileUpload.handleDragLeave}
-              onClick={handleBrowseFiles}
-            >
-              <div className="space-y-1 text-center">
-                <UploadIcon className="mx-auto" />
-                <p className="mb-2">Drag & drop to upload or</p>
-                <p className="text-[#998100]">Browse Files</p>
-              </div>
+      <div className="bg-white p-5 rounded-2xl">
+        <form ref={formRef} onSubmit={handleSubmit}>
+          <div className="w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10 mb-10">
+            <div className="space-y-5 lg:w-[56%]">
+              <Select
+                label="Category"
+                id="category"
+                placeholder="Select Category"
+                options={resolvedCategoryOptions}
+                defaultValue={initialData?.category}
+              />
+              <Input
+                label="Post Title"
+                id="title"
+                placeholder="Text"
+                defaultValue={initialData?.title}
+              />
+              <TextArea
+                ref={textAreaRef}
+                id="content"
+                label="Post Content"
+                placeholder="Write here..."
+                minHeight={200}
+                value={initialData?.content}
+              />
             </div>
 
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={fileUpload.handleFileInput}
-              className="hidden"
-            />
-
-            {/* Image Gallery */}
-            <div className="flex items-center gap-3 [&>*]:flex-shrink-0 max-w-full overflow-auto">
-              {/* Display existing images */}
-              {existingImages.map((img, index) => (
-                <ImageItem
-                  key={`existing-${index}`}
-                  src={img.file}
-                  alt={`Existing image ${index + 1}`}
-                  onRemove={() => handleExistingImageRemove(img.file)}
-                  // hideRemove={
-
-                  // }
-                />
-              ))}
-
-              {/* Display uploaded files */}
-              {fileUpload.files.map((file, index) => (
-                <ImageItem
-                  key={`uploaded-${index}`}
-                  src={URL.createObjectURL(file)}
-                  alt={`Uploaded image ${index + 1}`}
-                  onRemove={() => handleImageRemove(index)}
-                  // hideRemove={false}
-                />
-              ))}
-
-              {/* Add Photo Button - Always show on mobile, only show on lg when we have at least 1 image */}
-              <button
-                type="button"
-                className={`w-[147px] h-[100px] rounded-lg flex items-center justify-center border border-dashed border-[#999999] cursor-pointer hover:border-brand-500 transition-colors duration-200 ${
-                  (initialData?.images?.length || 0) + fileUpload.files.length >
-                  0
-                    ? "lg:flex"
-                    : "lg:hidden"
+            <div className="lg:flex-1 space-y-7 lg:space-y-10 overflow-hidden">
+              {/* Drag and Drop Area */}
+              <div
+                className={`h-[259px] items-center justify-center border border-dashed rounded-lg lg:mt-[42px] hidden lg:flex cursor-pointer transition-colors duration-200 ${
+                  fileUpload.isDragOver
+                    ? "border-brand-500 bg-brand-50"
+                    : "border-[#999999] hover:border-brand-500"
                 }`}
+                onDrop={fileUpload.handleDrop}
+                onDragOver={fileUpload.handleDragOver}
+                onDragLeave={fileUpload.handleDragLeave}
                 onClick={handleBrowseFiles}
               >
-                <div className="space-y-3 text-center">
-                  <PlusIcon className="mx-auto" />
-                  <p className="text-grey-normal">Add Photo</p>
+                <div className="space-y-1 text-center">
+                  <UploadIcon className="mx-auto" />
+                  <p className="mb-2">Drag & drop to upload or</p>
+                  <p className="text-[#998100]">Browse Files</p>
                 </div>
-              </button>
-            </div>
-
-            {/* Error Display */}
-            {fileUpload.error && (
-              <div className="text-red-500 text-sm mt-2">
-                {fileUpload.error}
               </div>
-            )}
+
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={fileUpload.handleFileInput}
+                className="hidden"
+              />
+
+              {/* Image Gallery */}
+              <div className="flex items-center gap-3 [&>*]:flex-shrink-0 max-w-full overflow-auto">
+                {/* Display existing images */}
+                {existingImages.map((img, index) => (
+                  <ImageItem
+                    key={`existing-${index}`}
+                    src={img.file}
+                    alt={`Existing image ${index + 1}`}
+                    onRemove={() => handleExistingImageRemove(img.file)}
+                    // hideRemove={
+
+                    // }
+                  />
+                ))}
+
+                {/* Display uploaded files */}
+                {fileUpload.files.map((file, index) => (
+                  <ImageItem
+                    key={`uploaded-${index}`}
+                    src={URL.createObjectURL(file)}
+                    alt={`Uploaded image ${index + 1}`}
+                    onRemove={() => handleImageRemove(index)}
+                    // hideRemove={false}
+                  />
+                ))}
+
+                {/* Add Photo Button - Always show on mobile, only show on lg when we have at least 1 image */}
+                <button
+                  type="button"
+                  className={`w-[147px] h-[100px] rounded-lg flex items-center justify-center border border-dashed border-[#999999] cursor-pointer hover:border-brand-500 transition-colors duration-200 ${
+                    (initialData?.images?.length || 0) +
+                      fileUpload.files.length >
+                    0
+                      ? "lg:flex"
+                      : "lg:hidden"
+                  }`}
+                  onClick={handleBrowseFiles}
+                >
+                  <div className="space-y-3 text-center">
+                    <PlusIcon className="mx-auto" />
+                    <p className="text-grey-normal">Add Photo</p>
+                  </div>
+                </button>
+              </div>
+
+              {/* Error Display */}
+              {fileUpload.error && (
+                <div className="text-red-500 text-sm mt-2">
+                  {fileUpload.error}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </form>
+      </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-4">
+      {/* Action Buttons - separate container at the bottom */}
+      <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+        {mode === "edit" && onCancel && (
           <Button
-            text={mode === "create" ? "Create Post" : "Update Post"}
-            type="submit"
-            extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
-            isLoading={isLoading}
+            text="Cancel"
+            type="button"
+            extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold !bg-transparent !text-grey-normal border border-[#E9E9E9]"
+            onClick={onCancel}
           />
-
-          {mode === "edit" && onDelete && (
-            <Button
-              text="Delete Post"
-              type="button"
-              extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 bg-red-light !text-red-normal !rounded-[8px] !font-bold"
-              onClick={handleDelete}
-              disabled={isLoading}
-            />
-          )}
-        </div>
-      </form>
+        )}
+        <Button
+          text={primaryButtonLabel || "Submit"}
+          type="submit"
+          extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
+        />
+      </div>
     </InnerLayout>
   );
 };
