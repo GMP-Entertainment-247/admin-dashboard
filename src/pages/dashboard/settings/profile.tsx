@@ -54,7 +54,7 @@ const Profile = () => {
       payload.append("email", values.email);
       payload.append("phone", values.contact);
       payload.append("location", values.location);
-      if (!!values.profile_picture_url) {
+      if ((values.profile_picture_url as any) instanceof File) {
         payload.append("image", values.profile_picture_url);
       }
       updateProfile.mutate(payload)
