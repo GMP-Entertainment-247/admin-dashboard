@@ -49,6 +49,11 @@ import CelebrityHome from "../pages/dashboard/celebrities";
 import CelebrityDetails from "../pages/dashboard/celebrities/details";
 import AllCelebrities from "../pages/dashboard/celebrities/tables/allCelebrities";
 import AllCelebrityBookings from "../pages/dashboard/celebrities/tables/allBookings";
+import InvestorLayout from "../pages/dashboard/investors/layout";
+import InvestorsHome from "../pages/dashboard/investors";
+import InvestorDetails from "../pages/dashboard/investors/details";
+import AllInvestments from "../pages/dashboard/investors/investments/allInvestments";
+import InvestmentDetail from "../pages/dashboard/investors/investments/details";
 interface IRoutes {
   path: string;
   element: ReactElement<any, any>;
@@ -122,6 +127,29 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: "uploads",
         childElement: <AllUploads />,
+      },
+    ],
+  },
+  {
+    path: "/investors",
+    element: <InvestorLayout />,
+    isProtected: true,
+    children: [
+      {
+        index: true,
+        childElement: <InvestorsHome />,
+      },
+      {
+        childPath: ":id",
+        childElement: <InvestorDetails />,
+      },
+      {
+        childPath: "investments",
+        childElement: <AllInvestments />,
+      },
+      {
+        childPath: "investment/:id",
+        childElement: <InvestmentDetail />,
       },
     ],
   },
