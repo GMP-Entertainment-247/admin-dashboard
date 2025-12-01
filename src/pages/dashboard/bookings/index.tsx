@@ -7,31 +7,21 @@ import rejected from "../../../images/svg/rejected.svg";
 import Card from "../../../components/shared/Card";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import type { CalendarProps } from  "react-calendar";
-
-
-
-
+import type { CalendarProps } from "react-calendar";
 
 export default function BookingsHome() {
- const handleDateChange = (value: Value) => {
-   
+  const handleDateChange = (value: Value) => {
     setSelectedDate(value);
   };
-  type Value = CalendarProps['value'];
-  
+  type Value = CalendarProps["value"];
+
   const [selectedDate, setSelectedDate] = useState<Value>(new Date());
-  
+
   // const handleDateChange: CalendarProps['onChange'] = (value) => {
   //   setSelectedDate(value);
   // };
   const cards = [
-    { id: 1,
-      title: "sessions",
-      icon: mic,
-      value: "238", 
-      iconBgColor: "red"
-     },
+    { id: 1, title: "sessions", icon: mic, value: "238", iconBgColor: "red" },
     {
       id: 2,
       title: "Bookings",
@@ -133,10 +123,6 @@ export default function BookingsHome() {
 
   return (
     <div>
-      
-    <Calendar value={selectedDate} onChange={handleDateChange} />
-  
-
       {/*cards and calender container*/}
       <div className="flex">
         {/*cards */}
@@ -152,27 +138,12 @@ export default function BookingsHome() {
           ))}
         </div>
         {/*calender */}
-        {/* <div className="ml-5 mt-5"> */}
-          {/* <Calendar
-            onChange ={(value: Date | Date[] | null) => {
-              if (value instanceof Date) {
-                setSelectedDate(value);
-              }
-            }}
-            value={selectedDate}
-          /> */}
-
-          {/* <Calendar
-          onChange ={setSelectedDate}
-          value={selectedDate} /> */}
-          
-          {/* <p className="mt-2 text-gray-600">
-            Selected Date: {selectedDate.toDateString()}
-          </p> */}
-        {/* </div> */}
+        <div className="ml-5 mt-5">
+          <Calendar value={selectedDate} onChange={handleDateChange} />
+        </div>
       </div>
       <div className="">
-      {/* <table className="w-full border-collapse bg-white ">
+        {/* <table className="w-full border-collapse bg-white ">
       <thead>
         <tr>
           <th className="border-b-2 border-gray-200 px-4 py-2 text-left">Event Title</th>
@@ -202,4 +173,4 @@ export default function BookingsHome() {
       </div>
     </div>
   );
-};
+}
