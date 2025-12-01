@@ -5,14 +5,26 @@ import accepted from "../../../images/svg/accepted.svg";
 import pending from "../../../images/svg/pending.svg";
 import rejected from "../../../images/svg/rejected.svg";
 import Card from "../../../components/shared/Card";
-// import title  from "process";
-// import { useState } from "react";
-// import Calendar from "react-calendar";
+import { useState } from "react";
+import Calendar from "react-calendar";
+import type { CalendarProps } from  "react-calendar";
+
+
+
 
 
 export default function BookingsHome() {
-  // const [date, setDate] = useState<Date | null>(new Date());
-
+ const handleDateChange = (value: Value) => {
+   
+    setSelectedDate(value);
+  };
+  type Value = CalendarProps['value'];
+  
+  const [selectedDate, setSelectedDate] = useState<Value>(new Date());
+  
+  // const handleDateChange: CalendarProps['onChange'] = (value) => {
+  //   setSelectedDate(value);
+  // };
   const cards = [
     { id: 1,
       title: "sessions",
@@ -56,71 +68,75 @@ export default function BookingsHome() {
       iconBgColor: "yellow",
     },
   ];
-  const details =[
-    {
-      id:1,
-      img: mic,
-      EventTitle: "GMP Rap Battle",
-      Organizers:"ABC Media",
-      GuestArtist: "Kizz Val",
-      Location: "Lagos, Nigeria",
-      Date: "12th Aug, 2023",
-      Time: "10:00 AM - 12:00 PM",
-      Action: "View Details",
+  // const details =[
+  //   {
+  //     id:1,
+  //     img: mic,
+  //     EventTitle: "GMP Rap Battle",
+  //     Organizers:"ABC Media",
+  //     GuestArtist: "Kizz Val",
+  //     Location: "Lagos, Nigeria",
+  //     Date: "12th Aug, 2023",
+  //     Time: "10:00 AM - 12:00 PM",
+  //     Action: "View Details",
 
-    },
-    {
-      id:2,
-      img: mic,
-      EventTitle: "FelaMusic",
-      Organizers:"ABC Media",
-      GuestArtist: "Kizz Val",
-      Location: "Lagos, Nigeria",
-      Date: "12th Aug, 2023",
-      Time: "10:00 AM - 12:00 PM",
-      Action: "View Details",
+  //   },
+  //   {
+  //     id:2,
+  //     img: mic,
+  //     EventTitle: "FelaMusic",
+  //     Organizers:"ABC Media",
+  //     GuestArtist: "Kizz Val",
+  //     Location: "Lagos, Nigeria",
+  //     Date: "12th Aug, 2023",
+  //     Time: "10:00 AM - 12:00 PM",
+  //     Action: "View Details",
 
-    },
-    {
-      id:3,
-      img: mic,
-      EventTitle: "GMP Rap Battle",
-      Organizers:"ABC Media",
-      GuestArtist: "Kizz Val",
-      Location: "Lagos, Nigeria",
-      Date: "12th Aug, 2023",
-      Time: "10:00 AM - 12:00 PM",
-      Action: "View Details",
+  //   },
+  //   {
+  //     id:3,
+  //     img: mic,
+  //     EventTitle: "GMP Rap Battle",
+  //     Organizers:"ABC Media",
+  //     GuestArtist: "Kizz Val",
+  //     Location: "Lagos, Nigeria",
+  //     Date: "12th Aug, 2023",
+  //     Time: "10:00 AM - 12:00 PM",
+  //     Action: "View Details",
 
-    },
-    {
-      id:4,
-      img: mic,
-      EventTitle: "Music Fest",
-      Organizers:"Legit Music",
-      GuestArtist: "Jizzy Dust",
-      Location: "Lagos, Nigeria",
-      Date: "12th Aug, 2023",
-      Time: "12:00 PM",
-      Action: "View Details",
+  //   },
+  //   {
+  //     id:4,
+  //     img: mic,
+  //     EventTitle: "Music Fest",
+  //     Organizers:"Legit Music",
+  //     GuestArtist: "Jizzy Dust",
+  //     Location: "Lagos, Nigeria",
+  //     Date: "12th Aug, 2023",
+  //     Time: "12:00 PM",
+  //     Action: "View Details",
 
-    },
-    {
-      id:5,
-      img: mic,
-      EventTitle: "GMP Rap Battle",
-      Organizers:"ABC Media",
-      GuestArtist: "Kizz Val",
-      Location: "Lagos, Nigeria",
-      Date: "12th Aug, 2023",
-      Time: "10:00 AM - 12:00 PM",
-      Action: "View Details",
+  //   },
+  //   {
+  //     id:5,
+  //     img: mic,
+  //     EventTitle: "GMP Rap Battle",
+  //     Organizers:"ABC Media",
+  //     GuestArtist: "Kizz Val",
+  //     Location: "Lagos, Nigeria",
+  //     Date: "12th Aug, 2023",
+  //     Time: "10:00 AM - 12:00 PM",
+  //     Action: "View Details",
 
-    }
-  ]
+  //   }
+  // ]
 
   return (
     <div>
+      
+    <Calendar value={selectedDate} onChange={handleDateChange} />
+  
+
       {/*cards and calender container*/}
       <div className="flex">
         {/*cards */}
@@ -136,26 +152,27 @@ export default function BookingsHome() {
           ))}
         </div>
         {/*calender */}
-        <div className="ml-5 mt-5">
+        {/* <div className="ml-5 mt-5"> */}
           {/* <Calendar
-            onChange={(value: Date | Date[] | null) => {
+            onChange ={(value: Date | Date[] | null) => {
               if (value instanceof Date) {
-                setDate(value);
+                setSelectedDate(value);
               }
             }}
-            value={date}
+            value={selectedDate}
           /> */}
 
           {/* <Calendar
-          onChange ={setDate}
-          value={date} /> */}
-          <p className="mt-2 text-gray-600">
-            {/* Selected Date: {date.toDateString()} */}
-          </p>
-        </div>
+          onChange ={setSelectedDate}
+          value={selectedDate} /> */}
+          
+          {/* <p className="mt-2 text-gray-600">
+            Selected Date: {selectedDate.toDateString()}
+          </p> */}
+        {/* </div> */}
       </div>
       <div className="">
-      <table className="w-full border-collapse bg-white ">
+      {/* <table className="w-full border-collapse bg-white ">
       <thead>
         <tr>
           <th className="border-b-2 border-gray-200 px-4 py-2 text-left">Event Title</th>
@@ -181,8 +198,8 @@ export default function BookingsHome() {
         <tr key={item.Action}></tr>
 </tbody>
         ))}
-    </table>
+    </table> */}
       </div>
     </div>
   );
-}
+};
