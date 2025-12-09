@@ -95,7 +95,7 @@ export interface BlogDetailsData {
 // Generic API response and specific responses
 export interface ApiResponse<T = any> {
   status: boolean;
-  message: string | Record<string, string | string[]> | [];
+  message: string | Record<string, string | string[]>;
   data: T;
 }
 

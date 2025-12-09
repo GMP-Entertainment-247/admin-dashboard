@@ -28,7 +28,7 @@ export default function BlogsHome() {
     queryParams.category = selectedCategory;
   }
 
-  if (selectedDate) {
+  if (selectedDate && selectedDate !== "all") {
     queryParams.date = selectedDate;
   }
 
@@ -111,6 +111,7 @@ export default function BlogsHome() {
                 triggerText="Date"
                 paramKey="date"
                 options={[
+                  { label: "All", value: "all" },
                   { label: "Today", value: "today" },
                   { label: "This week", value: "this-week" },
                   { label: "This month", value: "this-month" },

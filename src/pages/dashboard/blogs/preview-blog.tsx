@@ -6,7 +6,7 @@ import StateContainer from "../../../components/shared/StateContainer";
 import { useBlogDraft } from "./BlogDraftContext";
 import { createBlog, deleteBlogImage, updateBlog } from "./data";
 import { toast } from "react-toastify";
-import { flattenErrorMessage } from "../../../utils/errorHelpers";
+import { handleApiError } from "../../../utils/errorHelpers";
 import BlogViewLayout from "../../../components/BlogViewLayout";
 import { type CommentProps } from "../../../components/Comment";
 
@@ -119,10 +119,7 @@ const PreviewBlog = () => {
         navigate(`/blogs/${blogId}`);
       }
     } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.message || error?.message || null;
-      const message = flattenErrorMessage(errorMessage, "Failed to save blog");
-      toast.error(message);
+      toast.error(handleApiError(error, "Failed to save blog"));
     } finally {
       setIsSubmitting(false);
     }

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createApiClient } from "../api";
+import { handleApiError } from "../errorHelpers";
 
 export default function useFetch<T = unknown>(
   url: string,
@@ -7,8 +8,27 @@ export default function useFetch<T = unknown>(
   options?: { enabled?: boolean }
 ) {
   const fetcher = async (): Promise<T> => {
-    const response = await createApiClient().get(url, { params });
-    return response.data.data;
+    try {
+      const response = await createApiClient().get(url, { params });
+
+      // If API returns 200 OK with { status: false, message: "...", data: null }
+      if (response.data?.status === false) {
+        throw new Error(
+          handleApiError(
+            { response: { data: response.data } },
+            "Failed to load data"
+          )
+        );
+      }
+
+      return response.data.data;
+    } catch (error) {
+      // Convert Axios + Laravel validation error into readable text
+      const formattedMessage = handleApiError(error, "Failed to load data");
+
+      // Throw a new clean message so React Query exposes a readable error
+      throw new Error(formattedMessage);
+    }
   };
 
   const { data, isLoading, error, refetch } = useQuery({

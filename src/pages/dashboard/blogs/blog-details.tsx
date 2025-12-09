@@ -1,56 +1,29 @@
 import BlogInnerLayout from "./inner-layout";
-import { getBlogDetails } from "./data";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import LoadingSpinner from "../../../components/shared/LoadingSpinner";
 import StateContainer from "../../../components/shared/StateContainer";
 import { toast } from "react-toastify";
-import { flattenErrorMessage } from "../../../utils/errorHelpers";
 import Button from "../../../components/shared/Button";
 import BlogViewLayout from "../../../components/BlogViewLayout";
 import { type CommentProps } from "../../../components/Comment";
 import type { BlogDetailsData } from "../../../interface/blog.interface";
+import { deleteBlog } from "./data";
+import useFetch from "../../../utils/hooks/useFetch";
+import {
+  flattenErrorMessage,
+  handleApiError,
+} from "../../../utils/errorHelpers";
 
 const BlogDetails = () => {
   const { blogId } = useParams<{ blogId: string }>();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [blogData, setBlogData] = useState<BlogDetailsData | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    const run = async () => {
-      if (!blogId) return;
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await getBlogDetails(blogId);
-        if (response.status && response.data) {
-          if (!isMounted) return;
-          setBlogData(response.data);
-        } else {
-          toast.error("Failed to load blog details");
-          if (isMounted) setError("Failed to load blog details");
-        }
-      } catch (err: any) {
-        const errorMessage = err?.response?.data?.message
-          ? flattenErrorMessage(
-              err.response.data.message,
-              "Failed to load blog details"
-            )
-          : "Failed to load blog details";
-        toast.error(errorMessage);
-        if (isMounted) setError(errorMessage);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-    run();
-    return () => {
-      isMounted = false;
-    };
-  }, [blogId]);
+  const {
+    data: blogData,
+    loading,
+    error,
+  } = useFetch<BlogDetailsData | null>("/admin/blog/details", {
+    blog_id: blogId,
+  });
 
   // Transform blog data for BlogViewLayout
   const { title, content, images, likes, comments } = (() => {
@@ -93,13 +66,23 @@ const BlogDetails = () => {
     navigate(`/blogs/edit-blog/${blogId}`);
   };
 
-  const handleDelete = () => {
-    // TODO: Wire to real delete endpoint when available
+  const handleDelete = async () => {
+    if (!blogId) return;
     const confirmed = window.confirm(
       "Are you sure you want to delete this blog post?"
     );
     if (!confirmed) return;
-    toast.info("Delete blog functionality is not implemented yet.");
+    try {
+      const res = await deleteBlog(blogId);
+      if (!res.status) {
+        toast.error(flattenErrorMessage(res.message, "Failed to delete blog"));
+        return;
+      }
+      toast.success("Blog deleted successfully");
+      navigate("/blogs");
+    } catch (error) {
+      toast.error(handleApiError(error, "Failed to delete blog"));
+    }
   };
 
   return (
@@ -109,7 +92,7 @@ const BlogDetails = () => {
       ) : error ? (
         <StateContainer>
           <p className="text-red-600 mb-4">Error loading blog</p>
-          <p className="text-gray-600">{error}</p>
+          <p className="text-gray-600">{error.message}</p>
         </StateContainer>
       ) : (
         <>
