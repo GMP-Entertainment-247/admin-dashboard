@@ -46,7 +46,7 @@ export default function Tabs({
   return (
     <div className={clsx("flex gap-5 overflow-auto box-border border-b-[1px] border-solid border-[#E9E9E9]", className)}>
       {tabs.map((item) => (
-        <div>
+        <div key={item.key}>
           <p
             className={clsx(
               "whitespace-nowrap pb-1 cursor-pointer text-base text-[#212121]",

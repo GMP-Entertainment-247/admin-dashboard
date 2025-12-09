@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { createApiClient } from "../api";
 
-export default function useFetch<T = unknown>(url: string, params?: Record<string, any>) {
+export default function useFetch<T = unknown>(
+  url: string,
+  params?: Record<string, any>,
+  options?: { enabled?: boolean }
+) {
   const fetcher = async (): Promise<T> => {
     const response = await createApiClient().get(url, { params });
     return response.data.data;
@@ -14,6 +18,7 @@ export default function useFetch<T = unknown>(url: string, params?: Record<strin
     // cacheTime: 300000, // 5 minutes
     retry: 3, // retry up to 3 times on error
     refetchOnWindowFocus: false,
+    enabled: options?.enabled ?? true,
   });
 
   return {

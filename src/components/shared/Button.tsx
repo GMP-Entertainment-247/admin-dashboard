@@ -3,7 +3,7 @@ import loader from "../../images/gif/white-loader.gif";
 import { Link } from "react-router-dom";
 import { ReactNode } from "react";
 interface IButtonProps {
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "cancel";
   type?: "button" | "submit";
   extraClassName?: string;
   isLoading?: boolean;
@@ -31,15 +31,26 @@ export default function Button({
     </>
   );
 
+  const getVariantClasses = () => {
+    switch (variant) {
+      case "primary":
+        return "bg-primary text-white";
+      case "secondary":
+        return "bg-grey-1 text-black-1";
+      case "cancel":
+        return "bg-[#FFE5E5] text-[#FF0000]";
+      default:
+        return "bg-primary text-white";
+    }
+  };
+
   return props.href ? (
     <Link
       to={props.href}
       className={clsx(
         "text-center rounded-[16px] text-sm font-medium cursor-pointer py-2.5 relative w-full min-h-[50px]",
         props.extraClassName,
-        variant === "primary"
-          ? "bg-primary text-white"
-          : "bg-grey-1 text-black-1",
+        getVariantClasses(),
         props.isLoading && "opacity-70"
       )}
     >
@@ -51,9 +62,7 @@ export default function Button({
       className={clsx(
         "text-center rounded-[16px] text-sm font-medium cursor-pointer py-2.5 relative w-full min-h-[50px]",
         props.extraClassName,
-        variant === "primary"
-          ? "bg-primary text-white"
-          : "bg-grey-1 text-black-1",
+        getVariantClasses(),
         props.isLoading && "opacity-70"
       )}
       disabled={props.isLoading || props.disabled}

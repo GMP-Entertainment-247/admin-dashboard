@@ -17,7 +17,13 @@ import {
   Heading2,
   Heading3,
 } from "lucide-react";
-import { useState, useRef, forwardRef, useImperativeHandle } from "react";
+import {
+  useState,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+} from "react";
 import clsx from "clsx";
 import { TextAreaProps } from "./types";
 import Label from "./Label";
@@ -75,6 +81,12 @@ const TextArea = forwardRef<any, TextAreaProps>(
         },
       },
     });
+
+    useEffect(() => {
+      if (editor && value !== editor.getHTML()) {
+        editor.commands.setContent(value);
+      }
+    }, [value, editor]);
 
     // Expose editor through ref
     useImperativeHandle(ref, () => ({
@@ -146,17 +158,6 @@ const TextArea = forwardRef<any, TextAreaProps>(
 
     return (
       <div className={clsx("space-y-3", disabled && "opacity-60", className)}>
-        {/* Hidden input for form submission */}
-        {/* <input
-          type="hidden"
-          name={name ? name : id}
-          id={id}
-          value={editor?.getHTML() || ""}
-          required={required}
-          disabled={disabled}
-          className={inputClassName}
-        /> */}
-
         {label && (
           <Label id={id} required={required} labelclassName={labelclassName}>
             {label}

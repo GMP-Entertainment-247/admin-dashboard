@@ -44,12 +44,42 @@ export interface BlogListResponse {
 }
 
 // Blog details (single fetch) interfaces
-export interface BlogDetailsPicture {
+// export interface BlogDetailsPicture {
+//   id: number;
+//   blog_id: string;
+//   file: string;
+//   created_at?: string;
+//   updated_at?: string;
+// }
+
+export interface BlogDetailsComment {
   id: number;
   blog_id: string;
-  file: string;
-  created_at?: string;
-  updated_at?: string;
+  user_id: string;
+  comment: string;
+  created_at: string;
+  updated_at: string;
+  comment_id: null;
+  user: {
+    id: number;
+    name: string;
+    profile_pic: string;
+    profile_picture_url: string;
+  };
+}
+export interface BlogDetailsLike {
+  id: number;
+  blog_id: string;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+  comment_id: null;
+  user: {
+    id: number;
+    name: string;
+    profile_pic: string;
+    profile_picture_url: string;
+  };
 }
 
 export interface BlogDetailsData {
@@ -57,14 +87,15 @@ export interface BlogDetailsData {
   category: string;
   title: string;
   content: string;
-  pictures: BlogDetailsPicture[];
-  created_at?: string;
+  pictures: BlogPicture[];
+  comments: BlogDetailsComment[];
+  likes: BlogDetailsLike[];
 }
 
 // Generic API response and specific responses
 export interface ApiResponse<T = any> {
   status: boolean;
-  message: string | Record<string, string | string[]>;
+  message: string | Record<string, string | string[]> | [];
   data: T;
 }
 

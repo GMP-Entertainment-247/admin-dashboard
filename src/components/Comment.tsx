@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PostActions from "./PostActions";
 import Input from "./Form/Input";
+import { formatTimestamp } from "../utils/formatTimestamp";
 
 export interface CommentProps {
   id: string;
@@ -11,6 +12,7 @@ export interface CommentProps {
   replies?: CommentProps[];
   profile_picture: string;
   timestamp?: string;
+  disabled?: boolean;
 }
 
 const Comment: React.FC<CommentProps> = ({
@@ -22,12 +24,15 @@ const Comment: React.FC<CommentProps> = ({
   replies,
   profile_picture,
   timestamp,
+  disabled = false,
 }) => {
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState("");
 
   const handleReplyClick = () => {
-    setShowReplyInput(!showReplyInput);
+    if (!disabled) {
+      setShowReplyInput(!showReplyInput);
+    }
   };
 
   const handleReplySubmit = () => {
@@ -38,6 +43,7 @@ const Comment: React.FC<CommentProps> = ({
       setShowReplyInput(false);
     }
   };
+
   return (
     <div className="relative">
       {/* Vertical line from parent comment to replies */}
@@ -57,7 +63,9 @@ const Comment: React.FC<CommentProps> = ({
             <p className="text-xs md:text-sm font-semibold text-black-default">
               {name}
             </p>
-            <p className="text-xs text-[#999999] font-normal">{timestamp}</p>
+            <p className="text-xs text-[#999999] font-normal">
+              {formatTimestamp(timestamp)}
+            </p>
           </div>
           <p className="text-xs text-grey-normal font-normal">{text}</p>
           <PostActions
@@ -66,18 +74,16 @@ const Comment: React.FC<CommentProps> = ({
             dislikes={dislikes}
             replyText
             onReplyClick={handleReplyClick}
+            disabled={disabled}
           />
         </div>
       </div>
       {replies && replies.length > 0 && (
         <div className="ml-11 relative">
-          {/* Horizontal line connecting to reply */}
-          {/* <div className="absolute left-[-20px] top-[16px] w-4 h-px bg-[#E9E9E9]" /> */}
-
           <div className="space-y-4">
             {replies.map((reply, index) => (
-              <div key={reply.id + index * Math.random() + Math.random()}>
-                <Comment {...reply} />
+              <div key={reply.id}>
+                <Comment {...reply} disabled={disabled} />
                 {index !== replies.length - 1 && (
                   <div className="h-[1px] bg-[#E9E9E9] w-full my-4" />
                 )}
@@ -88,7 +94,7 @@ const Comment: React.FC<CommentProps> = ({
       )}
 
       {/* Reply Input Field */}
-      {showReplyInput && (
+      {showReplyInput && !disabled && (
         <div className="ml-11 mt-4">
           <Input
             id="reply-input"

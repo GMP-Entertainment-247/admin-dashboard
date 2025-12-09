@@ -32,13 +32,14 @@ export default function BlogsHome() {
     queryParams.date = selectedDate;
   }
 
-  const { data, loading, error } = useFetch<BlogListData>(
-    "/admin/blog/list",
-    queryParams
-  );
+  const {
+    data: blogData,
+    loading,
+    error,
+  } = useFetch<BlogListData>("/admin/blog/list", queryParams);
 
   // Type assertion to help TypeScript understand the structure
-  const blogData = data as BlogListData | undefined;
+  // const blogData = data as BlogListData | undefined;
 
   const renderContent = () => {
     if (loading) {

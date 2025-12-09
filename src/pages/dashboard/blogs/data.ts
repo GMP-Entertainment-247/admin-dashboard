@@ -91,6 +91,21 @@ export const updateBlog = async (
   return response.data;
 };
 
+// export const addBlogImages = async (
+//   formData: FormData
+// ): Promise<ApiResponse<null>> => {
+//   const response = await createApiClient().post(
+//     "/admin/blog/add-image",
+//     formData,
+//     {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     }
+//   );
+//   return response.data;
+// };
+
 export const getBlogDetails = async (
   blogId: string | number
 ): Promise<BlogDetailsResponse> => {
@@ -102,7 +117,7 @@ export const getBlogDetails = async (
 
 // Delete existing blog image by image id
 export const deleteBlogImage = async (
-  imageId: number
+  imageId: number | string
 ): Promise<ApiResponse<null>> => {
   const response = await createApiClient().post("/admin/blog/delete-image", {
     id: imageId,

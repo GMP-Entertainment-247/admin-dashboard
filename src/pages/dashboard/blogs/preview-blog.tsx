@@ -1,54 +1,128 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BlogInnerLayout from "./inner-layout";
-import image from "../../../images/rap-battle.jpg";
-import PostActions from "../../../components/PostActions";
 import Button from "../../../components/shared/Button";
 import StateContainer from "../../../components/shared/StateContainer";
 import { useBlogDraft } from "./BlogDraftContext";
+import { createBlog, deleteBlogImage, updateBlog } from "./data";
+import { toast } from "react-toastify";
+import { flattenErrorMessage } from "../../../utils/errorHelpers";
+import BlogViewLayout from "../../../components/BlogViewLayout";
+import { type CommentProps } from "../../../components/Comment";
 
 const PreviewBlog = () => {
   const { draft } = useBlogDraft();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { title, content, images } = useMemo(() => {
-    if (!draft) {
-      return { title: "", content: "", images: [] as string[] };
+  const {
+    title,
+    content,
+    images,
+    comments,
+    likes,
+    blogId,
+    deletedIds,
+    newFiles,
+  } = useMemo(() => {
+    if (!draft?.data) {
+      return {
+        title: "",
+        content: "",
+        images: [] as string[],
+        comments: [] as CommentProps[],
+        likes: 0,
+        blogId: undefined as string | number | undefined,
+        deletedIds: [] as string[],
+        newFiles: [] as File[],
+      };
     }
 
-    const formData = draft.formData;
-    const derivedTitle = (formData.get("title") as string) || "";
-    const derivedContent = (formData.get("content") as string) || "";
+    const { data } = draft;
+    const filteredExisting =
+      data.existingImages?.filter((img) => {
+        if (!img.file) return false;
+        return !data.deletedImageIds.includes(String(img.id));
+      }) || [];
 
-    const derivedImages: string[] = [];
-    for (const [key, value] of Array.from(formData.entries())) {
-      if (key.startsWith("picture[") && value instanceof File) {
-        derivedImages.push(URL.createObjectURL(value));
-      }
-    }
+    const derivedImages: string[] = [
+      ...filteredExisting.map((img) => img.file),
+      ...(data.newImages || []).map((f) => URL.createObjectURL(f)),
+    ];
+
+    // Map comments from draft data
+    const mappedComments: CommentProps[] =
+      data.comments?.map((c: any) => ({
+        id: String(c.id),
+        name: c.user?.name || "Anonymous",
+        text: c.comment,
+        likes: 0, // Comments don't have individual like counts in preview
+        dislikes: 0,
+        profile_picture:
+          c.user?.profile_picture_url || c.user?.profile_pic || "",
+        timestamp: c.created_at,
+        replies: [], // Ignoring nested comments for now
+      })) || [];
 
     return {
-      title: derivedTitle,
-      content: derivedContent,
+      title: data.title,
+      content: data.content,
       images: derivedImages,
+      comments: mappedComments,
+      likes: data.likes?.length || 0,
+      blogId: data.blogId,
+      deletedIds: data.deletedImageIds || [],
+      newFiles: data.newImages || [],
     };
   }, [draft]);
 
-  const imagesToShow =
-    images.length > 0 ? images : [image, image, image].slice(0, 3);
-
-  const handleMakeChanges = () => {
+  const handleContinueEditing = () => {
     navigate(-1);
   };
 
   const handlePrimaryAction = async () => {
     if (!draft) return;
     setIsSubmitting(true);
+    console.log(deletedIds, "line 86");
     try {
-      // The actual API submission is still handled on the form page.
-      // For now, simply navigate back to the blogs list.
-      navigate("/blogs");
+      const formData = new FormData();
+      formData.set("category", draft.data.category || "");
+      formData.set("title", draft.data.title || "");
+      formData.set("content", draft.data.content || "");
+
+      if (draft.mode === "create") {
+        newFiles.forEach((file, idx) =>
+          formData.append(`picture[${idx}]`, file)
+        );
+        await createBlog(formData);
+        toast.success("Blog created");
+      } else {
+        const targetBlogId = blogId;
+        if (targetBlogId) {
+          formData.set("blog_id", String(targetBlogId));
+        }
+        newFiles.forEach((file, idx) =>
+          formData.append(`picture[${idx}]`, file)
+        );
+        await updateBlog(formData);
+
+        for (const id of deletedIds || []) {
+          if (id != null && id !== "") {
+            await deleteBlogImage(String(id));
+          }
+        }
+        toast.success("Blog updated");
+      }
+      if (draft.mode === "create") {
+        navigate("/blogs");
+      } else {
+        navigate(`/blogs/${blogId}`);
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || error?.message || null;
+      const message = flattenErrorMessage(errorMessage, "Failed to save blog");
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -69,45 +143,30 @@ const PreviewBlog = () => {
 
   return (
     <BlogInnerLayout title="Preview">
-      <div className="w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10">
-        <article className="lg:w-[56%]">
-          <h3 className="text-sm md:text-base font-semibold text-grey-normal mb-5 line-clamp-2">
-            {title}
-          </h3>
-          <div
-            className="text-xs md:text-sm text-grey-normal font-normal mb-8"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
-          <PostActions likes={10} dislikes={2} comments={10} />
-        </article>
-        <aside className="lg:flex-1 space-y-10 lg:mt-4">
-          <div className="w-full flex gap-3">
-            {imagesToShow.slice(0, 3).map((src, idx) => (
-              <div
-                key={idx}
-                className="flex-1 aspect-[1.47] rounded-lg overflow-hidden relative"
-              >
-                <img
-                  src={typeof src === "string" ? src : image}
-                  alt="blog"
-                  className="w-full h-full object-cover absolute inset-0"
-                />
-              </div>
-            ))}
-          </div>
-        </aside>
-      </div>
+      <BlogViewLayout
+        title={title}
+        content={content}
+        images={images}
+        likes={likes}
+        comments={comments}
+        disableActions={true}
+        noCommentsMessage={
+          draft.mode === "create"
+            ? "No comments yet. Create the post to start collecting feedback."
+            : "No comments to display."
+        }
+      />
 
       {/* Bottom action bar */}
       <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
         <Button
-          text="Make Changes"
+          text="Continue Editing"
           type="button"
           extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold !bg-transparent !text-grey-normal border border-[#E9E9E9]"
-          onClick={handleMakeChanges}
+          onClick={handleContinueEditing}
         />
         <Button
-          text={draft.mode === "create" ? "Create Post" : "Save"}
+          text={draft.mode === "create" ? "Create Post" : "Save Changes"}
           type="button"
           extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
           isLoading={isSubmitting}

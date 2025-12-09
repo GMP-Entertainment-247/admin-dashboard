@@ -8,6 +8,7 @@
  */
 export const flattenErrorMessage = (
   message: string | Record<string, string | string[]> | null | undefined,
+  // | object,
   defaultMessage: string = "An error occurred"
 ): string => {
   if (!message) {

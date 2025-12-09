@@ -1,15 +1,38 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  type ReactNode,
+  SetStateAction,
+  Dispatch,
+} from "react";
+import type {
+  BlogDetailsComment,
+  BlogDetailsLike,
+} from "../../../interface/blog.interface";
 
 export type BlogDraftMode = "create" | "edit";
 
+export interface BlogDraftData {
+  category: string;
+  title: string;
+  content: string;
+  existingImages: { id: string; file: string }[];
+  newImages: File[];
+  deletedImageIds: string[];
+  blogId?: string | number;
+  comments?: BlogDetailsComment[];
+  likes?: BlogDetailsLike[];
+}
+
 export interface BlogDraft {
   mode: BlogDraftMode;
-  formData: FormData;
+  data: BlogDraftData;
 }
 
 interface BlogDraftContextValue {
   draft: BlogDraft | null;
-  setDraft: (draft: BlogDraft | null) => void;
+  setDraft: Dispatch<SetStateAction<BlogDraft | null>>;
 }
 
 const BlogDraftContext = createContext<BlogDraftContextValue | undefined>(

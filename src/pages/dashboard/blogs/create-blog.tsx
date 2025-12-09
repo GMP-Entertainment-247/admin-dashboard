@@ -1,24 +1,27 @@
+import { useEffect } from "react";
 import BlogForm from "../../../components/BlogForm";
-import { useNavigate } from "react-router-dom";
 import { useBlogDraft } from "./BlogDraftContext";
 
 export default function CreateBlog() {
-  const navigate = useNavigate();
-  const { setDraft } = useBlogDraft();
+  const { draft, setDraft } = useBlogDraft();
 
-  const handlePreview = (formData: FormData) => {
+  useEffect(() => {
+    if (draft?.mode === "create" && draft.data) return;
     setDraft({
       mode: "create",
-      formData,
+      data: {
+        category: "",
+        title: "",
+        content: "",
+        existingImages: [],
+        newImages: [],
+        deletedImageIds: [],
+        blogId: undefined,
+        comments: [],
+        likes: [],
+      },
     });
-    navigate("/blogs/preview");
-  };
+  }, [draft, setDraft]);
 
-  return (
-    <BlogForm
-      mode="create"
-      onSubmit={handlePreview}
-      primaryButtonLabel="Preview"
-    />
-  );
+  return <BlogForm />;
 }
