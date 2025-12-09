@@ -8,6 +8,7 @@
  */
 export const flattenErrorMessage = (
   message: string | Record<string, string | string[]> | null | undefined,
+  // | object,
   defaultMessage: string = "An error occurred"
 ): string => {
   if (!message) {
@@ -37,4 +38,22 @@ export const flattenErrorMessage = (
   }
 
   return defaultMessage;
+};
+
+/**
+ * Safely extracts and flattens API error messages from Axios or manual errors.
+ *
+ * @param error - The caught error object from API calls
+ * @param defaultMessage - Message to use if no valid error message is found
+ * @returns A human-readable error message
+ */
+export const handleApiError = (
+  error: any,
+  defaultMessage: string = "An error occurred"
+): string => {
+  // Extract API message if available
+  const apiMessage = error?.response?.data?.message || error?.message || null;
+
+  // Reuse existing helper to flatten nested error structures
+  return flattenErrorMessage(apiMessage, defaultMessage);
 };

@@ -3,7 +3,7 @@ import commenter from "../../../images/commenter.png";
 import { createApiClient } from "../../../utils/api";
 import type {
   BlogCreateResponse,
-  BlogDetailsResponse,
+  // BlogDetailsResponse,
   ApiResponse,
 } from "../../../interface/blog.interface";
 
@@ -91,21 +91,36 @@ export const updateBlog = async (
   return response.data;
 };
 
-export const getBlogDetails = async (
-  blogId: string | number
-): Promise<BlogDetailsResponse> => {
-  const response = await createApiClient().get("/admin/blog/details", {
-    params: { blog_id: String(blogId) },
+// export const addBlogImages = async (
+//   formData: FormData
+// ): Promise<ApiResponse<null>> => {
+//   const response = await createApiClient().post(
+//     "/admin/blog/add-image",
+//     formData,
+//     {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     }
+//   );
+//   return response.data;
+// };
+
+// Delete existing blog image by image id
+export const deleteBlogImage = async (
+  imageId: number | string
+): Promise<ApiResponse<null>> => {
+  const response = await createApiClient().post("/admin/blog/delete-image", {
+    id: imageId,
   });
   return response.data;
 };
 
-// Delete existing blog image by image id
-export const deleteBlogImage = async (
-  imageId: number
+export const deleteBlog = async (
+  blogId: string
 ): Promise<ApiResponse<null>> => {
-  const response = await createApiClient().post("/admin/blog/delete-image", {
-    id: imageId,
+  const response = await createApiClient().post("/admin/blog/delete", {
+    id: blogId,
   });
   return response.data;
 };

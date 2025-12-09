@@ -1,10 +1,13 @@
 import { Outlet } from "react-router-dom";
 import DashboardLayout from "../DashboardLayout";
+import { BlogDraftProvider } from "./BlogDraftContext";
 
 export default function BlogsLayout() {
   return (
     <DashboardLayout>
-      <Outlet />
+      <BlogDraftProvider>
+        <Outlet />
+      </BlogDraftProvider>
     </DashboardLayout>
   );
 }

@@ -1,4 +1,5 @@
 import Button from "../../../components/shared/Button";
+import PageTitle from "../../../components/shared/PageTitle";
 import Tabs from "../../../components/shared/Tabs";
 import AutoResizingGrid from "../../../components/shared/AutoResizingGrid";
 import BlogCard from "../../../components/BlogCard";
@@ -27,17 +28,18 @@ export default function BlogsHome() {
     queryParams.category = selectedCategory;
   }
 
-  if (selectedDate) {
+  if (selectedDate && selectedDate !== "all") {
     queryParams.date = selectedDate;
   }
 
-  const { data, loading, error } = useFetch<BlogListData>(
-    "/admin/blog/list",
-    queryParams
-  );
+  const {
+    data: blogData,
+    loading,
+    error,
+  } = useFetch<BlogListData>("/admin/blog/list", queryParams);
 
   // Type assertion to help TypeScript understand the structure
-  const blogData = data as BlogListData | undefined;
+  // const blogData = data as BlogListData | undefined;
 
   const renderContent = () => {
     if (loading) {
@@ -90,7 +92,7 @@ export default function BlogsHome() {
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="page-title">News & Blogs</h1>
+        <PageTitle as="h1">News & Blogs</PageTitle>
         <Button
           text="Create Blog"
           href="/blogs/create-blog"
@@ -109,6 +111,7 @@ export default function BlogsHome() {
                 triggerText="Date"
                 paramKey="date"
                 options={[
+                  { label: "All", value: "all" },
                   { label: "Today", value: "today" },
                   { label: "This week", value: "this-week" },
                   { label: "This month", value: "this-month" },
