@@ -23,7 +23,7 @@ export default function useFetch<T = unknown>(
 
       return response.data.data;
     } catch (error) {
-      // Convert Axios + Laravel validation error into readable text
+      // Convert Axios + Laravel backend validation error into readable text
       const formattedMessage = handleApiError(error, "Failed to load data");
 
       // Throw a new clean message so React Query exposes a readable error
