@@ -141,7 +141,7 @@ const Profile = () => {
                     !!form.values.profile_picture_url && "border border-[#999999]"
                   )}
                 >
-                  <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                  <input placeholder="accept" ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                   <img
                     src={
                       !!form.values.profile_picture_url ?
