@@ -118,9 +118,9 @@ export default function BookingsHome() {
   return (
     <div>
       {/*cards and calender container*/}
-      <div className="flex">
+      <div className="flex gap-6">
         {/*cards */}
-        <div className="grid grid-cols-3 gap-5 my-5 w-[802px] h-[383px] ">
+        <div className="grid grid-cols-3 gap-5 my-5 w-full h-[383px] ">
           {cards.map((item) => (
             <Card
               key={item.id}
@@ -132,7 +132,7 @@ export default function BookingsHome() {
           ))}
         </div>
         {/*calender */}
-        <div className="ml-5 mt-5 h-[383px]">
+        <div className="ml-auto mt-5 h-[383px] w-1/4">
           <EventCalendar />
           {/* <Calendar value={selectedDate} onChange={handleDateChange} /> */}
         </div>

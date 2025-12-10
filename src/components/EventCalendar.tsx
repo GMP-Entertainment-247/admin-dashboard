@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Calendar from "react-calendar";
-// import 'react-calendar/dist/Calendar.css';
+import 'react-calendar/dist/Calendar.css';
 import { useMemo } from "react";
 
 export default function EventCalendar({
@@ -38,13 +38,13 @@ export default function EventCalendar({
           {colors.map((c, i) => (
             <span
               key={i}
-              // style={{
-              // 	width: 6,
-              // 	height: 6,
-              // 	borderRadius: 999,
-              // 	background: c,
-              // 	display: 'inline-block',
-              // }}
+              style={{
+              	width: 6,
+              	height: 6,
+              	borderRadius: 999,
+              	background: c,
+              	display: 'inline-block',
+              }}
             />
           ))}
         </div>
@@ -59,9 +59,9 @@ export default function EventCalendar({
           <div className="flex items-center gap-1 mb-2 ml-2.5" key={idx}>
             <div
               className="w-2.5 h-2.5 rounded-full"
-              // style={{
-              // 	background: item?.[1] || "#BFA100"
-              // }}
+              style={{
+              	background: item?.[1] || "#BFA100"
+              }}
             />
             <p className="text-[#737373] text-sm capitalize">
               {item?.[0] || ""}

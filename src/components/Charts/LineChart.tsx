@@ -36,20 +36,20 @@ const LineChartComponent = ({
     return (
       <div
         className="flex flex-col gap-1"
-        // style={{
-        //   background: "white",
-        //   border: "1px solid #e5e7eb",
-        //   padding: "10px",
-        //   borderRadius: "8px",
-        //   boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        // }}
+        style={{
+          background: "white",
+          border: "1px solid #e5e7eb",
+          padding: "10px",
+          borderRadius: "8px",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+        }}
       >
         {/* <p className='text-xs'>{label}</p> */}
         {payload.map((entry, index) => (
           <div className="flex items-center gap-1" key={`item-${index}`}>
             <div
               className="w-2 h-2"
-              //  style={{background: entry.color ?? entry.stroke}}
+               style={{background: entry.color ?? entry.stroke}}
             />
             <p className="text-xs">
               <span className="capitalize text-[#737373]">{entry.name}:</span>{" "}
@@ -125,7 +125,7 @@ const LineChartComponent = ({
             />
             <p
               className="text-xs capitalize"
-              // style={{color: `${key.color}`}}
+              style={{color: `${key.color}`}}
             >
               {key.label}
             </p>
