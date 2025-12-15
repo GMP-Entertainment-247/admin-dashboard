@@ -25,6 +25,7 @@ const PostActions: React.FC<PostActionsProps> = ({
       <div className="flex items-center gap-1.5">
         <button
           type="button"
+          title="like"
           disabled={disabled}
           className={clsx(disabled && "cursor-not-allowed opacity-50")}
         >
@@ -35,6 +36,7 @@ const PostActions: React.FC<PostActionsProps> = ({
       <div className="flex items-center gap-1.5">
         <button
           type="button"
+          title="dislike"
           disabled={disabled}
           className={clsx(disabled && "cursor-not-allowed opacity-50")}
         >
@@ -46,6 +48,7 @@ const PostActions: React.FC<PostActionsProps> = ({
         <div className="flex items-center gap-1.5">
           <button
             type="button"
+            title="comments"
             disabled={disabled}
             className={clsx(disabled && "cursor-not-allowed opacity-50")}
           >
