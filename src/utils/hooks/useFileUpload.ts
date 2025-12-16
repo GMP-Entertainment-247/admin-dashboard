@@ -1,10 +1,11 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 interface FileUploadOptions {
   accept?: string[]; // Optional array of accepted file types
   maxSizeKb?: number; // in kb
   multiple?: boolean;
   maxFiles?: number; // Maximum number of files allowed
+  initialFiles?: File[]; // Optional initial files (useful for rehydration)
 }
 
 interface UploadOptions {
@@ -23,13 +24,17 @@ export function useFileUpload({
   maxSizeKb = 5 * 1024, // 5MB default
   multiple = false,
   maxFiles = 10, // Default to 10 files
+  initialFiles = [],
 }: FileUploadOptions) {
   const [state, setState] = useState<FileUploadState>({
-    files: [],
+    files: initialFiles,
     isDragOver: false,
     isUploading: false,
     error: null,
   });
+  useEffect(() => {
+    setState((prev) => ({ ...prev, files: initialFiles }));
+  }, [initialFiles]);
 
   const formatFileSize = useCallback((bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
