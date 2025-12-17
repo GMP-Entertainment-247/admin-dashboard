@@ -1,4 +1,3 @@
-import { Outlet } from "react-router-dom";
 import DashboardLayout from "../DashboardLayout";
 import mic from "../../../images/svg/mic.svg";
 import investors from "../../../images/svg/investors.svg";
