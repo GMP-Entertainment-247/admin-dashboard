@@ -48,6 +48,11 @@ export const navigationItems: NavigationItem[] = [
     link: "/fans",
   },
   {
+    icon: <IconPerson />,
+    text: "Earnings",
+    link: "/earnings",
+  },
+  {
     icon: <IconRapBattle />,
     text: "Rap Battle",
     link: "/rap-battle",

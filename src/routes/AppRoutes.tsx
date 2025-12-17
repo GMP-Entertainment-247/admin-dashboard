@@ -54,6 +54,10 @@ import InvestorsHome from "../pages/dashboard/investors";
 import InvestorDetails from "../pages/dashboard/investors/details";
 import AllInvestments from "../pages/dashboard/investors/investments/allInvestments";
 import InvestmentDetail from "../pages/dashboard/investors/investments/details";
+import EarningsLayout from "../pages/dashboard/earnings/layout";
+import EarningsHome from "../pages/dashboard/earnings";
+import AllPayouts from "../pages/dashboard/earnings/allpayouts";
+import NotificationsPage from "../pages/dashboard/notifications";
 interface IRoutes {
   path: string;
   element: ReactElement<any, any>;
@@ -291,6 +295,26 @@ export const appRoutes: IRoutes[] = [
         childElement: <BookingsHome />,
       },
     ],
+  },
+  {
+    path: "/earnings",
+    element: <EarningsLayout />,
+    isProtected: true,
+    children: [
+      {
+        index: true,
+        childElement: <EarningsHome />,
+      },
+      {
+        childPath: "payouts",
+        childElement: <AllPayouts />,
+      },
+    ],
+  },
+  {
+    path: "/notifications",
+    element: <NotificationsPage />,
+    isProtected: true,
   },
   {
     path: "/settings",

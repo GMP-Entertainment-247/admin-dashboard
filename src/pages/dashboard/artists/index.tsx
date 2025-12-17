@@ -8,16 +8,16 @@ import mic from "../../../images/svg/mic.svg";
 import edit from "../../../images/svg/edit.svg";
 import { useNavigate } from "react-router-dom";
 import useFetch from '../../../utils/hooks/useFetch';
-import { IFan } from "../../../interface/fans.interface";
 import LineChartComponent from "../../../components/Charts/LineChart";
 import { useState } from "react";
 import PieChartComponent from "../../../components/Charts/PieChart";
+import { IArtist } from "../../../interface/artists.interface";
 // import dayjs from "dayjs";
 
 
 export default function ArtistsHome () {
   const navigate = useNavigate()
-  const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+  const {data, loading} = useFetch<{data: IArtist[]}>("/admin/list-artists")
   const [lineChartDataKeys, setLineChartDataKeys] = useState([
     {label: 'revenue', color: "#00BF00", isActive: true, handleChange: handleLineChartDataKeyChange},
     {label: 'uploads', color: "#AB1BB2", isActive: true, handleChange: handleLineChartDataKeyChange},
@@ -223,7 +223,7 @@ export default function ArtistsHome () {
             },
             {
               header: "Location",
-              view: (item) => <span className="lowercase">{item.email}</span>,
+              view: (item) => <span className="lowercase">{item.location ?? "---"}</span>,
             },
             {
               header: "Phone Number",
