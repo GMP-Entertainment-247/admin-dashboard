@@ -74,7 +74,7 @@ export default function BlogsHome() {
       <>
         <AutoResizingGrid minWidth={300}>
           {blogData.data.map((blog) => (
-            <Link key={blog.id} to={`/blogs/${blog.id}`}>
+            <Link key={blog.id} to={`${blog.id}`}>
               <BlogCard blog={blog} />
             </Link>
           ))}
@@ -95,7 +95,7 @@ export default function BlogsHome() {
         <PageTitle as="h1">News & Blogs</PageTitle>
         <Button
           text="Create Blog"
-          href="/blogs/create-blog"
+          href="create-blog"
           extraClassName="rounded-[8px] font-bold !w-fit px-5 !min-h-[unset]"
         />
       </div>

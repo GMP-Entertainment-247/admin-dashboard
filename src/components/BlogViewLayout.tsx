@@ -28,7 +28,7 @@ const BlogViewLayout: React.FC<BlogViewLayoutProps> = ({
   return (
     <div className="bg-white p-5 rounded-2xl w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10">
       <article className="lg:w-[56%]">
-        <h3 className="text-sm md:text-base font-semibold text-grey-normal mb-5 line-clamp-2">
+        <h3 className="text-xl md:text-2xl font-semibold text-grey-normal mb-5 line-clamp-2">
           {title}
         </h3>
         <div

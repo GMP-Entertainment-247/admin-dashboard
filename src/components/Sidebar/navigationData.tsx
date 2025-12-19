@@ -64,7 +64,7 @@ export const navigationItems: NavigationItem[] = [
       },
       {
         text: "Announcement",
-        link: "/rap-battle/annoucement",
+        link: "/rap-battle/announcement",
       },
       {
         text: "Votes",
