@@ -9,3 +9,5 @@ export interface Announcement {
   description: string;
   image: string;
 }
+
+

@@ -109,3 +109,8 @@ export const formatTimeAgo = (dateString: string) => {
     return `${Math.floor(diffInSeconds / 3600)} hrs ago`;
   return `${Math.floor(diffInSeconds / 86400)} days ago`;
 };
+
+export const combineDateTime = (date?: string, time?: string) => {
+  if (!date || !time) return "";
+  return `${date} ${time}:00`;
+};

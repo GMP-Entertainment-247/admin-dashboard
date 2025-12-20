@@ -1,4 +1,4 @@
-import image from "../images/rap-battle.jpg";
+// import image from "../images/rap-battle.jpg";
 import PostActions from "./PostActions";
 import Comment from "./Comment";
 import { type CommentProps } from "./Comment";
@@ -22,9 +22,6 @@ const BlogViewLayout: React.FC<BlogViewLayoutProps> = ({
   disableActions = false,
   noCommentsMessage = "No comments to display.",
 }) => {
-  const imagesToShow =
-    images.length > 0 ? images.slice(0, 3) : [image, image, image].slice(0, 3);
-
   return (
     <div className="bg-white p-5 rounded-2xl w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10">
       <article className="lg:w-[56%]">
@@ -44,13 +41,13 @@ const BlogViewLayout: React.FC<BlogViewLayoutProps> = ({
       </article>
       <aside className="lg:flex-1 space-y-10 lg:mt-4">
         <div className="w-full flex gap-3">
-          {imagesToShow.map((src, idx) => (
+          {images.slice(0, 3).map((src, idx) => (
             <div
               key={idx}
               className="flex-1 aspect-[1.47] rounded-lg overflow-hidden relative"
             >
               <img
-                src={typeof src === "string" ? src : image}
+                src={src}
                 alt="blog"
                 className="w-full h-full object-cover absolute inset-0"
               />

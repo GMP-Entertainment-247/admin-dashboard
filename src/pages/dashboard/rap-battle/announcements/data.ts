@@ -1,5 +1,6 @@
 import type { Announcement } from "../../../../interface/announcement.interface";
 import { useEffect, useState } from "react";
+import { createApiClient, type ApiResponse } from "../../../../utils/api";
 
 export const mockAnnouncements: Announcement[] = [
   {
@@ -154,4 +155,20 @@ export const useMockFetchAnnouncement = (
   }, [announcementId, enabled]);
 
   return { data, loading, error };
+};
+
+export const createAnnouncement = async (
+  formData: FormData
+): Promise<ApiResponse<null>> => {
+  const response = await createApiClient().post(
+    "/admin/announcement/create",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
 };

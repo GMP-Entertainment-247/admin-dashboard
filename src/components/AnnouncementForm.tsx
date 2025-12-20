@@ -3,9 +3,10 @@ import { useRef, useMemo } from "react";
 import AnnouncementInnerLayout from "../pages/dashboard/rap-battle/announcements/inner-layout";
 import {
   useAnnouncementDraft,
-  type AnnouncementDraftData,
+  // type AnnouncementDraftData,
 } from "../pages/dashboard/rap-battle/announcements/announcement-draft-context";
 import Button from "./shared/Button";
+import ImageItem from "./ImageItem";
 import Input from "./Form/Input";
 import Select from "./Form/Select";
 import Label from "./Form/Label";
@@ -31,7 +32,7 @@ const AnnouncementForm = () => {
     description,
     image,
     newImage,
-  } = useMemo<Partial<AnnouncementDraftData>>(() => {
+  } = useMemo(() => {
     return (
       draft?.data || {
         title: "",
@@ -52,6 +53,36 @@ const AnnouncementForm = () => {
     maxSizeKb: 2 * 1024, // 2MB
     initialFiles: newImage,
   });
+
+  const previewImageUrl = useMemo(() => {
+    if (fileUpload.files.length > 0) {
+      return URL.createObjectURL(fileUpload.files[0]);
+    }
+    if (newImage && newImage.length > 0) {
+      return URL.createObjectURL(newImage[0]);
+    }
+    if (image) {
+      return image;
+    }
+    return null;
+  }, [fileUpload.files, newImage, image]);
+
+  const handleRemoveImage = () => {
+    fileUpload.clearFiles();
+
+    setDraft((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        data: {
+          ...prev.data,
+          image: "",
+          newImage: [],
+        },
+      };
+    });
+  };
 
   const handleBrowseFiles = () => {
     fileInputRef.current?.click();
@@ -87,6 +118,12 @@ const AnnouncementForm = () => {
           endDate: derivedEndDate,
           endTime: derivedEndTime,
           description: derivedDescription,
+
+          // ✅ FILES SAVED HERE
+          ...(fileUpload.files.length > 0 && {
+            image: "", // remove old URL if replacing
+            newImage: fileUpload.files,
+          }),
         },
       };
     });
@@ -138,29 +175,39 @@ const AnnouncementForm = () => {
                 label="Description"
                 placeholder="Write here..."
                 minHeight={200}
-                // value={content}
+                value={description}
               />
             </div>
 
             <div className="w-full lg:w-[unset] lg:flex-1 space-y-7 lg:space-y-10 overflow-hidden self-center">
-              {/* Drag and Drop Area */}
-              <div
-                className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${
-                  fileUpload.isDragOver
-                    ? "border-brand-500 bg-brand-50"
-                    : "border-[#999999] hover:border-brand-500"
-                }`}
-                onDrop={fileUpload.handleDrop}
-                onDragOver={fileUpload.handleDragOver}
-                onDragLeave={fileUpload.handleDragLeave}
-                onClick={handleBrowseFiles}
-              >
-                <div className="space-y-1 text-center">
-                  <UploadIcon className="mx-auto" />
-                  <p className="mb-2">Drag & drop to upload or</p>
-                  <p className="text-[#998100]">Browse Files</p>
+              {previewImageUrl ? (
+                <ImageItem
+                  src={previewImageUrl}
+                  alt="Announcement image"
+                  onRemove={handleRemoveImage}
+                  className="w-full h-[259px]"
+                  imgClass="object-contain"
+                />
+              ) : (
+                // Drag and Drop Area
+                <div
+                  className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${
+                    fileUpload.isDragOver
+                      ? "border-brand-500 bg-brand-50"
+                      : "border-[#999999] hover:border-brand-500"
+                  }`}
+                  onDrop={fileUpload.handleDrop}
+                  onDragOver={fileUpload.handleDragOver}
+                  onDragLeave={fileUpload.handleDragLeave}
+                  onClick={handleBrowseFiles}
+                >
+                  <div className="space-y-1 text-center">
+                    <UploadIcon className="mx-auto" />
+                    <p className="mb-2">Drag & drop to upload or</p>
+                    <p className="text-[#998100]">Browse Files</p>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Hidden file input */}
               <input

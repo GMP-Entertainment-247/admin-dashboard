@@ -1,5 +1,5 @@
 import type { Announcement } from "../../../../interface/announcement.interface";
-import pic from "../../../../images/capture.png";
+// import pic from "../../../../images/capture.png";
 import { MessageCircle, PhoneCall, Calendar, Clock } from "lucide-react";
 import { imageProp } from "../../../../utils/helpers";
 
@@ -56,7 +56,7 @@ const AnnouncementViewLayout: React.FC<Omit<Announcement, "status" | "id">> = ({
         </div>
       </article>
       <aside className="lg:flex-1 space-y-10 lg:mt-4">
-        <img src={pic} alt="" className="w-full aspect-[1.7]" />
+        <img src={image} alt="announcement-pic" className="w-full aspect-[1.7]" />
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
@@ -66,7 +66,7 @@ const AnnouncementViewLayout: React.FC<Omit<Announcement, "status" | "id">> = ({
             />
             <div className="space-y-1.5">
               <p className="font-semibold text-[#1A1A1A] text-base">John Doe</p>
-              <p className="text-[#484848] text-sm">Admins</p>
+              <p className="text-[#484848] text-sm">Admin</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
