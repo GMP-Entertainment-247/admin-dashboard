@@ -11,7 +11,7 @@ import {
 export type AnnouncementDraftMode = "create" | "edit";
 
 export interface AnnouncementDraftData {
-  announcementId: number;
+  announcementId?: number;
   title: string;
   status: string;
   startDate: string;

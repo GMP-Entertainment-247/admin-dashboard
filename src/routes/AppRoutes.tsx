@@ -25,7 +25,6 @@ import AllRapBattleTickets from "../pages/dashboard/rap-battle/viewmore/AllTicke
 import AllRapBattleVotes from "../pages/dashboard/rap-battle/viewmore/AllVotes";
 import CreateEvent from "../pages/dashboard/rap-battle/create/events";
 import CreateTicket from "../pages/dashboard/rap-battle/create/tickets";
-import CreateAnnouncement from "../pages/dashboard/rap-battle/create/tickets";
 import BlogsHome from "../pages/dashboard/blogs";
 import BlogsLayout from "../pages/dashboard/blogs/layout";
 import CreateBlog from "../pages/dashboard/blogs/create-blog";
@@ -65,6 +64,7 @@ import AnnouncementDetails from "../pages/dashboard/rap-battle/announcement-deta
 import AnnouncementLayout from "../pages/dashboard/rap-battle/announcements/announcement-layout";
 import EditAnnouncement from "../pages/dashboard/rap-battle/edit-announcement";
 import PreviewAnnouncement from "../pages/dashboard/rap-battle/preview-announcement";
+import CreateAnnouncement from "../pages/dashboard/rap-battle/create/announcement";
 
 interface RouteNode {
   index?: boolean;

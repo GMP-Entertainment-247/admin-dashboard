@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useMemo } from "react";
 import AnnouncementInnerLayout from "../pages/dashboard/rap-battle/announcements/inner-layout";
-import { useAnnouncementDraft } from "../pages/dashboard/rap-battle/announcements/announcement-draft-context";
+import {
+  useAnnouncementDraft,
+  type AnnouncementDraftData,
+} from "../pages/dashboard/rap-battle/announcements/announcement-draft-context";
 import Button from "./shared/Button";
 import Input from "./Form/Input";
 import Select from "./Form/Select";
@@ -28,7 +31,7 @@ const AnnouncementForm = () => {
     description,
     image,
     newImage,
-  } = useMemo(() => {
+  } = useMemo<Partial<AnnouncementDraftData>>(() => {
     return (
       draft?.data || {
         title: "",
@@ -118,15 +121,15 @@ const AnnouncementForm = () => {
               <div className="space-y-3">
                 <Label id="start">Start Date & Time</Label>
                 <div className="flex items-center w-full gap-5">
-                  <Input id="start-date" />
-                  <Input id="start-time" />
+                  <Input id="start-date" type="date" defaultValue={startDate} />
+                  <Input id="start-time" type="time" defaultValue={startTime} />
                 </div>
               </div>
               <div className="space-y-3">
                 <Label id="start">End Date & Time</Label>
                 <div className="flex items-center w-full gap-5">
-                  <Input id="end-date" />
-                  <Input id="end-time" />
+                  <Input id="end-date" type="date" defaultValue={endDate} />
+                  <Input id="end-time" type="time" defaultValue={endTime} />
                 </div>
               </div>
               <TextArea
