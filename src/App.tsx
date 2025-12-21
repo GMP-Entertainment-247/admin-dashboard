@@ -1,13 +1,35 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ProtectedRoute } from './routes/ProtectedRoute';
-import { AuthProvider } from './context/AuthContext';
-import { appRoutes } from './routes/AppRoutes';
-import "./index.css"
-import { ToastContainer } from 'react-toastify';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ProfileProvider } from './context/ProfileContext';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
+import { ProfileProvider } from "./context/ProfileContext";
+import { appRoutes } from "./routes/AppRoutes";
+import { ToastContainer } from "react-toastify";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "./index.css";
 
 const queryClient = new QueryClient();
+
+/** 🔁 Recursive route renderer */
+const renderChildRoutes = (routes: any[], isProtected: boolean) => {
+  return routes.map(({ index, childPath, childElement, children }, i) => {
+    const element = isProtected ? (
+      <ProtectedRoute>{childElement}</ProtectedRoute>
+    ) : (
+      childElement
+    );
+
+    return (
+      <Route
+        key={childPath ?? i}
+        index={index}
+        path={index ? undefined : childPath}
+        element={element}
+      >
+        {children && renderChildRoutes(children, isProtected)}
+      </Route>
+    );
+  });
+};
 
 function App() {
   return (
@@ -17,37 +39,21 @@ function App() {
           <ToastContainer theme="colored" />
           <Router>
             <Routes>
-              {
-                appRoutes.map(({ path, element, isProtected, children })=>(
-                  <Route 
-                    key={path}
-                    path={path} 
-                    element={
-                      isProtected ?
+              {appRoutes.map(({ path, element, isProtected, children }) => (
+                <Route
+                  key={path}
+                  path={path}
+                  element={
+                    isProtected ? (
                       <ProtectedRoute>{element}</ProtectedRoute>
-                      :
+                    ) : (
                       element
-                    } 
-                  >
-                    {children &&
-                      children.map(({ childPath, childElement, index }) => 
-                        index ? (
-                          <Route
-                            key="index"
-                            index
-                            element={isProtected ? <ProtectedRoute>{childElement}</ProtectedRoute> : childElement}
-                          />
-                        ) : (
-                          <Route
-                            key={path}
-                            path={childPath}
-                            element={isProtected ? <ProtectedRoute>{childElement}</ProtectedRoute> : childElement}
-                          />
-                        )
-                      )}
-                  </Route>
-                ))
-              }
+                    )
+                  }
+                >
+                  {children && renderChildRoutes(children, isProtected)}
+                </Route>
+              ))}
             </Routes>
           </Router>
         </ProfileProvider>

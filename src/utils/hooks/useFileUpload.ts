@@ -32,8 +32,20 @@ export function useFileUpload({
     isUploading: false,
     error: null,
   });
+  // useEffect(() => {
+  //   setState((prev) => ({ ...prev, files: initialFiles }));
+  // }, [initialFiles]);
+
+  // useEffect(() => {
+  //   if (!initialFiles?.length) return;
+  //   setState((prev) => ({ ...prev, files: initialFiles }));
+  // }, [initialFiles?.length]);
+
   useEffect(() => {
-    setState((prev) => ({ ...prev, files: initialFiles }));
+    setState((prev) => {
+      if (prev.files === initialFiles) return prev;
+      return { ...prev, files: initialFiles ?? [] };
+    });
   }, [initialFiles]);
 
   const formatFileSize = useCallback((bytes: number): string => {

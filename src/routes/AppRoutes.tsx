@@ -17,6 +17,8 @@ import RapBattleHome from "../pages/dashboard/rap-battle";
 import AllContestants from "../pages/dashboard/rap-battle/viewmore/AllContestant";
 import LivestreamHome from "../pages/dashboard/rap-battle/livestream";
 import AllLivestreams from "../pages/dashboard/rap-battle/viewmore/AllLivestream";
+import Announcement from "../pages/dashboard/rap-battle/announcement";
+import AllAnnouncements from "../pages/dashboard/rap-battle/viewmore/AllAnnouncements";
 import TicketHome from "../pages/dashboard/rap-battle/ticket";
 import VotesHome from "../pages/dashboard/rap-battle/vote";
 import AllRapBattleTickets from "../pages/dashboard/rap-battle/viewmore/AllTickets";
@@ -58,15 +60,24 @@ import EarningsLayout from "../pages/dashboard/earnings/layout";
 import EarningsHome from "../pages/dashboard/earnings";
 import AllPayouts from "../pages/dashboard/earnings/allpayouts";
 import NotificationsPage from "../pages/dashboard/notifications";
+import AnnouncementDetails from "../pages/dashboard/rap-battle/announcement-details";
+import AnnouncementLayout from "../pages/dashboard/rap-battle/announcements/announcement-layout";
+import EditAnnouncement from "../pages/dashboard/rap-battle/edit-announcement";
+import PreviewAnnouncement from "../pages/dashboard/rap-battle/preview-announcement";
+import CreateAnnouncement from "../pages/dashboard/rap-battle/create/announcement";
+
+interface RouteNode {
+  index?: boolean;
+  childPath?: string;
+  childElement: ReactElement<any, any>;
+  children?: RouteNode[]; // 👈 recursion
+}
+
 interface IRoutes {
   path: string;
   element: ReactElement<any, any>;
   isProtected: boolean;
-  children?: {
-    index?: boolean;
-    childPath?: string;
-    childElement: ReactElement<any, any>;
-  }[];
+  children?: RouteNode[];
 }
 
 export const appRoutes: IRoutes[] = [
@@ -255,6 +266,36 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: "create-event",
         childElement: <CreateEvent />,
+      },
+      {
+        childPath: "announcement",
+        childElement: <AnnouncementLayout />,
+        children: [
+          {
+            index: true,
+            childElement: <Announcement />,
+          },
+          {
+            childPath: "all",
+            childElement: <AllAnnouncements />,
+          },
+          {
+            childPath: "create-announcement",
+            childElement: <CreateAnnouncement />,
+          },
+          {
+            childPath: "preview",
+            childElement: <PreviewAnnouncement />,
+          },
+          {
+            childPath: ":announcementId",
+            childElement: <AnnouncementDetails />,
+          },
+          {
+            childPath: ":announcementId/edit",
+            childElement: <EditAnnouncement />,
+          },
+        ],
       },
     ],
   },

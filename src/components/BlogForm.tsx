@@ -244,7 +244,7 @@ const BlogForm: React.FC = () => {
             />
           )}
           <Button
-            text={mode === "create" ? "Preview" : "Preview"}
+            text="Preview"
             type="submit"
             extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
           />

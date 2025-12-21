@@ -7,6 +7,7 @@ interface ImageItemProps {
   onRemove: () => void;
   className?: string;
   hideRemove?: boolean;
+  imgClass?: string;
 }
 
 const ImageItem: React.FC<ImageItemProps> = ({
@@ -15,6 +16,7 @@ const ImageItem: React.FC<ImageItemProps> = ({
   onRemove,
   className,
   hideRemove,
+  imgClass,
 }) => {
   return (
     <div
@@ -26,7 +28,7 @@ const ImageItem: React.FC<ImageItemProps> = ({
       <img
         src={src}
         alt={alt}
-        className="absolute inset-0 w-full h-full object-cover"
+        className={`absolute inset-0 w-full h-full object-cover ${imgClass}`}
       />
       {/* Remove button */}
       {!hideRemove && (

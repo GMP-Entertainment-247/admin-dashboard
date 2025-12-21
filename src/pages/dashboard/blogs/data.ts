@@ -1,11 +1,6 @@
 import type { CommentProps } from "../../../components/Comment";
 import commenter from "../../../images/commenter.png";
-import { createApiClient } from "../../../utils/api";
-import type {
-  BlogCreateResponse,
-  // BlogDetailsResponse,
-  ApiResponse,
-} from "../../../interface/blog.interface";
+import { createApiClient, type ApiResponse } from "../../../utils/api";
 
 // Centralized blog categories and tabs
 export const BLOG_CATEGORIES: { value: string; label: string }[] = [
@@ -64,9 +59,7 @@ export const comments: CommentProps[] = [
 ];
 
 // Blog API functions
-export const createBlog = async (
-  formData: FormData
-): Promise<BlogCreateResponse> => {
+export const createBlog = async (formData: FormData): Promise<ApiResponse<null>> => {
   const response = await createApiClient().post("/admin/blog/store", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -76,9 +69,7 @@ export const createBlog = async (
 };
 
 // Update blog
-export const updateBlog = async (
-  formData: FormData
-): Promise<BlogCreateResponse> => {
+export const updateBlog = async (formData: FormData): Promise<ApiResponse<null>> => {
   const response = await createApiClient().post(
     "/admin/blog/update",
     formData,

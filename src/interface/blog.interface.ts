@@ -1,3 +1,5 @@
+import type { ApiResponse } from "../utils/api";
+
 export interface BlogPicture {
   id: number;
   blog_id: string;
@@ -91,15 +93,6 @@ export interface BlogDetailsData {
   comments: BlogDetailsComment[];
   likes: BlogDetailsLike[];
 }
-
-// Generic API response and specific responses
-export interface ApiResponse<T = any> {
-  status: boolean;
-  message: string | Record<string, string | string[]>;
-  data: T;
-}
-
-export interface BlogCreateResponse extends ApiResponse<null> {}
 
 export interface BlogDetailsResponse
   extends ApiResponse<BlogDetailsData | null> {}

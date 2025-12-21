@@ -125,51 +125,49 @@ const PreviewBlog = () => {
     }
   };
 
-  if (!draft) {
-    return (
-      <BlogInnerLayout title="Preview">
+  return (
+    <BlogInnerLayout title="Preview">
+      {!draft ? (
         <StateContainer>
           <p className="text-gray-600">
             No blog data found to preview. Please go back and fill the form
             first.
           </p>
         </StateContainer>
-      </BlogInnerLayout>
-    );
-  }
+      ) : (
+        <>
+          <BlogViewLayout
+            title={title}
+            content={content}
+            images={images}
+            likes={likes}
+            comments={comments}
+            disableActions={true}
+            noCommentsMessage={
+              draft.mode === "create"
+                ? "No comments yet. Create the post to start collecting feedback."
+                : "No comments to display."
+            }
+          />
 
-  return (
-    <BlogInnerLayout title="Preview">
-      <BlogViewLayout
-        title={title}
-        content={content}
-        images={images}
-        likes={likes}
-        comments={comments}
-        disableActions={true}
-        noCommentsMessage={
-          draft.mode === "create"
-            ? "No comments yet. Create the post to start collecting feedback."
-            : "No comments to display."
-        }
-      />
-
-      {/* Bottom action bar */}
-      <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
-        <Button
-          text="Continue Editing"
-          type="button"
-          extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold !bg-transparent !text-grey-normal border border-[#E9E9E9]"
-          onClick={handleContinueEditing}
-        />
-        <Button
-          text={draft.mode === "create" ? "Create Post" : "Save Changes"}
-          type="button"
-          extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
-          isLoading={isSubmitting}
-          onClick={handlePrimaryAction}
-        />
-      </div>
+          {/* Bottom action bar */}
+          <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+            <Button
+              text="Continue Editing"
+              type="button"
+              extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold !bg-transparent !text-grey-normal border border-[#E9E9E9]"
+              onClick={handleContinueEditing}
+            />
+            <Button
+              text={draft.mode === "create" ? "Create Post" : "Save Changes"}
+              type="button"
+              extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
+              isLoading={isSubmitting}
+              onClick={handlePrimaryAction}
+            />
+          </div>
+        </>
+      )}
     </BlogInnerLayout>
   );
 };
