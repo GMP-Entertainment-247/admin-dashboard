@@ -1,0 +1,140 @@
+import PageTitle from "../../../components/shared/PageTitle";
+import Button from "../../../components/shared/Button";
+import Card from "../../../components/shared/Card";
+import {
+  FileUp,
+  SkipForward,
+  FileDown,
+  Bookmark,
+  EyeOff,
+  Trash2,
+} from "lucide-react";
+import { formatNumber } from "../../../utils/helpers";
+import Table from "../../../components/Table";
+import useFetch from "../../../utils/hooks/useFetch";
+import StateContainer from "../../../components/shared/StateContainer";
+import type { IBeat } from "../../../interface/beats.interface";
+import LoadingSpinner from "../../../components/shared/LoadingSpinner";
+
+const BeatsHome = () => {
+  const { data, loading, error } = useFetch<{
+    data: IBeat[];
+    total: number;
+    last_page: number;
+  }>("/admin/beats");
+
+  return (
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <PageTitle as="h1">Beats</PageTitle>
+        <Button
+          text="Upload Beat"
+          href="upload-beat"
+          extraClassName="rounded-[8px] font-bold !w-fit px-5 !min-h-[unset]"
+        />
+      </div>
+
+      <div className="grid grid-cols-4 gap-6 max-[1200px]:grid-cols-3 max-[992px]:grid-cols-2 max-[560px]:grid-cols-1">
+        {[
+          {
+            icon: <FileUp color="#fff" />,
+            bg: "bg-[#F85A7E]",
+            value: formatNumber(10000),
+            title: "Uploads",
+          },
+          {
+            icon: <SkipForward color="#fff" />,
+            bg: "bg-[#181670]",
+            value: formatNumber(10000),
+            title: "Streams",
+          },
+          {
+            icon: <FileDown color="#fff" />,
+            bg: "bg-[#00BF00]",
+            value: formatNumber(10000),
+            title: "Downloads",
+          },
+          {
+            icon: <Bookmark color="#fff" />,
+            bg: "bg-[#3B81DC]",
+            value: formatNumber(10000),
+            title: "Saves",
+          },
+        ].map((item, idx) => (
+          <Card
+            key={idx}
+            icon={item.icon}
+            iconBgColor={item.bg}
+            value={item.value}
+            title={item.title}
+          />
+        ))}
+      </div>
+      {loading ? (
+        <LoadingSpinner />
+      ) : error ? (
+        <StateContainer>
+          <p className="text-red-600 mb-4">Error loading Beats</p>
+          <p className="text-gray-600">
+            {error.message || "Something went wrong"}
+          </p>
+        </StateContainer>
+      ) : (
+        <Table
+          tableTitle="Beats"
+          searchPlaceHolder="Search any beat"
+          isLoading={loading}
+          data={data?.data ?? []}
+          rows={[
+            {
+              header: "Title",
+              view: (item) => (
+                <div className="flex items-center gap-3">
+                  <img
+                    src={item.image_url}
+                    alt={item.name}
+                    className="w-9 h-9 rounded-full object-cover"
+                  />
+                  <span className="font-medium">{item.name}</span>
+                </div>
+              ),
+            },
+            {
+              header: "Description",
+              view: (item) => (
+                <span className="text-sm text-[#6B6B6B] line-clamp-1">
+                  {item.description}
+                </span>
+              ),
+            },
+            {
+              header: "Genre",
+              view: () => <span>Afro Pop</span>, // placeholder (API doesn't provide yet)
+            },
+            {
+              header: "Year",
+              view: (item) => (
+                <span>{new Date(item.created_at).getFullYear()}</span>
+              ),
+            },
+            {
+              header: "Action",
+              view: () => (
+                <div className="flex items-center gap-4">
+                  <button title="Hide" type="button">
+                    <EyeOff />
+                  </button>
+                  <button title="Delete" className="text-red-600" type="button">
+                    <Trash2 />
+                  </button>
+                </div>
+              ),
+            },
+          ]}
+        />
+      )}
+    </div>
+  );
+};
+
+export default BeatsHome;
