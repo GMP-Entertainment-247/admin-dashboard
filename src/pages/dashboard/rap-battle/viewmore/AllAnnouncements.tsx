@@ -1,12 +1,49 @@
+import { useSearchParams } from "react-router-dom";
 import Dropdown from "../../../../components/shared/Dropdown";
 import { Link } from "react-router-dom";
 import Tabs from "../../../../components/shared/Tabs";
 import Table from "../../../../components/Table";
-import { imageProp } from "../../../../utils/helpers";
+import { imageProp, splitDateTime } from "../../../../utils/helpers";
 import edit from "../../../../images/svg/edit.svg";
-import { mockAnnouncements } from "../announcements/data";
+import useFetch from "../../../../utils/hooks/useFetch";
+import type { AnnouncementListData } from "../../../../interface/announcement.interface";
 
 export default function AllAnnouncements() {
+   const [searchParams] = useSearchParams();
+
+   const currentPage = searchParams.get("page") || "1";
+   const selectedTab = searchParams.get("tab") || "all";
+   const selectedDate = searchParams.get("date") || "";
+   const selectedSeason = searchParams.get("season") || "";
+   const search = searchParams.get("search") || "";
+
+   const queryParams: Record<string, any> = {
+     page: currentPage,
+   };
+
+   if (selectedTab && selectedTab !== "all") {
+     queryParams.status = selectedTab;
+   }
+
+   if (selectedDate && selectedDate !== "all") {
+     queryParams.date = selectedDate;
+   }
+
+   if (selectedSeason && selectedSeason !== "all") {
+     queryParams.season = selectedSeason;
+   }
+
+   if (search) {
+     queryParams.search = search;
+   }
+
+   const { data: announcementList, loading } = useFetch<AnnouncementListData>(
+     "/admin/announcement",
+     queryParams
+   );
+
+   const tableData = announcementList?.data ?? [];
+   const totalPages = announcementList?.last_page ?? 1;
   return (
     <div>
       <h2 className="text-[24px] font-semibold mb-3">All Announcements</h2>
@@ -26,9 +63,10 @@ export default function AllAnnouncements() {
         </div>
         <Table
           noTitle={true}
-          searchPlaceHolder="Search any contestant"
-          isLoading={false}
-          data={mockAnnouncements}
+          searchPlaceHolder="Search any announcement"
+          isLoading={loading}
+          data={tableData}
+          totalPages={totalPages}
           slot={
             <div className="flex items-center gap-3">
               <Dropdown triggerText="Most recent" options={[]} />
@@ -42,7 +80,16 @@ export default function AllAnnouncements() {
                   { label: "This year", value: "this-year" },
                 ]}
               />
-              <Dropdown triggerText="Season 1" options={[]} />
+              <Dropdown
+                triggerText="Season 1"
+                paramKey="season"
+                options={[
+                  { label: "All", value: "all" },
+                  { label: "Season 1", value: "1" },
+                  { label: "Season 2", value: "2" },
+                  { label: "Season 3", value: "3" },
+                ]}
+              />
             </div>
           }
           rows={[
@@ -51,7 +98,11 @@ export default function AllAnnouncements() {
               view: (item) => (
                 <div className="flex gap-2 items-center">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
-                    <img {...imageProp("")} alt="" className="w-full" />
+                    <img
+                      {...imageProp(item.image || "")}
+                      alt=""
+                      className="w-full h-full"
+                    />
                   </div>
                   <p>{item.title}</p>
                 </div>
@@ -59,21 +110,32 @@ export default function AllAnnouncements() {
             },
             {
               header: "Description",
-              view: (item) => (
-                <span className="line-clamp-1">{item.description}</span>
-              ),
+              view: (item) => {
+                return (
+                  <span
+                    className="line-clamp-1"
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  />
+                );
+              },
             },
             {
               header: "Status",
-              view: (item) => item.status,
+              view: (item) => (item.status === "1" ? "Active" : "Inactive"),
             },
             {
               header: "Start",
-              view: (item) => `${item.startTime} ${item.startDate}`,
+              view: (item) => {
+                const { date, time } = splitDateTime(item.start_date);
+                return `${date} ${time}`.trim();
+              },
             },
             {
               header: "End",
-              view: (item) => `${item.endTime} ${item.endDate}`,
+              view: (item) => {
+                const { date, time } = splitDateTime(item.end_date);
+                return `${date} ${time}`.trim();
+              },
             },
             {
               header: "Action",

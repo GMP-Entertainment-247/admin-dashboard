@@ -114,3 +114,9 @@ export const combineDateTime = (date?: string, time?: string) => {
   if (!date || !time) return "";
   return `${date} ${time}:00`;
 };
+
+export const splitDateTime = (value: string | null) => {
+   if (!value) return { date: "", time: "" };
+   const [date, time] = value.split(" ");
+   return { date: date || "", time: time || "" };
+ };

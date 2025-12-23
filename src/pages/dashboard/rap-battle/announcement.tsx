@@ -1,13 +1,51 @@
 import { Link } from "react-router-dom";
 import Dropdown from "../../../components/shared/Dropdown";
 import Table from "../../../components/Table";
-import { imageProp } from "../../../utils/helpers";
+import { imageProp, splitDateTime } from "../../../utils/helpers";
 import IndexWrapper from "./components/indexWrapper";
 import Tabs from "../../../components/shared/Tabs";
 import edit from "../../../images/svg/edit.svg";
-import { mockAnnouncements } from "./announcements/data";
+import useFetch from "../../../utils/hooks/useFetch";
+import type { AnnouncementListData } from "../../../interface/announcement.interface";
+import { useSearchParams } from "react-router-dom";
 
 export default function AnnouncementHome() {
+  const [searchParams] = useSearchParams();
+
+  const currentPage = searchParams.get("page") || "1";
+  const selectedTab = searchParams.get("tab") || "all";
+  const selectedDate = searchParams.get("date") || "";
+  const selectedSeason = searchParams.get("season") || "";
+  const search = searchParams.get("search") || "";
+
+  const queryParams: Record<string, any> = {
+    page: currentPage,
+  };
+
+  if (selectedTab && selectedTab !== "all") {
+    queryParams.status = selectedTab;
+  }
+
+  if (selectedDate && selectedDate !== "all") {
+    queryParams.date = selectedDate;
+  }
+
+  if (selectedSeason && selectedSeason !== "all") {
+    queryParams.season = selectedSeason;
+  }
+
+  if (search) {
+    queryParams.search = search;
+  }
+
+  const { data: announcementList, loading } = useFetch<AnnouncementListData>(
+    "/admin/announcement",
+    queryParams
+  );
+
+  const tableData = announcementList?.data ?? [];
+  const totalPages = announcementList?.last_page ?? 1;
+
   return (
     <IndexWrapper
       title="Announcement"
@@ -25,19 +63,21 @@ export default function AnnouncementHome() {
               { label: "Stage 3", key: "stage-3" },
               { label: "Finale", key: "finale" },
             ]}
-            // useAsLink
+            tabName="tab"
           />
         </div>
         <Table
           noTitle={true}
           searchPlaceHolder="Search any announcement"
-          isLoading={false}
-          data={mockAnnouncements}
+          isLoading={loading}
+          data={tableData}
+          totalPages={totalPages}
           slot={
             <div className="flex items-center gap-3">
               <Dropdown triggerText="Most recent" options={[]} />
               <Dropdown
                 triggerText="Date"
+                paramKey="date"
                 options={[
                   { label: "All", value: "all" },
                   { label: "Today", value: "today" },
@@ -46,7 +86,16 @@ export default function AnnouncementHome() {
                   { label: "This year", value: "this-year" },
                 ]}
               />
-              <Dropdown triggerText="Season 1" options={[]} />
+              <Dropdown
+                triggerText="Season 1"
+                paramKey="season"
+                options={[
+                  { label: "All", value: "all" },
+                  { label: "Season 1", value: "1" },
+                  { label: "Season 2", value: "2" },
+                  { label: "Season 3", value: "3" },
+                ]}
+              />
             </div>
           }
           rows={[
@@ -55,7 +104,11 @@ export default function AnnouncementHome() {
               view: (item) => (
                 <div className="flex gap-2 items-center">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
-                    <img {...imageProp("")} alt="" className="w-full" />
+                    <img
+                      {...imageProp(item.image || "")}
+                      alt=""
+                      className="w-full h-full"
+                    />
                   </div>
                   <p>{item.title}</p>
                 </div>
@@ -63,21 +116,32 @@ export default function AnnouncementHome() {
             },
             {
               header: "Description",
-              view: (item) => (
-                <span className="line-clamp-1">{item.description}</span>
-              ),
+              view: (item) => {
+                return (
+                  <span
+                    className="line-clamp-1"
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  />
+                );
+              },
             },
             {
               header: "Status",
-              view: (item) => item.status,
+              view: (item) => (item.status === "1" ? "Active" : "Inactive"),
             },
             {
               header: "Start",
-              view: (item) => `${item.startTime} ${item.startDate}`,
+              view: (item) => {
+                const { date, time } = splitDateTime(item.start_date);
+                return `${date} ${time}`.trim();
+              },
             },
             {
               header: "End",
-              view: (item) => `${item.endTime} ${item.endDate}`,
+              view: (item) => {
+                const { date, time } = splitDateTime(item.end_date);
+                return `${date} ${time}`.trim();
+              },
             },
             {
               header: "Action",

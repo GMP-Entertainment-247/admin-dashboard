@@ -1,9 +1,20 @@
-import type { Announcement } from "../../../../interface/announcement.interface";
-// import pic from "../../../../images/capture.png";
 import { MessageCircle, PhoneCall, Calendar, Clock } from "lucide-react";
 import { imageProp } from "../../../../utils/helpers";
 
-const AnnouncementViewLayout: React.FC<Omit<Announcement, "status" | "id">> = ({
+interface AnnouncementViewLayoutProps {
+  title: string;
+  description: string;
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
+  image: string;
+  creatorName?: string;
+  creatorAvatar?: string;
+  // creatorRole?: string;
+}
+
+const AnnouncementViewLayout: React.FC<AnnouncementViewLayoutProps> = ({
   title,
   description,
   startDate,
@@ -11,6 +22,9 @@ const AnnouncementViewLayout: React.FC<Omit<Announcement, "status" | "id">> = ({
   endDate,
   endTime,
   image,
+  creatorName,
+  creatorAvatar,
+  // creatorRole,
 }) => {
   return (
     <div className="bg-white p-5 rounded-2xl w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-[30px]">
@@ -56,16 +70,22 @@ const AnnouncementViewLayout: React.FC<Omit<Announcement, "status" | "id">> = ({
         </div>
       </article>
       <aside className="lg:flex-1 space-y-10 lg:mt-4">
-        <img src={image} alt="announcement-pic" className="w-full aspect-[1.7]" />
+        <img
+          src={image}
+          alt="announcement-pic"
+          className="w-full aspect-[1.7]"
+        />
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
-              {...imageProp("")}
+              {...imageProp(creatorAvatar || "")}
               alt=""
               className="w-12 h-12 rounded-full border border-red-500"
             />
             <div className="space-y-1.5">
-              <p className="font-semibold text-[#1A1A1A] text-base">John Doe</p>
+              <p className="font-semibold text-[#1A1A1A] text-base">
+                {creatorName || "John Doe"}
+              </p>
               <p className="text-[#484848] text-sm">Admin</p>
             </div>
           </div>
