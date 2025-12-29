@@ -3,6 +3,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../shared/Button";
+import clsx from "clsx";
 
 interface ITable<TRow> {
     noTitle?: boolean;
@@ -50,7 +51,12 @@ export default function Table <TRow extends {}> ({
                     !noTitle &&
                     <h4 className="text-[22px] font-semibold mr-10 whitespace-nowrap">{tableTitle}</h4>
                 }
-                <div className="flex gap-4 items-center justify-between w-full max-[769px]:flex-col max-[769px]:items-start">
+                <div 
+                    className={clsx(
+                        "flex gap-4 items-center justify-between w-full max-[769px]:flex-col max-[769px]:items-start",
+                        hideSearch && "ml-auto max-[769px]:ml-0 !w-fit"
+                    )}
+                >
                     {
                         !hideSearch &&
                         <div className="rounded flex w-[230px] max-[769px]:w-full h-9 items-center px-[6px] py-[2px] border border-solid border-[#BABABA] border-box">

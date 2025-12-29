@@ -7,6 +7,7 @@ import {
   Tooltip,
   Line,
 } from "recharts";
+import { formatNumber } from "../../utils/helpers";
 
 const LineChartComponent = ({
   data,
@@ -53,7 +54,7 @@ const LineChartComponent = ({
             />
             <p className="text-xs">
               <span className="capitalize text-[#737373]">{entry.name}:</span>{" "}
-              <span className="font-semibold">{entry.value}</span>
+              <span className="font-semibold">{formatNumber(entry.value)}</span>
             </p>
           </div>
         ))}
@@ -91,6 +92,7 @@ const LineChartComponent = ({
           tickLine={false}
           tick={{ fontSize: "14px", fill: "#737373" }}
           width="auto"
+          tickFormatter={(value) => formatNumber(value, true)}
         />
         <Tooltip cursor={false} content={<CustomTooltip />} />
         {dataKeys.map((key, index) => {

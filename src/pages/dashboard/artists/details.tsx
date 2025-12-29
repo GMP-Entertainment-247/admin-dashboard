@@ -5,18 +5,19 @@ import { imageProp } from "../../../utils/helpers";
 import { useSingleState } from "../../../utils/hooks/useSingleState";
 import { useParams } from "react-router-dom";
 import useFetch from "../../../utils/hooks/useFetch";
-import { IFan } from "../../../interface/fans.interface";
 import { OffersTable } from "./tables/allOffers";
 import { BookingsTable } from "./tables/allBookings";
 import { UploadsTable } from "./tables/allUploads";
+import { IArtistDetails } from "../../../interface/artists.interface";
+import dayjs from "dayjs";
 
 
 export default function ArtistDetails () {
     const showModal = useSingleState(false)
     const params = useParams()
 
-    const {data} = useFetch<IFan>(
-        "/admin/profile",{
+    const {data} = useFetch<IArtistDetails>(
+        "/admin/artist-details",{
             id: params.id || ""
         }
     )
@@ -24,14 +25,26 @@ export default function ArtistDetails () {
     return (
         <div>
             <div className="bg-white rounded-lg flex gap-5 p-6 max-[1200px]:block">
-                <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center overflow-hidden">
-                    <img {...imageProp("/images/profile-default.png")} alt="" className="w-full" />
+                <div className="w-[100px] h-[100px] border border-[#E6E6E6] shrink-0 rounded-full flex items-center justify-center overflow-hidden">
+                    <img {...imageProp(data?.profile_picture_url || "/images/profile-default.png")} alt="" className="w-full" />
                 </div>
                 <div className="w-full">
                     <div className="flex gap-2 flex-wrap">
-                        <p className="text-[24px] font-semibold">{data?.name || ""}</p>
-                        <div className="bg-[#01BA4C1A] w-fit rounded-full py-0.5 px-2.5">
-                            <span className="text-[#01BA4C] font-medium text-sm">Active</span>
+                        <p className="text-[24px] font-semibold capitalize">{data?.name || ""}</p>
+                        <div 
+                            className={clsx(
+                                "w-fit rounded-full py-0.5 px-2.5",
+                                data?.is_online==="1" ? "bg-[#01BA4C1A]" : "bg-[#0000001A]"
+                            )}
+                        >
+                            <span 
+                                className={clsx(
+                                    "font-medium text-sm",
+                                    data?.is_online==="1" ? "text-[#01BA4C]" : "text-[#000]"
+                                )}
+                            >
+                                {data?.is_online==="1" ? "Active" : "Inactive"}
+                            </span>
                         </div>
                     </div>
                     <div className="text-base grid grid-cols-4 gap-5 mt-6 max-[1400px]:grid-cols-3 max-[992px]:grid-cols-2 max-[560px]:grid-cols-1">
@@ -47,19 +60,19 @@ export default function ArtistDetails () {
                                 },
                                 {
                                     title: "Location",
-                                    value: "---",
+                                    value: data?.location || "---",
                                 },
                                 {
                                     title: "Member Since",
-                                    value: "---",
+                                    value: dayjs(data?.created_at).format("MMM DD, YYYY") || "---",
                                 },
                                 {
                                     title: "Hourly Rate",
-                                    value: "---",
+                                    value: data?.hourly_rate || "---",
                                 },
                                 {
                                     title: "Status",
-                                    value: "---",
+                                    value: !!data?.email_verified_at ? "Verified" : "Unverified",
                                 },
                             ].map((item, i)=>(
                                 <div 

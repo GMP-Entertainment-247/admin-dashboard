@@ -7,6 +7,7 @@ export default function useFetch<T = unknown>(
   params?: Record<string, any>,
   options?: { enabled?: boolean }
 ) {
+  console.log(params)
   const fetcher = async (): Promise<T> => {
     try {
       const response = await createApiClient().get(url, { params });
