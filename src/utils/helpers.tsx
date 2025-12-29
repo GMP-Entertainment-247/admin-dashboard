@@ -85,8 +85,16 @@ export const startCountdown = (
   }, 1000);
 };
 
-export const formatNumber = (num: number) => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+export const formatNumber = (num: number, isCompact: boolean = false) => {
+  if (isCompact) {
+    const compactFormatter = new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      compactDisplay: 'short' // Uses 'K', 'M', 'B'
+    });
+    return compactFormatter.format(num)
+  } else {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 };
 
 export const imageProp = (
