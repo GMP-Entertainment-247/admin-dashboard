@@ -11,16 +11,29 @@ import useFetch from '../../../utils/hooks/useFetch';
 import { IFan } from "../../../interface/fans.interface";
 import { useState } from "react";
 import BarChartComponent from "../../../components/Charts/BarChart";
+import { IInvestorsChart, IInvestorsMetrics } from "../../../interface/investors.interface";
+import { useQueryParams } from "../../../utils/hooks/useQueryParams";
 // import dayjs from "dayjs";
 
 
 export default function InvestorsHome () {
   const navigate = useNavigate()
-  const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+  const queryParam = useQueryParams()
   const [lineChartDataKeys, setLineChartDataKeys] = useState([
     {label: 'investment', color: "#998100", isActive: true, handleChange: handleLineChartDataKeyChange},
     {label: 'revenue', color: "#D7C567", isActive: true, handleChange: handleLineChartDataKeyChange},
   ]);
+  const {data: invMetrics} = useFetch<IInvestorsMetrics>("/admin/investors-metrics")
+  const {data: graphData} = useFetch<IInvestorsChart>("/admin/investors-chart",{
+    year: queryParam.get("year") || "2026",
+  })
+  const {data, loading} = useFetch<{data: any[]}>("/admin/list-investors",{
+    date: queryParam.get("period") || "",
+    recent: queryParam.get("order") || "most-recent",
+    search: queryParam.get("search") || "",
+  })
+
+  console.log(data)
 
   function handleLineChartDataKeyChange(keyLabel: string) {
     setLineChartDataKeys(prev =>
@@ -41,19 +54,19 @@ export default function InvestorsHome () {
 							{
 								icon: investors_icon,
 								bg: "bg-[#3BDC54]",
-								value: formatNumber(10000),
+								value: formatNumber(invMetrics?.investors || 0),
 								title: "Investors",
 							},
 							{
 								icon: money,
 								bg: "bg-[#F85A7E]",
-								value: formatNumber(10000),
+								value: formatNumber(invMetrics?.revenue || 0),
 								title: "Revenue",
 							},
 							{
 								icon: investments_icon,
 								bg: "bg-[#FF0000]",
-								value: formatNumber(10000),
+								value: formatNumber(invMetrics?.investment || 0),
 								title: "Investment",
 							},
 						].map((item, idx) => (
@@ -70,74 +83,23 @@ export default function InvestorsHome () {
 						<div className="flex justify-between items-center mb-6">
 							<p className="font-semibold text-lg mb-4">Investments</p>
 							<Dropdown 
-								triggerText="This Month" 
-								options={[]} 
+								triggerText={queryParam.get("year") || "2026"} 
+								options={[2026,2025,2024].map(year => ({
+									label: year.toString(),
+									value: year.toString(),
+									action: () => queryParam.set("year", year.toString()),
+								}))}
 							/>
 						</div>
 						<BarChartComponent 
 							dataKeys={lineChartDataKeys}
-							data={[
-								{
-									name: 'Jan',
-									revenue: 40,
-									investment: 24,
-								},
-								{
-									name: 'Feb',
-									revenue: 30,
-									investment: 10,
-								},
-								{
-									name: 'Mar',
-									revenue: 20,
-									investment: 20,
-								},
-								{
-									name: 'Apr',
-									revenue: 20,
-									investment: 20,
-								},
-								{
-									name: 'May',
-									revenue: 10,
-									investment: 21,
-								},
-								{
-									name: 'Jun',
-									revenue: 23,
-									investment: 25,
-								},
-								{
-									name: 'Jul',
-									revenue: 34,
-									investment: 21,
-								},
-								{
-									name: 'Aug',
-									revenue: 34,
-									investment: 21,
-								},
-								{
-									name: 'Sep',
-									revenue: 34,
-									investment: 21,
-								},
-								{
-									name: 'Oct',
-									revenue: 34,
-									investment: 21,
-								},
-								{
-									name: 'Nov',
-									revenue: 34,
-									investment: 21,
-								},
-								{
-									name: 'Dec',
-									revenue: 34,
-									investment: 21,
-								},
-							]}
+							data={
+							  graphData?.labels.map((item: string, idx: number)=>({
+								name: item||"--",
+								revenue: graphData?.series.revenue[idx]||0,
+								investment: graphData?.series.investment[idx]||0,
+							  })) ?? []
+							}
 						/>
 					</div>
 				</div>

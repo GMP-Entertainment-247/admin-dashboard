@@ -27,6 +27,12 @@ export interface ILineGraphData {
     };
 }
 
+export interface IPieChartData {
+    Accepted: number;
+    Pending: number;
+    Rejected: number;
+}
+
 export interface IArtistDetails {
     id: number;
     name: string;

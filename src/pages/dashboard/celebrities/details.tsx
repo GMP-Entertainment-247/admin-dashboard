@@ -5,19 +5,22 @@ import { imageProp } from "../../../utils/helpers";
 import { useSingleState } from "../../../utils/hooks/useSingleState";
 import { useParams } from "react-router-dom";
 import useFetch from "../../../utils/hooks/useFetch";
-import { IFan } from "../../../interface/fans.interface";
 import { BookingsTable } from "./tables/allBookings";
+import { ICelebrity } from "../../../interface/celebrities.interface";
+import dayjs from "dayjs";
 
 
 export default function CelebrityDetails () {
     const showModal = useSingleState(false)
     const params = useParams()
 
-    const {data} = useFetch<IFan>(
-        "/admin/profile",{
+    const {data} = useFetch<ICelebrity>(
+        "/admin/celebrity-details",{
             id: params.id || ""
         }
     )
+
+    console.log(data)
 
     return (
         <div>
@@ -45,20 +48,20 @@ export default function CelebrityDetails () {
                                 },
                                 {
                                     title: "Location",
-                                    value: "---",
+                                    value: data?.location || "---",
                                 },
                                 {
                                     title: "Member Since",
-                                    value: "---",
+                                    value: dayjs(data?.created_at).format("MMM DD, YYYY") || "---",
                                 },
                                 {
                                     title: "Hourly Rate",
-                                    value: "---",
+                                    value: data?.hourly_rate || "---",
                                 },
                                 {
                                     title: "Status",
-                                    value: "---",
-                                },
+                                    value: !!data?.email_verified_at ? "Verified" : "Unverified",
+                                }
                             ].map((item, i)=>(
                                 <div 
                                     key={i}
