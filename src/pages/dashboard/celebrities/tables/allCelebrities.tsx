@@ -4,13 +4,20 @@ import { imageProp } from "../../../../utils/helpers";
 import edit from "../../../../images/svg/edit.svg";
 import { useNavigate } from "react-router-dom";
 import useFetch from '../../../../utils/hooks/useFetch';
-import { IFan } from "../../../../interface/fans.interface";
 import BreadCrumbs from "../../../../components/shared/Breadcrumbs";
+import { ICelebrity } from "../../../../interface/celebrities.interface";
+import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
+import { tableOrderOptions, tablePeriodOptions } from "../../../../utils/constant";
 
 
 export default function AllCelebrities () {
   const navigate = useNavigate()
-  const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+  const queryParam = useQueryParams()
+  const {data, loading} = useFetch<{data: ICelebrity[], last_page: number}>("/admin/list-celebrities",{
+    date: queryParam.get("period") || "",
+    recent: queryParam.get("order") || "most-recent",
+    search: queryParam.get("search") || "",
+  })
 
   return (
     <div>
@@ -29,26 +36,28 @@ export default function AllCelebrities () {
           searchPlaceHolder="Search any artist"
           isLoading={loading}
           data={data?.data ?? []}
+          totalPages={data?.last_page || 1}
           slot={
             <div className="flex gap-4 items-center">
               <Dropdown 
-                triggerText="Most Recent" 
-                options={[
-                  {label: "Most Recent", value: "recent"},
-                  {label: "Newest First", value: "newest"},
-                  {label: "Oldest First", value: "oldest"},
-                  {label: "A-Z", value: "desc"},
-                  {label: "Z-A", value: "asc"},
-                ]} 
+                triggerText={tableOrderOptions.find(item => item.value === queryParam.get("order"))?.label || "Most Recent"}
+                options={
+                  tableOrderOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                    action: () => queryParam.set("order", item.value),
+                  }))
+                } 
               />
               <Dropdown 
-                triggerText="This Month" 
-                options={[
-                  {label: "Today", value: "today"},
-                  {label: "This Week", value: "week"},
-                  {label: "This Month", value: "month"},
-                  {label: "This Year", value: "year"},
-                ]} 
+                triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("period"))?.label || "This Month"}
+                options={
+                  tablePeriodOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                    action: () => queryParam.set("period", item.value),
+                  }))
+                } 
               />
             </div>
           }
@@ -70,16 +79,12 @@ export default function AllCelebrities () {
             },
             {
               header: "Location",
-              view: (item) => <span className="lowercase">{item.email}</span>,
+              view: (item) => <span>{item.location || "---"}</span>,
             },
             {
               header: "Phone Number",
               view: (item) => item.phone,
             },
-            // {
-            //   header: "Date Joined",
-            //   view: (item) => <span>{dayjs(item.created_at).format("DD MMM, YYYY")}</span>,
-            // },
             {
               header: "Action",
               view: (item) => (

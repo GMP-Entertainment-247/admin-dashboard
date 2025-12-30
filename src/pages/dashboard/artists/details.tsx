@@ -21,6 +21,22 @@ export default function ArtistDetails () {
             id: params.id || ""
         }
     )
+    const {data: bookingsData} = useFetch<any>(
+        "/admin/artist-bookings",{
+            id: params.id || ""
+        }
+    )
+    const {data: offersData} = useFetch<any>(
+        "/admin/artist-offers",{
+            id: params.id || ""
+        }
+    )
+    const {data: uploadsData} = useFetch<any>(
+        "/admin/artist-uploads",{
+            id: params.id || ""
+        }
+    )
+    console.log(bookingsData, offersData, uploadsData)
 
     return (
         <div>

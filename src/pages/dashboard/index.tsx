@@ -68,7 +68,7 @@ export default function DashboardHome() {
                 {
                   icon: investors,
                   bg: "bg-[#3BDC54]",
-                  value: formatNumber(0),
+                  value: formatNumber(data?.investors || 0),
                   title: "Investors",
                 },
                 {

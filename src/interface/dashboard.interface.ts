@@ -5,6 +5,7 @@ export interface IDashboardMetrics {
     celebrities: number;
     contestants: number;
     bookings: number;
+    investors: number;
 }
 
 export interface IActivityLog {

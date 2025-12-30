@@ -11,7 +11,7 @@ import useFetch from '../../../utils/hooks/useFetch';
 import LineChartComponent from "../../../components/Charts/LineChart";
 import { useState } from "react";
 import PieChartComponent from "../../../components/Charts/PieChart";
-import { IArtist, IArtistMetrics, ILineGraphData } from "../../../interface/artists.interface";
+import { IArtist, IArtistMetrics, ILineGraphData, IPieChartData } from "../../../interface/artists.interface";
 import { useQueryParams } from "../../../utils/hooks/useQueryParams";
 import { tableOrderOptions, tablePeriodOptions } from "../../../utils/constant";
 
@@ -23,6 +23,10 @@ export default function ArtistsHome () {
   const {data: graphData} = useFetch<ILineGraphData>("/admin/artists-line-graph",{
     year: queryParam.get("year") || "2026",
   })
+  const {data: chartData} = useFetch<IPieChartData>("/admin/artists-pie-chart",{
+    // month: "January 2026", // i think it should take the period options instead
+  })
+  console.log(chartData)
   const {data, loading} = useFetch<{data: IArtist[]}>("/admin/list-artists",{
     date: queryParam.get("period") || "",
     recent: queryParam.get("order") || "most-recent",
@@ -116,10 +120,11 @@ export default function ArtistsHome () {
             />
           </div>
           <PieChartComponent 
+            totalValue={chartData?.Accepted! + chartData?.Pending! + chartData?.Rejected! || 0}
             data={[
-              { name: "Accepted", value: 400, color: "#00CC00" },
-              { name: "Pending", value: 300, color: "#FFD700" },
-              { name: "Rejected", value: 300, color: "#FF0000" },
+              { name: "Accepted", value: chartData?.Accepted || 0, color: "#00CC00" },
+              { name: "Pending", value: chartData?.Pending || 0, color: "#FFD700" },
+              { name: "Rejected", value: chartData?.Rejected || 0, color: "#FF0000" },
             ]}
           />
         </div>

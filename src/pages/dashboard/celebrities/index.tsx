@@ -9,20 +9,33 @@ import bookmark from "../../../images/svg/bookmark.svg";
 import edit from "../../../images/svg/edit.svg";
 import { useNavigate } from "react-router-dom";
 import useFetch from '../../../utils/hooks/useFetch';
-import { IFan } from "../../../interface/fans.interface";
 import LineChartComponent from "../../../components/Charts/LineChart";
 import PieChartComponent from "../../../components/Charts/PieChart";
 import { useState } from "react";
-// import dayjs from "dayjs";
+import { useQueryParams } from "../../../utils/hooks/useQueryParams";
+import { ICelebritiesMetrics, ICelebrity, ILineGraphData, IPieChartData } from "../../../interface/celebrities.interface";
+import { tableOrderOptions, tablePeriodOptions } from "../../../utils/constant";
 
 
 export default function CelebrityHome () {
   const navigate = useNavigate()
-  const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+  const queryParam = useQueryParams()
   const [lineChartDataKeys, setLineChartDataKeys] = useState([
     {label: 'revenue', color: "#00BF00", isActive: true, handleChange: handleLineChartDataKeyChange},
     {label: 'sessions', color: "#CCAC00", isActive: true, handleChange: handleLineChartDataKeyChange},
   ]);
+  const {data: celebMetrics} = useFetch<ICelebritiesMetrics>("/admin/celebrities-metrics")
+  const {data: graphData} = useFetch<ILineGraphData>("/admin/celebrities-graph",{
+    year: queryParam.get("year") || "2026",
+  })
+  const {data: chartData} = useFetch<IPieChartData>("/admin/celebrities-pie-chart",{
+    // month: "January 2026", // i think it should take the period options instead
+  })
+  const {data, loading} = useFetch<{data: ICelebrity[]}>("/admin/list-celebrities",{
+    date: queryParam.get("period") || "",
+    recent: queryParam.get("order") || "most-recent",
+    search: queryParam.get("search") || "",
+  })
 
   function handleLineChartDataKeyChange(keyLabel: string) {
     setLineChartDataKeys(prev =>
@@ -41,25 +54,25 @@ export default function CelebrityHome () {
           {
             icon: user,
             bg: "bg-[#3BDC54]",
-            value: formatNumber(10000),
+            value: formatNumber(celebMetrics?.celebrity || 0),
             title: "Celebrity",
           },
           {
             icon: mic,
             bg: "bg-[#F6917F]",
-            value: formatNumber(10000),
+            value: formatNumber(celebMetrics?.sessions || 0),
             title: "Sessions",
           },
           {
             icon: money,
             bg: "bg-[#181670]",
-            value: formatNumber(10000),
+            value: formatNumber(celebMetrics?.revenue || 0),
             title: "Revenue",
           },
           {
             icon: bookmark,
             bg: "bg-[#702AC8]",
-            value: formatNumber(10000),
+            value: formatNumber(celebMetrics?.uploads || 0),
             title: "Bookings",
           },
         ].map((item, idx) => (
@@ -77,74 +90,23 @@ export default function CelebrityHome () {
           <div className="flex justify-between items-center mb-6">
             <p className="font-semibold text-lg mb-4">Performance</p>
             <Dropdown 
-              triggerText="This Month" 
-              options={[]} 
+              triggerText={queryParam.get("year") || "2026"} 
+              options={[2026,2025,2024].map(year => ({
+                label: year.toString(),
+                value: year.toString(),
+                action: () => queryParam.set("year", year.toString()),
+              }))}
             />
           </div>
           <LineChartComponent 
             dataKeys={lineChartDataKeys}
-            data={[
-              {
-                name: 'Jan',
-                revenue: 40,
-                sessions: 24,
-              },
-              {
-                name: 'Feb',
-                revenue: 30,
-                sessions: 10,
-              },
-              {
-                name: 'Mar',
-                revenue: 20,
-                sessions: 20,
-              },
-              {
-                name: 'Apr',
-                revenue: 20,
-                sessions: 20,
-              },
-              {
-                name: 'May',
-                revenue: 10,
-                sessions: 21,
-              },
-              {
-                name: 'Jun',
-                revenue: 23,
-                sessions: 25,
-              },
-              {
-                name: 'Jul',
-                revenue: 34,
-                sessions: 21,
-              },
-              {
-                name: 'Aug',
-                revenue: 34,
-                sessions: 21,
-              },
-              {
-                name: 'Sep',
-                revenue: 34,
-                sessions: 21,
-              },
-              {
-                name: 'Oct',
-                revenue: 34,
-                sessions: 21,
-              },
-              {
-                name: 'Nov',
-                revenue: 34,
-                sessions: 21,
-              },
-              {
-                name: 'Dec',
-                revenue: 34,
-                sessions: 21,
-              },
-            ]}
+            data={
+              graphData?.labels.map((item: string, idx: number)=>({
+                name: item||"--",
+                revenue: graphData?.series?.revenue?.[idx]||0,
+                sessions: graphData?.series?.session?.[idx]||0,
+              })) ?? []
+            }
           />
         </div>
         <div className="bg-white rounded-[16px] p-5">
@@ -156,10 +118,11 @@ export default function CelebrityHome () {
             />
           </div>
           <PieChartComponent 
+            totalValue={chartData?.Accepted! + chartData?.Pending! + chartData?.Rejected! || 0}
             data={[
-              { name: "Accepted", value: 400, color: "#00CC00" },
-              { name: "Pending", value: 300, color: "#FFD700" },
-              { name: "Rejected", value: 300, color: "#FF0000" },
+              { name: "Accepted", value: chartData?.Accepted || 0, color: "#00CC00" },
+              { name: "Pending", value: chartData?.Pending || 0, color: "#FFD700" },
+              { name: "Rejected", value: chartData?.Rejected || 0, color: "#FF0000" },
             ]}
           />
         </div>
@@ -173,23 +136,24 @@ export default function CelebrityHome () {
           slot={
             <div className="flex gap-4 items-center">
               <Dropdown 
-                triggerText="Most Recent" 
-                options={[
-                  {label: "Most Recent", value: "recent"},
-                  {label: "Newest First", value: "newest"},
-                  {label: "Oldest First", value: "oldest"},
-                  {label: "A-Z", value: "desc"},
-                  {label: "Z-A", value: "asc"},
-                ]} 
+                triggerText={tableOrderOptions.find(item => item.value === queryParam.get("order"))?.label || "Most Recent"}
+                options={
+                  tableOrderOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                    action: () => queryParam.set("order", item.value),
+                  }))
+                } 
               />
               <Dropdown 
-                triggerText="This Month" 
-                options={[
-                  {label: "Today", value: "today"},
-                  {label: "This Week", value: "week"},
-                  {label: "This Month", value: "month"},
-                  {label: "This Year", value: "year"},
-                ]} 
+                triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("period"))?.label || "This Month"}
+                options={
+                  tablePeriodOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                    action: () => queryParam.set("period", item.value),
+                  }))
+                } 
               />
             </div>
           }
@@ -211,16 +175,12 @@ export default function CelebrityHome () {
             },
             {
               header: "Location",
-              view: (item) => <span className="lowercase">{item.email}</span>,
+              view: (item) => <span>{item.location || "---"}</span>,
             },
             {
               header: "Phone Number",
               view: (item) => item.phone,
             },
-            // {
-            //   header: "Date Joined",
-            //   view: (item) => <span>{dayjs(item.created_at).format("DD MMM, YYYY")}</span>,
-            // },
             {
               header: "Action",
               view: (item) => (
