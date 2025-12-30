@@ -8,7 +8,6 @@ import investments_icon from "../../../images/svg/investments.svg";
 import edit from "../../../images/svg/edit.svg";
 import { useNavigate } from "react-router-dom";
 import useFetch from '../../../utils/hooks/useFetch';
-import { IFan } from "../../../interface/fans.interface";
 import { useState } from "react";
 import BarChartComponent from "../../../components/Charts/BarChart";
 import { IInvestorsChart, IInvestorsMetrics } from "../../../interface/investors.interface";
