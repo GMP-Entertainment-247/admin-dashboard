@@ -1,5 +1,5 @@
 import { MessageCircle, PhoneCall, Calendar, Clock } from "lucide-react";
-import { imageProp } from "../../../../utils/helpers";
+import { imageProp, formatTime12Hour } from "../../../../utils/helpers";
 
 interface AnnouncementViewLayoutProps {
   title: string;
@@ -48,7 +48,7 @@ const AnnouncementViewLayout: React.FC<AnnouncementViewLayoutProps> = ({
               </p>
               <p className="flex items-center gap-2">
                 <Clock />
-                {startTime}
+                {formatTime12Hour(startTime)}
               </p>
             </div>
           </div>
@@ -63,7 +63,7 @@ const AnnouncementViewLayout: React.FC<AnnouncementViewLayoutProps> = ({
               </p>
               <p className="flex items-center gap-2">
                 <Clock />
-                {endTime}
+                {formatTime12Hour(endTime)}
               </p>
             </div>
           </div>

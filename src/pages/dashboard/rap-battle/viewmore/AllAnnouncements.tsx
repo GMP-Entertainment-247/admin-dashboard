@@ -3,47 +3,47 @@ import Dropdown from "../../../../components/shared/Dropdown";
 import { Link } from "react-router-dom";
 import Tabs from "../../../../components/shared/Tabs";
 import Table from "../../../../components/Table";
-import { imageProp, splitDateTime } from "../../../../utils/helpers";
+import { imageProp, formatDateTime } from "../../../../utils/helpers";
 import edit from "../../../../images/svg/edit.svg";
 import useFetch from "../../../../utils/hooks/useFetch";
 import type { AnnouncementListData } from "../../../../interface/announcement.interface";
 
 export default function AllAnnouncements() {
-   const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-   const currentPage = searchParams.get("page") || "1";
-   const selectedTab = searchParams.get("tab") || "all";
-   const selectedDate = searchParams.get("date") || "";
-   const selectedSeason = searchParams.get("season") || "";
-   const search = searchParams.get("search") || "";
+  const currentPage = searchParams.get("page") || "1";
+  const selectedTab = searchParams.get("tab") || "all";
+  const selectedDate = searchParams.get("date") || "";
+  const selectedSeason = searchParams.get("season") || "";
+  const search = searchParams.get("search") || "";
 
-   const queryParams: Record<string, any> = {
-     page: currentPage,
-   };
+  const queryParams: Record<string, any> = {
+    page: currentPage,
+  };
 
-   if (selectedTab && selectedTab !== "all") {
-     queryParams.status = selectedTab;
-   }
+  if (selectedTab && selectedTab !== "all") {
+    queryParams.status = selectedTab;
+  }
 
-   if (selectedDate && selectedDate !== "all") {
-     queryParams.date = selectedDate;
-   }
+  if (selectedDate && selectedDate !== "all") {
+    queryParams.date = selectedDate;
+  }
 
-   if (selectedSeason && selectedSeason !== "all") {
-     queryParams.season = selectedSeason;
-   }
+  if (selectedSeason && selectedSeason !== "all") {
+    queryParams.season = selectedSeason;
+  }
 
-   if (search) {
-     queryParams.search = search;
-   }
+  if (search) {
+    queryParams.search = search;
+  }
 
-   const { data: announcementList, loading } = useFetch<AnnouncementListData>(
-     "/admin/announcement",
-     queryParams
-   );
+  const { data: announcementList, loading } = useFetch<AnnouncementListData>(
+    "/admin/announcement",
+    queryParams
+  );
 
-   const tableData = announcementList?.data ?? [];
-   const totalPages = announcementList?.last_page ?? 1;
+  const tableData = announcementList?.data ?? [];
+  const totalPages = announcementList?.last_page ?? 1;
   return (
     <div>
       <h2 className="text-[24px] font-semibold mb-3">All Announcements</h2>
@@ -125,17 +125,11 @@ export default function AllAnnouncements() {
             },
             {
               header: "Start",
-              view: (item) => {
-                const { date, time } = splitDateTime(item.start_date);
-                return `${date} ${time}`.trim();
-              },
+              view: (item) => formatDateTime(item.start_date),
             },
             {
               header: "End",
-              view: (item) => {
-                const { date, time } = splitDateTime(item.end_date);
-                return `${date} ${time}`.trim();
-              },
+              view: (item) => formatDateTime(item.end_date),
             },
             {
               header: "Action",

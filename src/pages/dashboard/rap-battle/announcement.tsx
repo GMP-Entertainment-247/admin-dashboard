@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import Dropdown from "../../../components/shared/Dropdown";
 import Table from "../../../components/Table";
-import { imageProp, splitDateTime } from "../../../utils/helpers";
+import { imageProp, formatDateTime } from "../../../utils/helpers";
 import IndexWrapper from "./components/indexWrapper";
-import Tabs from "../../../components/shared/Tabs";
+// import Tabs from "../../../components/shared/Tabs";
 import edit from "../../../images/svg/edit.svg";
 import useFetch from "../../../utils/hooks/useFetch";
 import type { AnnouncementListData } from "../../../interface/announcement.interface";
@@ -13,29 +13,19 @@ export default function AnnouncementHome() {
   const [searchParams] = useSearchParams();
 
   const currentPage = searchParams.get("page") || "1";
-  const selectedTab = searchParams.get("tab") || "all";
   const selectedDate = searchParams.get("date") || "";
-  const selectedSeason = searchParams.get("season") || "";
   const search = searchParams.get("search") || "";
 
   const queryParams: Record<string, any> = {
     page: currentPage,
   };
 
-  if (selectedTab && selectedTab !== "all") {
-    queryParams.status = selectedTab;
-  }
-
   if (selectedDate && selectedDate !== "all") {
     queryParams.date = selectedDate;
   }
 
-  if (selectedSeason && selectedSeason !== "all") {
-    queryParams.season = selectedSeason;
-  }
-
   if (search) {
-    queryParams.search = search;
+    queryParams.filter = search;
   }
 
   const { data: announcementList, loading } = useFetch<AnnouncementListData>(
@@ -53,18 +43,7 @@ export default function AnnouncementHome() {
       buttonLink="create-announcement"
     >
       <div>
-        <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
-          <Tabs
-            tabs={[
-              { label: "All Events", key: "all" },
-              { label: "Audition", key: `audition` },
-              { label: "Stage 1", key: "stage-1" },
-              { label: "Stage 2", key: "stage-2" },
-              { label: "Stage 3", key: "stage-3" },
-              { label: "Finale", key: "finale" },
-            ]}
-            tabName="tab"
-          />
+        <div className="bg-white px-5 py-2 -mb-5 rounded-t-xl">
         </div>
         <Table
           noTitle={true}
@@ -84,16 +63,6 @@ export default function AnnouncementHome() {
                   { label: "This week", value: "this-week" },
                   { label: "This month", value: "this-month" },
                   { label: "This year", value: "this-year" },
-                ]}
-              />
-              <Dropdown
-                triggerText="Season 1"
-                paramKey="season"
-                options={[
-                  { label: "All", value: "all" },
-                  { label: "Season 1", value: "1" },
-                  { label: "Season 2", value: "2" },
-                  { label: "Season 3", value: "3" },
                 ]}
               />
             </div>
@@ -131,17 +100,11 @@ export default function AnnouncementHome() {
             },
             {
               header: "Start",
-              view: (item) => {
-                const { date, time } = splitDateTime(item.start_date);
-                return `${date} ${time}`.trim();
-              },
+              view: (item) => formatDateTime(item.start_date),
             },
             {
               header: "End",
-              view: (item) => {
-                const { date, time } = splitDateTime(item.end_date);
-                return `${date} ${time}`.trim();
-              },
+              view: (item) => formatDateTime(item.end_date),
             },
             {
               header: "Action",

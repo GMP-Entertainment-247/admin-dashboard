@@ -12,6 +12,7 @@ import {
   handleApiError,
 } from "../../../utils/errorHelpers";
 import { deleteAnnouncement } from "./announcements/data";
+import { splitDateTime } from "../../../utils/helpers";
 
 const AnnouncementDetails = () => {
   const { announcementId } = useParams<{ announcementId: string }>();
@@ -24,12 +25,6 @@ const AnnouncementDetails = () => {
   } = useFetch<Announcement | null>("/admin/announcement/details", {
     id: announcementId,
   });
-
-  const splitDateTime = (value?: string | null) => {
-    if (!value) return { date: "", time: "" };
-    const [date, time] = value.split(" ");
-    return { date: date || "", time: time || "" };
-  };
 
   const handleEdit = () => {
     if (!announcementId) return;
@@ -70,10 +65,10 @@ const AnnouncementDetails = () => {
           <AnnouncementViewLayout
             title={announcementData?.title || ""}
             description={announcementData?.description || ""}
-            startDate={splitDateTime(announcementData?.start_date).date}
-            startTime={splitDateTime(announcementData?.start_date).time}
-            endDate={splitDateTime(announcementData?.end_date).date}
-            endTime={splitDateTime(announcementData?.end_date).time}
+            startDate={splitDateTime(announcementData?.start_date ?? null).date}
+            startTime={splitDateTime(announcementData?.start_date ?? null).time}
+            endDate={splitDateTime(announcementData?.end_date ?? null).date}
+            endTime={splitDateTime(announcementData?.end_date ?? null).time}
             image={announcementData?.image || ""}
             creatorName={announcementData?.creator?.name}
             creatorAvatar={
