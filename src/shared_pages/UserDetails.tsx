@@ -174,11 +174,14 @@ export default function UserDetails ({
                     )}
                     onClick={()=>showModal.set(true)}
                 />
-                <Button 
-                    text="Move to next stage"
-                    extraClassName="rounded-[8px] !font-bold !w-fit px-5 !min-h-10"
-                    onClick={()=>nextStageModal.set(true)}
-                />
+                {
+                    isContestant &&
+                    <Button 
+                        text="Move to next stage"
+                        extraClassName="rounded-[8px] !font-bold !w-fit px-5 !min-h-10"
+                        onClick={()=>nextStageModal.set(true)}
+                    />
+                }
             </div>
             <Modal
                 show={showModal.get}

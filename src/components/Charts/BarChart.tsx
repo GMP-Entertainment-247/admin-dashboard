@@ -1,5 +1,6 @@
 import ReactSwitch from 'react-switch';
 import { BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Bar } from 'recharts';
+import { formatNumber } from '../../utils/helpers';
 
 const BarChartComponent = ({ data, dataKeys, isAnimationActive = true }:{
   data: any[],
@@ -35,7 +36,7 @@ const BarChartComponent = ({ data, dataKeys, isAnimationActive = true }:{
             <div className='flex items-center gap-1'  key={`item-${index}`}>
               <div className='w-2 h-2' style={{background: entry.color}}/>
               <p className='text-xs'>
-                <span className='capitalize text-[#737373]'>{entry.name}:</span> <span className='font-semibold'>{entry.value}</span>
+                <span className='capitalize text-[#737373]'>{entry.name}:</span> <span className='font-semibold'>{formatNumber(entry.value)}</span>
               </p>
             </div>
           ))
@@ -53,7 +54,7 @@ const BarChartComponent = ({ data, dataKeys, isAnimationActive = true }:{
       >
         <CartesianGrid vertical={false} stroke="#E9E9E9" strokeWidth={0.5} style={{borderColor: "red"}}  />
         <XAxis tickLine={false} tick={{fontSize: "12px", fill: "#737373"}} stroke='#E9E9E9' strokeWidth={0.5} dataKey="name" />
-        <YAxis axisLine={false} tickLine={false} tick={{fontSize: "14px", fill: "#737373"}} width="auto" />
+        <YAxis axisLine={false} tickLine={false} tick={{fontSize: "14px", fill: "#737373"}} width="auto" tickFormatter={(value) => formatNumber(value, true)} />
         <Tooltip cursor={false} content={<CustomTooltip />} />
         {
           dataKeys.map((key, index) => {

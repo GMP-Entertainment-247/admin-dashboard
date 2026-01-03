@@ -6,10 +6,12 @@ import { useNavigate } from "react-router-dom";
 interface IBreadCrumb {
     title: string;
     links?: { label: string; path?: string }[]
+    backNavigation?: string; //link to navigate to
 }
 export default function BreadCrumbs ({
     title,
-    links
+    links,
+    backNavigation,
 }: IBreadCrumb) {
     const navigate = useNavigate();
 
@@ -17,7 +19,7 @@ export default function BreadCrumbs ({
         <div className="flex items-center justify-between">
             <div 
                 className="flex items-center gap-1 cursor-pointer"
-                onClick={() => navigate(-1)}
+                onClick={() => backNavigation ? navigate(backNavigation) : navigate(-1)}
             >
                 <ChevronLeftIcon />
                 <p className="text-[20px] font-semibold">{title}</p>
