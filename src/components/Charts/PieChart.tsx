@@ -1,13 +1,15 @@
 import clsx from 'clsx';
 import { PieChart, Pie, Cell } from 'recharts';
+import { formatNumber } from '../../utils/helpers';
 
 
-export const PieChartComponent = ({ data, layout = "horizontal" }:{
+export const PieChartComponent = ({ data, totalValue=0, layout = "horizontal" }:{
     data: any[],
+    totalValue?: number,
     layout?: "vertical" | "horizontal"
 }) => (
     <div>
-        <p className='text-[32px] font-medium'>1267</p>
+        <p className='text-[32px] font-medium'>{formatNumber(totalValue)}</p>
         <div 
             className={clsx(
                 'flex -my-5 ',

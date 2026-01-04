@@ -11,13 +11,27 @@ import useFetch from '../../../utils/hooks/useFetch';
 import LineChartComponent from "../../../components/Charts/LineChart";
 import { useState } from "react";
 import PieChartComponent from "../../../components/Charts/PieChart";
-import { IArtist } from "../../../interface/artists.interface";
-// import dayjs from "dayjs";
+import { IArtist, IArtistMetrics, ILineGraphData, IPieChartData } from "../../../interface/artists.interface";
+import { useQueryParams } from "../../../utils/hooks/useQueryParams";
+import { tableOrderOptions, tablePeriodOptions } from "../../../utils/constant";
 
 
 export default function ArtistsHome () {
   const navigate = useNavigate()
-  const {data, loading} = useFetch<{data: IArtist[]}>("/admin/list-artists")
+  const queryParam = useQueryParams()
+  const {data: artistMetrics} = useFetch<IArtistMetrics>("/admin/artists-metrics")
+  const {data: graphData} = useFetch<ILineGraphData>("/admin/artists-line-graph",{
+    year: queryParam.get("year") || "2026",
+  })
+  const {data: chartData} = useFetch<IPieChartData>("/admin/artists-pie-chart",{
+    // month: "January 2026", // i think it should take the period options instead
+  })
+  console.log(chartData)
+  const {data, loading} = useFetch<{data: IArtist[]}>("/admin/list-artists",{
+    date: queryParam.get("period") || "",
+    recent: queryParam.get("order") || "most-recent",
+    search: queryParam.get("search") || "",
+  })
   const [lineChartDataKeys, setLineChartDataKeys] = useState([
     {label: 'revenue', color: "#00BF00", isActive: true, handleChange: handleLineChartDataKeyChange},
     {label: 'uploads', color: "#AB1BB2", isActive: true, handleChange: handleLineChartDataKeyChange},
@@ -41,25 +55,25 @@ export default function ArtistsHome () {
           {
             icon: upload,
             bg: "bg-[#F6917F]",
-            value: formatNumber(10000),
+            value: formatNumber(artistMetrics?.upolads || 0),
             title: "Uploads",
           },
           {
             icon: money,
             bg: "bg-[#181670]",
-            value: formatNumber(10000),
+            value: formatNumber(Number(artistMetrics?.revenue || 0)),
             title: "Revenue",
           },
           {
             icon: mic,
             bg: "bg-[#3BDC54]",
-            value: formatNumber(10000),
+            value: formatNumber(artistMetrics?.artist || 0),
             title: "Artists",
           },
           {
             icon: money,
             bg: "bg-[#702AC8]",
-            value: formatNumber(10000),
+            value: formatNumber(artistMetrics?.offers || 0),
             title: "Offers",
           },
         ].map((item, idx) => (
@@ -77,86 +91,24 @@ export default function ArtistsHome () {
           <div className="flex justify-between items-center mb-6">
             <p className="font-semibold text-lg mb-4">Performance</p>
             <Dropdown 
-              triggerText="This Month" 
-              options={[]} 
+              triggerText={queryParam.get("year") || "2026"} 
+              options={[2026,2025,2024].map(year => ({
+                label: year.toString(),
+                value: year.toString(),
+                action: () => queryParam.set("year", year.toString()),
+              }))}
             />
           </div>
           <LineChartComponent 
             dataKeys={lineChartDataKeys}
-            data={[
-              {
-                name: 'Jan',
-                revenue: 40,
-                uploads: 24,
-                bookings: 24,
-              },
-              {
-                name: 'Feb',
-                revenue: 30,
-                uploads: 13,
-                bookings: 10,
-              },
-              {
-                name: 'Mar',
-                revenue: 20,
-                uploads: 98,
-                bookings: 20,
-              },
-              {
-                name: 'Apr',
-                revenue: 20,
-                uploads: 38,
-                bookings: 20,
-              },
-              {
-                name: 'May',
-                revenue: 10,
-                uploads: 48,
-                bookings: 21,
-              },
-              {
-                name: 'Jun',
-                revenue: 23,
-                uploads: 38,
-                bookings: 25,
-              },
-              {
-                name: 'Jul',
-                revenue: 34,
-                uploads: 43,
-                bookings: 21,
-              },
-              {
-                name: 'Aug',
-                revenue: 34,
-                uploads: 43,
-                bookings: 21,
-              },
-              {
-                name: 'Sep',
-                revenue: 34,
-                uploads: 43,
-                bookings: 21,
-              },
-              {
-                name: 'Oct',
-                revenue: 34,
-                uploads: 43,
-                bookings: 21,
-              },
-              {
-                name: 'Nov',
-                revenue: 34,
-                uploads: 43,
-                bookings: 21,
-              },
-              {
-                name: 'Dec',
-                revenue: 34,
-                uploads: 43,
-                bookings: 21,
-              },
-            ]}
+            data={
+              graphData?.labels.map((item: string, idx: number)=>({
+                name: item||"--",
+                revenue: graphData?.series.revenue[idx]||0,
+                uploads: graphData?.series.uploads[idx]||0,
+                bookings: graphData?.series.bookings[idx]||0,
+              })) ?? []
+            }
           />
         </div>
         <div className="bg-white rounded-[16px] p-5">
@@ -168,10 +120,11 @@ export default function ArtistsHome () {
             />
           </div>
           <PieChartComponent 
+            totalValue={chartData?.Accepted! + chartData?.Pending! + chartData?.Rejected! || 0}
             data={[
-              { name: "Accepted", value: 400, color: "#00CC00" },
-              { name: "Pending", value: 300, color: "#FFD700" },
-              { name: "Rejected", value: 300, color: "#FF0000" },
+              { name: "Accepted", value: chartData?.Accepted || 0, color: "#00CC00" },
+              { name: "Pending", value: chartData?.Pending || 0, color: "#FFD700" },
+              { name: "Rejected", value: chartData?.Rejected || 0, color: "#FF0000" },
             ]}
           />
         </div>
@@ -185,23 +138,24 @@ export default function ArtistsHome () {
           slot={
             <div className="flex gap-4 items-center">
               <Dropdown 
-                triggerText="Most Recent" 
-                options={[
-                  {label: "Most Recent", value: "recent"},
-                  {label: "Newest First", value: "newest"},
-                  {label: "Oldest First", value: "oldest"},
-                  {label: "A-Z", value: "desc"},
-                  {label: "Z-A", value: "asc"},
-                ]} 
+                triggerText={tableOrderOptions.find(item => item.value === queryParam.get("order"))?.label || "Most Recent"}
+                options={
+                  tableOrderOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                    action: () => queryParam.set("order", item.value),
+                  }))
+                } 
               />
               <Dropdown 
-                triggerText="This Month" 
-                options={[
-                  {label: "Today", value: "today"},
-                  {label: "This Week", value: "week"},
-                  {label: "This Month", value: "month"},
-                  {label: "This Year", value: "year"},
-                ]} 
+                triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("period"))?.label || "This Month"}
+                options={
+                  tablePeriodOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                    action: () => queryParam.set("period", item.value),
+                  }))
+                } 
               />
             </div>
           }
@@ -211,7 +165,7 @@ export default function ArtistsHome () {
               view: (item) => (
                 <div className="flex gap-2 items-center">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
-                    <img {...imageProp("")} alt="" className="w-full" />
+                    <img {...imageProp(item.profile_picture_url??"")} alt="" className="w-full" />
                   </div>
                   <p>{item.name}</p>
                 </div>

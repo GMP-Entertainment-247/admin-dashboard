@@ -4,7 +4,6 @@ import Dropdown from "../../components/shared/Dropdown";
 import Table from "../../components/Table";
 import { formatNumber, imageProp } from "../../utils/helpers";
 import useFetch from '../../utils/hooks/useFetch';
-import { IFan } from "../../interface/fans.interface";
 import LineChartComponent from "../../components/Charts/LineChart";
 import { useState } from "react";
 import PieChartComponent from "../../components/Charts/PieChart";
@@ -16,10 +15,25 @@ import ranking from "../../images/svg/ranking.svg";
 import studio from "../../images/svg/studio_booking.svg";
 import medal from "../../images/svg/medal-star.svg";
 import dayjs from "dayjs";
+import { IActivityLog, IDashboardMetrics, ILineGraphData } from "../../interface/dashboard.interface";
+import { useQueryParams } from "../../utils/hooks/useQueryParams";
+import { tableOrderOptions, tablePeriodOptions } from "../../utils/constant";
 
 
 export default function DashboardHome() {
-  const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+  const queryParam = useQueryParams()
+  const {data} = useFetch<IDashboardMetrics>("/admin/dashboard")
+  const {data: activityLog, loading} = useFetch<{data: IActivityLog[], last_page: number;}>(
+    "/admin/activity-log",
+    {
+      date: queryParam.get("period") || "this-month",
+      recent: queryParam.get("order") || "most-recent",
+      page: queryParam.get("page") || 1,
+    }
+  )
+  const {data: graphData} = useFetch<ILineGraphData>("/admin/line-graph",{
+    year: queryParam.get("year") || "2026",
+  })
   const [lineChartDataKeys, setLineChartDataKeys] = useState([
     {label: 'voting', color: "#00BF00", isActive: true, handleChange: handleLineChartDataKeyChange},
     {label: 'artists', color: "#AB1BB2", isActive: true, handleChange: handleLineChartDataKeyChange},
@@ -48,37 +62,37 @@ export default function DashboardHome() {
                 {
                   icon: user,
                   bg: "bg-[#F85A7E]",
-                  value: formatNumber(10000),
+                  value: formatNumber(data?.new_users || 0),
                   title: "New Users",
                 },
                 {
                   icon: investors,
                   bg: "bg-[#3BDC54]",
-                  value: formatNumber(10000),
+                  value: formatNumber(data?.investors || 0),
                   title: "Investors",
                 },
                 {
                   icon: mic,
                   bg: "bg-[#C25589]",
-                  value: formatNumber(10000),
+                  value: formatNumber(data?.artists || 0),
                   title: "Artists",
                 },
                 {
                   icon: medal,
                   bg: "bg-[#1A96F0]",
-                  value: formatNumber(10000),
+                  value: formatNumber(data?.celebrities || 0),
                   title: "Celebrities",
                 },
                 {
                   icon: ranking,
                   bg: "bg-[#FFA61F]",
-                  value: formatNumber(10000),
+                  value: formatNumber(data?.contestants || 0),
                   title: "Contestants",
                 },
                 {
                   icon: studio,
                   bg: "bg-[#702AC8]",
-                  value: formatNumber(10000),
+                  value: formatNumber(data?.bookings || 0),
                   title: "Studio Bookings",
                 },
               ].map((item, idx) => (
@@ -104,110 +118,26 @@ export default function DashboardHome() {
             <div className="flex justify-between items-center mb-6">
               <p className="font-semibold text-lg mb-4">Total Revenue</p>
               <Dropdown 
-                triggerText="This Month" 
-                options={[]} 
+                triggerText={queryParam.get("year") || "2026"} 
+                options={[2026,2025,2024].map(year => ({
+                  label: year.toString(),
+                  value: year.toString(),
+                  action: () => queryParam.set("year", year.toString()),
+                }))}
               />
             </div>
             <LineChartComponent 
               dataKeys={lineChartDataKeys}
-              data={[
-                {
-                  name: 'Jan',
-                  voting: 40,
-                  artists: 24,
-                  celebrity: 24,
-                  investors: 23,
-                  tickets: 34,
-                },
-                {
-                  name: 'Feb',
-                  voting: 30,
-                  artists: 13,
-                  celebrity: 10,
-                  investors: 43,
-                  tickets: 35,
-                },
-                {
-                  name: 'Mar',
-                  voting: 20,
-                  artists: 98,
-                  celebrity: 20,
-                  investors: 99,
-                  tickets: 55,
-                },
-                {
-                  name: 'Apr',
-                  voting: 20,
-                  artists: 38,
-                  celebrity: 20,
-                  investors: 13,
-                  tickets: 5,
-                },
-                {
-                  name: 'May',
-                  voting: 10,
-                  artists: 48,
-                  celebrity: 21,
-                  investors: 88,
-                  tickets: 76,
-                },
-                {
-                  name: 'Jun',
-                  voting: 23,
-                  artists: 38,
-                  celebrity: 25,
-                  investors: 43,
-                  tickets: 85,
-                },
-                {
-                  name: 'Jul',
-                  voting: 34,
-                  artists: 43,
-                  celebrity: 21,
-                  investors: 13,
-                  tickets: 95,
-                },
-                {
-                  name: 'Aug',
-                  voting: 34,
-                  artists: 43,
-                  celebrity: 21,
-                  investors: 43,
-                  tickets: 65,
-                },
-                {
-                  name: 'Sep',
-                  voting: 34,
-                  artists: 43,
-                  celebrity: 21,
-                  investors: 93,
-                  tickets: 35,
-                },
-                {
-                  name: 'Oct',
-                  voting: 34,
-                  artists: 43,
-                  celebrity: 21,
-                  investors: 23,
-                  tickets: 55,
-                },
-                {
-                  name: 'Nov',
-                  voting: 34,
-                  artists: 43,
-                  celebrity: 21,
-                  investors: 67,
-                  tickets: 37,
-                },
-                {
-                  name: 'Dec',
-                  voting: 34,
-                  artists: 43,
-                  celebrity: 21,
-                  investors: 24,
-                  tickets: 39,
-                },
-              ]}
+              data={
+                graphData?.labels.map((item: string, idx: number)=>({
+                  name: item||"--",
+                  voting: graphData?.series.voting[idx]||0,
+                  artists: graphData?.series.artist[idx]||0,
+                  celebrity: graphData?.series.celebrity[idx]||0,
+                  investors: graphData?.series.investor[idx]||0,
+                  tickets: graphData?.series.ticket[idx]||0,
+                })) ?? []
+              }
             />
           </div>
           <div className="bg-white rounded-[16px] p-5">
@@ -232,27 +162,29 @@ export default function DashboardHome() {
             tableTitle="Recent Activities"
             hideSearch
             isLoading={loading}
-            data={data?.data ?? []}
+            data={activityLog?.data || []}
+            totalPages={activityLog?.last_page || 1}
             slot={
               <div className="flex gap-4 items-center">
                 <Dropdown 
-                  triggerText="Most Recent" 
-                  options={[
-                    {label: "Most Recent", value: "recent"},
-                    {label: "Newest First", value: "newest"},
-                    {label: "Oldest First", value: "oldest"},
-                    {label: "A-Z", value: "desc"},
-                    {label: "Z-A", value: "asc"},
-                  ]} 
+                  triggerText={tableOrderOptions.find(item => item.value === queryParam.get("order"))?.label || "Most Recent"}
+                  options={
+                    tableOrderOptions.map(item => ({
+                      label: item.label,
+                      value: item.value,
+                      action: () => queryParam.set("order", item.value),
+                    }))
+                  } 
                 />
                 <Dropdown 
-                  triggerText="This Month" 
-                  options={[
-                    {label: "Today", value: "today"},
-                    {label: "This Week", value: "week"},
-                    {label: "This Month", value: "month"},
-                    {label: "This Year", value: "year"},
-                  ]} 
+                  triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("period"))?.label || "This Month"}
+                  options={
+                    tablePeriodOptions.map(item => ({
+                      label: item.label,
+                      value: item.value,
+                      action: () => queryParam.set("period", item.value),
+                    }))
+                  } 
                 />
               </div>
             }
@@ -264,17 +196,17 @@ export default function DashboardHome() {
                     <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                       <img {...imageProp("")} alt="" className="w-full" />
                     </div>
-                    <p>{item.name}</p>
+                    <p className="whitespace-nowrap">{item.user || "Unknown"}</p>
                   </div>
                 ),
               },
               {
                 header: "Description",
-                view: (item) => <span>Big Baller just release a new song titled “No Fear”. This song is one of the most streaming...</span>,
+                view: (item) => <p className="line-clamp-1 max-w-[700px]">{item.description || "---"}</p>,
               },
               {
                 header: "Date",
-                view: (item) => <span>{dayjs(item.created_at).format("DD MMM, YYYY")}</span>,
+                view: (item) => <span className="whitespace-nowrap">{dayjs(item.created_at).format("DD MMM, YYYY")}</span>,
               },
               {
                 header: "Time",
