@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import AnnouncementInnerLayout from "./announcements/inner-layout";
 import Button from "../../../components/shared/Button";
@@ -17,6 +18,7 @@ import { splitDateTime } from "../../../utils/helpers";
 const AnnouncementDetails = () => {
   const { announcementId } = useParams<{ announcementId: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     data: announcementData,
@@ -45,6 +47,10 @@ const AnnouncementDetails = () => {
         );
         return;
       }
+      // Invalidate the announcement list query to refetch updated data
+      await queryClient.invalidateQueries({
+        queryKey: ["/admin/announcement"],
+      });
       toast.success("Announcement deleted successfully");
       navigate("/rap-battle/announcement");
     } catch (error) {

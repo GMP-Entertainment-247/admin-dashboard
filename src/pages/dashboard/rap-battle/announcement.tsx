@@ -3,38 +3,24 @@ import Dropdown from "../../../components/shared/Dropdown";
 import Table from "../../../components/Table";
 import { imageProp, formatDateTime } from "../../../utils/helpers";
 import IndexWrapper from "./components/indexWrapper";
-// import Tabs from "../../../components/shared/Tabs";
 import edit from "../../../images/svg/edit.svg";
 import useFetch from "../../../utils/hooks/useFetch";
 import type { AnnouncementListData } from "../../../interface/announcement.interface";
-import { useSearchParams } from "react-router-dom";
+import { useQueryParams } from "../../../utils/hooks/useQueryParams";
+import { tablePeriodOptions, tableOrderOptions } from "../../../utils/constant";
 
 export default function AnnouncementHome() {
-  const [searchParams] = useSearchParams();
-
-  const currentPage = searchParams.get("page") || "1";
-  const selectedDate = searchParams.get("date") || "";
-  const search = searchParams.get("search") || "";
-
-  const queryParams: Record<string, any> = {
-    page: currentPage,
-  };
-
-  if (selectedDate && selectedDate !== "all") {
-    queryParams.date = selectedDate;
-  }
-
-  if (search) {
-    queryParams.filter = search;
-  }
+  const queryParams = useQueryParams();
 
   const { data: announcementList, loading } = useFetch<AnnouncementListData>(
     "/admin/announcement",
-    queryParams
+    {
+      page: queryParams.get("page") || "1",
+      filter: queryParams.get("search") || "",
+      date: queryParams.get("period") || "this-month",
+      recent: queryParams.get("order") || "most-recent",
+    }
   );
-
-  const tableData = announcementList?.data ?? [];
-  const totalPages = announcementList?.last_page ?? 1;
 
   return (
     <IndexWrapper
@@ -43,27 +29,37 @@ export default function AnnouncementHome() {
       buttonLink="create-announcement"
     >
       <div>
-        <div className="bg-white px-5 py-2 -mb-5 rounded-t-xl">
-        </div>
+        <div className="bg-white px-5 py-2 -mb-5 rounded-t-xl"></div>
         <Table
           noTitle={true}
           searchPlaceHolder="Search any announcement"
           isLoading={loading}
-          data={tableData}
-          totalPages={totalPages}
+          data={announcementList?.data ?? []}
           slot={
             <div className="flex items-center gap-3">
-              <Dropdown triggerText="Most recent" options={[]} />
               <Dropdown
-                triggerText="Date"
-                paramKey="date"
-                options={[
-                  { label: "All", value: "all" },
-                  { label: "Today", value: "today" },
-                  { label: "This week", value: "this-week" },
-                  { label: "This month", value: "this-month" },
-                  { label: "This year", value: "this-year" },
-                ]}
+                triggerText={
+                  tableOrderOptions.find(
+                    (item) => item.value === queryParams.get("order")
+                  )?.label || "Most Recent"
+                }
+                options={tableOrderOptions.map((item) => ({
+                  label: item.label,
+                  value: item.value,
+                  action: () => queryParams.set("order", item.value),
+                }))}
+              />
+              <Dropdown
+                triggerText={
+                  tablePeriodOptions.find(
+                    (item) => item.value === queryParams.get("period")
+                  )?.label || "This Month"
+                }
+                options={tablePeriodOptions.map((item) => ({
+                  label: item.label,
+                  value: item.value,
+                  action: () => queryParams.set("period", item.value),
+                }))}
               />
             </div>
           }

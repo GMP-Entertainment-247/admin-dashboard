@@ -11,6 +11,7 @@ import Dropdown from "../../../components/shared/Dropdown";
 import useFetch from "../../../utils/hooks/useFetch";
 import { BlogListData } from "../../../interface/blog.interface";
 import { BLOG_TABS } from "./data";
+import { tablePeriodOptions } from "../../../utils/constant";
 
 export default function BlogsHome() {
   const [searchParams] = useSearchParams();
@@ -112,10 +113,10 @@ export default function BlogsHome() {
                 paramKey="date"
                 options={[
                   { label: "All", value: "all" },
-                  { label: "Today", value: "today" },
-                  { label: "This week", value: "this-week" },
-                  { label: "This month", value: "this-month" },
-                  { label: "This year", value: "this-year" },
+                  ...tablePeriodOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                  })),
                 ]}
               />
             </div>

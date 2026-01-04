@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import AnnouncementInnerLayout from "./announcements/inner-layout";
 import Button from "../../../components/shared/Button";
 import StateContainer from "../../../components/shared/StateContainer";
@@ -14,6 +15,7 @@ import { useProfile } from "../../../context/ProfileContext";
 const PreviewAnnouncement = () => {
   const { draft } = useAnnouncementDraft();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { profile } = useProfile();
 
@@ -67,6 +69,11 @@ const PreviewAnnouncement = () => {
       if (draft.mode === "create") {
         await createAnnouncement(formData);
         toast.success("Announcement created");
+        // Invalidate the announcement list query to refetch updated data
+        await queryClient.invalidateQueries({
+          queryKey: ["/admin/announcement"],
+        });
+        navigate("/rap-battle/announcement");
       } else {
         const targetAnnouncementId = announcementId;
         if (targetAnnouncementId) {
@@ -74,10 +81,16 @@ const PreviewAnnouncement = () => {
         }
         await updateAnnouncement(formData);
         toast.success("Announcement updated");
-      }
-      if (draft.mode === "create") {
-        navigate("/rap-battle/announcement");
-      } else {
+        // Invalidate both the list and details queries to refetch updated data
+        await queryClient.invalidateQueries({
+          queryKey: ["/admin/announcement"],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [
+            "/admin/announcement/details",
+            { id: targetAnnouncementId },
+          ],
+        });
         navigate(`/rap-battle/announcement/${announcementId}`);
       }
     } catch (error: any) {
