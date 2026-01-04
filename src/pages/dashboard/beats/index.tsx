@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import PageTitle from "../../../components/shared/PageTitle";
 import Button from "../../../components/shared/Button";
 import Card from "../../../components/shared/Card";
@@ -17,11 +18,16 @@ import type { IBeat } from "../../../interface/beats.interface";
 import LoadingSpinner from "../../../components/shared/LoadingSpinner";
 
 const BeatsHome = () => {
+  const [searchParams] = useSearchParams();
+  const queryParams: Record<string, any> = {
+    page: searchParams.get("page") || "1",
+    search: searchParams.get("search") || "",
+  };
   const { data, loading, error } = useFetch<{
     data: IBeat[];
     total: number;
     last_page: number;
-  }>("/admin/beats");
+  }>("/admin/beats", queryParams);
 
   return (
     <div className="space-y-8">
@@ -109,13 +115,11 @@ const BeatsHome = () => {
             },
             {
               header: "Genre",
-              view: () => <span>Afro Pop</span>, // placeholder (API doesn't provide yet)
+              view: (item) => item.genre || "---",
             },
             {
               header: "Year",
-              view: (item) => (
-                <span>{new Date(item.created_at).getFullYear()}</span>
-              ),
+              view: (item) => new Date(item.created_at).getFullYear(),
             },
             {
               header: "Action",

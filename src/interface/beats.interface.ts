@@ -7,6 +7,7 @@ export interface IBeat {
   views_count: string;
   likes_count: string;
   direct_count: string;
+  genre: string;
   user: {
     name: string;
     profile_picture_url: string;
