@@ -6,7 +6,7 @@ import {
   SetStateAction,
   Dispatch,
 } from "react";
-// import type { Announcement } from "../../../../interface/announcement.interface";
+import type { AnnouncementCreator } from "../../../../interface/announcement.interface";
 
 export type AnnouncementDraftMode = "create" | "edit";
 
@@ -21,6 +21,7 @@ export interface AnnouncementDraftData {
   description: string;
   image: string;
   newImage: File[];
+  creator?: AnnouncementCreator;
 }
 
 export interface AnnouncementDraft {

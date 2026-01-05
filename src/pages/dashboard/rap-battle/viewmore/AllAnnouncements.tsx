@@ -1,48 +1,65 @@
 import Dropdown from "../../../../components/shared/Dropdown";
 import { Link } from "react-router-dom";
-import Tabs from "../../../../components/shared/Tabs";
 import Table from "../../../../components/Table";
-import { imageProp } from "../../../../utils/helpers";
+import { imageProp, formatDateTime } from "../../../../utils/helpers";
 import edit from "../../../../images/svg/edit.svg";
-import { mockAnnouncements } from "../announcements/data";
+import useFetch from "../../../../utils/hooks/useFetch";
+import type { AnnouncementListData } from "../../../../interface/announcement.interface";
+import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
+import {
+  tablePeriodOptions,
+  tableOrderOptions,
+} from "../../../../utils/constant";
 
 export default function AllAnnouncements() {
+  const queryParams = useQueryParams();
+
+  const { data: announcementList, loading } = useFetch<AnnouncementListData>(
+    "/admin/announcement",
+    {
+      page: queryParams.get("page") || "1",
+      filter: queryParams.get("search") || "",
+      date: queryParams.get("period") || "this-month",
+      recent: queryParams.get("order") || "most-recent",
+    }
+  );
   return (
     <div>
       <h2 className="text-[24px] font-semibold mb-3">All Announcements</h2>
       <div>
-        <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
-          <Tabs
-            tabs={[
-              { label: "All Events", key: "all" },
-              { label: "Audition", key: `audition` },
-              { label: "Stage 1", key: "stage-1" },
-              { label: "Stage 2", key: "stage-2" },
-              { label: "Stage 3", key: "stage-3" },
-              { label: "Finale", key: "finale" },
-            ]}
-            // useAsLink
-          />
-        </div>
+        <div className="bg-white px-5 py-2 -mb-5 rounded-t-xl"></div>
         <Table
           noTitle={true}
-          searchPlaceHolder="Search any contestant"
-          isLoading={false}
-          data={mockAnnouncements}
+          searchPlaceHolder="Search any announcement"
+          isLoading={loading}
+          data={announcementList?.data ?? []}
+          totalPages={announcementList?.last_page ?? 1}
           slot={
             <div className="flex items-center gap-3">
-              <Dropdown triggerText="Most recent" options={[]} />
               <Dropdown
-                triggerText="Date"
-                options={[
-                  { label: "All", value: "all" },
-                  { label: "Today", value: "today" },
-                  { label: "This week", value: "this-week" },
-                  { label: "This month", value: "this-month" },
-                  { label: "This year", value: "this-year" },
-                ]}
+                triggerText={
+                  tableOrderOptions.find(
+                    (item) => item.value === queryParams.get("order")
+                  )?.label || "Most Recent"
+                }
+                options={tableOrderOptions.map((item) => ({
+                  label: item.label,
+                  value: item.value,
+                  action: () => queryParams.set("order", item.value),
+                }))}
               />
-              <Dropdown triggerText="Season 1" options={[]} />
+              <Dropdown
+                triggerText={
+                  tablePeriodOptions.find(
+                    (item) => item.value === queryParams.get("period")
+                  )?.label || "This Month"
+                }
+                options={tablePeriodOptions.map((item) => ({
+                  label: item.label,
+                  value: item.value,
+                  action: () => queryParams.set("period", item.value),
+                }))}
+              />
             </div>
           }
           rows={[
@@ -51,7 +68,11 @@ export default function AllAnnouncements() {
               view: (item) => (
                 <div className="flex gap-2 items-center">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
-                    <img {...imageProp("")} alt="" className="w-full" />
+                    <img
+                      {...imageProp(item.image || "")}
+                      alt=""
+                      className="w-full h-full"
+                    />
                   </div>
                   <p>{item.title}</p>
                 </div>
@@ -59,26 +80,31 @@ export default function AllAnnouncements() {
             },
             {
               header: "Description",
-              view: (item) => (
-                <span className="line-clamp-1">{item.description}</span>
-              ),
+              view: (item) => {
+                return (
+                  <span
+                    className="line-clamp-1"
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  />
+                );
+              },
             },
             {
               header: "Status",
-              view: (item) => item.status,
+              view: (item) => (item.status === "1" ? "Active" : "Inactive"),
             },
             {
               header: "Start",
-              view: (item) => `${item.startTime} ${item.startDate}`,
+              view: (item) => formatDateTime(item.start_date),
             },
             {
               header: "End",
-              view: (item) => `${item.endTime} ${item.endDate}`,
+              view: (item) => formatDateTime(item.end_date),
             },
             {
               header: "Action",
               view: (item) => (
-                <Link to={String(item.id)} title="View">
+                <Link to={`/rap-battle/announcement/${item.id}`} title="View">
                   <img src={edit} alt="edit" className="w-6 ml-4" />
                 </Link>
               ),

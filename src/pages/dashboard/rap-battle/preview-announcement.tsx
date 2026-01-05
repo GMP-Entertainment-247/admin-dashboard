@@ -1,19 +1,23 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import AnnouncementInnerLayout from "./announcements/inner-layout";
 import Button from "../../../components/shared/Button";
 import StateContainer from "../../../components/shared/StateContainer";
 import { useAnnouncementDraft } from "./announcements/announcement-draft-context";
-import { createAnnouncement } from "./announcements/data";
+import { createAnnouncement, updateAnnouncement } from "./announcements/data";
 import { toast } from "react-toastify";
 import { handleApiError } from "../../../utils/errorHelpers";
 import AnnouncementViewLayout from "./announcements/announcement-view-layout";
 import { combineDateTime } from "../../../utils/helpers";
+import { useProfile } from "../../../context/ProfileContext";
 
 const PreviewAnnouncement = () => {
   const { draft } = useAnnouncementDraft();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { profile } = useProfile();
 
   const {
     title,
@@ -26,6 +30,7 @@ const PreviewAnnouncement = () => {
     announcementId,
     image,
     newImage,
+    creator,
   } = useMemo(() => {
     return (
       draft?.data || {
@@ -64,17 +69,28 @@ const PreviewAnnouncement = () => {
       if (draft.mode === "create") {
         await createAnnouncement(formData);
         toast.success("Announcement created");
-      } else {
-        // const targetAnnouncementId = announcementId;
-        // if (targetAnnouncementId) {
-        //   formData.set("announcement_id", String(targetAnnouncementId));
-        // }
-        // await updateAnnouncement(formData);
-        // toast.success("Announcement updated");
-      }
-      if (draft.mode === "create") {
+        // Invalidate the announcement list query to refetch updated data
+        await queryClient.invalidateQueries({
+          queryKey: ["/admin/announcement"],
+        });
         navigate("/rap-battle/announcement");
       } else {
+        const targetAnnouncementId = announcementId;
+        if (targetAnnouncementId) {
+          formData.set("id", String(targetAnnouncementId));
+        }
+        await updateAnnouncement(formData);
+        toast.success("Announcement updated");
+        // Invalidate both the list and details queries to refetch updated data
+        await queryClient.invalidateQueries({
+          queryKey: ["/admin/announcement"],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: [
+            "/admin/announcement/details",
+            { id: targetAnnouncementId },
+          ],
+        });
         navigate(`/rap-battle/announcement/${announcementId}`);
       }
     } catch (error: any) {
@@ -106,6 +122,18 @@ const PreviewAnnouncement = () => {
               newImage && newImage.length > 0
                 ? URL.createObjectURL(newImage[0])
                 : image || ""
+            }
+            creatorName={
+              draft.mode === "create"
+                ? `${profile?.first_name ?? ""} ${
+                    profile?.last_name ?? ""
+                  }`.trim() || "Admin"
+                : creator?.name
+            }
+            creatorAvatar={
+              draft.mode === "create"
+                ? profile?.profile_picture_url || profile?.profile_pic || ""
+                : creator?.profile_picture_url || creator?.profile_pic || ""
             }
           />
 

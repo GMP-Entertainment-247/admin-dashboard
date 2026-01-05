@@ -120,5 +120,44 @@ export const formatTimeAgo = (dateString: string) => {
 
 export const combineDateTime = (date?: string, time?: string) => {
   if (!date || !time) return "";
-  return `${date} ${time}:00`;
+  // Remove seconds if they exist (HH:mm:ss -> HH:mm)
+  const normalizedTime = time.split(":").slice(0, 2).join(":");
+  return `${date} ${normalizedTime}:00`;
+};
+
+export const splitDateTime = (value: string | null) => {
+  if (!value) return { date: "", time: "" };
+  const [date, time] = value.split(" ");
+  if (!date || !time) return { date: date || "", time: "" };
+  // Remove seconds if they exist (HH:mm:ss -> HH:mm)
+  const normalizedTime = time.split(":").slice(0, 2).join(":");
+  return { date: date || "", time: normalizedTime || "" };
+};
+
+/**
+ * Formats time from 24-hour format (HH:mm or HH:mm:ss) to 12-hour format (h:mm am/pm)
+ * @param time - Time string in 24-hour format (e.g., "11:03", "11:03:00", "23:05")
+ * @returns Formatted time string (e.g., "11:03 am", "11:05 pm")
+ */
+export const formatTime12Hour = (time?: string | null) => {
+  if (!time) return "";
+
+  // Remove seconds if they exist
+  const [hourStr, minute] = time.split(":").slice(0, 2);
+  if (!hourStr || !minute) return time;
+
+  const hour = Number(hourStr);
+  if (isNaN(hour) || isNaN(Number(minute))) return time;
+
+  const period = hour >= 12 ? "pm" : "am";
+  const displayHour = hour % 12 || 12; // convert 0 → 12, 13-23 → 1-11
+
+  return `${displayHour}:${minute} ${period}`;
+};
+
+
+export const formatDateTime = (value: string | null) => {
+  if (!value) return "";
+  const {date, time} = splitDateTime(value);
+  return `${date} ${formatTime12Hour(time)}`;
 };

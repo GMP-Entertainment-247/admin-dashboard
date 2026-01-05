@@ -65,6 +65,9 @@ import AnnouncementLayout from "../pages/dashboard/rap-battle/announcements/anno
 import EditAnnouncement from "../pages/dashboard/rap-battle/edit-announcement";
 import PreviewAnnouncement from "../pages/dashboard/rap-battle/preview-announcement";
 import CreateAnnouncement from "../pages/dashboard/rap-battle/create/announcement";
+import BeatsLayout from "../pages/dashboard/beats/layout";
+import BeatsHome from "../pages/dashboard/beats";
+import UploadBeat from "../pages/dashboard/beats/upload";
 
 interface RouteNode {
   index?: boolean;
@@ -382,6 +385,15 @@ export const appRoutes: IRoutes[] = [
         childPath: "others",
         childElement: <SettingsOthers />,
       },
+    ],
+  },
+  {
+    path: "/beats",
+    element: <BeatsLayout />,
+    isProtected: true,
+    children: [
+      { index: true, childElement: <BeatsHome /> },
+      { childPath: "upload-beat", childElement: <UploadBeat /> },
     ],
   },
 ];

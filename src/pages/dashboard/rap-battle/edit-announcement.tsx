@@ -4,8 +4,9 @@ import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../../components/shared/LoadingSpinner";
 import StateContainer from "../../../components/shared/StateContainer";
 import { useAnnouncementDraft } from "./announcements/announcement-draft-context";
-// import useFetch from "../../../utils/hooks/useFetch";
-import { useMockFetchAnnouncement } from "./announcements/data";
+import useFetch from "../../../utils/hooks/useFetch";
+import type { Announcement } from "../../../interface/announcement.interface";
+import { splitDateTime } from "../../../utils/helpers";
 
 const EditAnnouncement = () => {
   const { announcementId } = useParams<{ announcementId: string }>();
@@ -15,42 +16,39 @@ const EditAnnouncement = () => {
     draft?.mode === "edit" &&
     draft.data.announcementId?.toString() === (announcementId ?? "").toString();
 
-  console.log({ shouldUseDraft, draft });
-
-  //   const {
-  //     data: fetchedData,
-  //     loading,
-  //     error,
-  //   } = useFetch<BlogDetailsData | null>(
-  //     "/admin/blog/details",
-  //     {
-  //       announcement_Id: announcementId,
-  //     },
-  //     { enabled: !shouldUseDraft }
-  //   );
+  // console.log({ shouldUseDraft, draft });
 
   const {
     data: fetchedData,
     loading,
     error,
-  } = useMockFetchAnnouncement(announcementId, { enabled: !shouldUseDraft });
+  } = useFetch<Announcement | null>(
+    "/admin/announcement/details",
+    {
+      id: announcementId,
+    },
+    { enabled: !shouldUseDraft }
+  );
 
   // Seed draft from API when needed
   useEffect(() => {
     if (shouldUseDraft || !fetchedData) return;
+    const start = splitDateTime(fetchedData.start_date);
+    const end = splitDateTime(fetchedData.end_date);
     setDraft({
       mode: "edit",
       data: {
         announcementId: fetchedData.id,
         title: fetchedData.title || "",
-        status: fetchedData.status || "",
-        startDate: fetchedData.startDate || "",
-        startTime: fetchedData.startTime || "",
-        endDate: fetchedData.endDate || "",
-        endTime: fetchedData.endTime || "",
+        status: fetchedData.status === "1" ? "Active" : "Inactive",
+        startDate: start.date,
+        startTime: start.time,
+        endDate: end.date,
+        endTime: end.time,
         description: fetchedData.description || "",
         image: fetchedData.image || "",
         newImage: [],
+        creator: fetchedData.creator
       },
     });
   }, [fetchedData, shouldUseDraft, setDraft]);
