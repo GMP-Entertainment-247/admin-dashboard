@@ -49,7 +49,7 @@ const AnnouncementForm = () => {
   }, [draft]);
 
   const fileUpload = useFileUpload({
-    accept: ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"],
+    accept: ["image/jpeg", "image/jpg", "image/png"],
     maxSizeKb: 2 * 1024, // 2MB
     initialFiles: newImage,
   });

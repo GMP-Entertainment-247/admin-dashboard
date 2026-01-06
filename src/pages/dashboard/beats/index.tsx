@@ -1,33 +1,28 @@
-import { useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PageTitle from "../../../components/shared/PageTitle";
 import Button from "../../../components/shared/Button";
 import Card from "../../../components/shared/Card";
-import {
-  FileUp,
-  SkipForward,
-  FileDown,
-  Bookmark,
-  EyeOff,
-  Trash2,
-} from "lucide-react";
+import { FileUp, SkipForward, FileDown, Bookmark } from "lucide-react";
 import { formatNumber } from "../../../utils/helpers";
 import Table from "../../../components/Table";
 import useFetch from "../../../utils/hooks/useFetch";
 import StateContainer from "../../../components/shared/StateContainer";
-import type { IBeat } from "../../../interface/beats.interface";
+import type { IBeat, BeatMetrics } from "../../../interface/beats.interface";
 import LoadingSpinner from "../../../components/shared/LoadingSpinner";
+import { useQueryParams } from "../../../utils/hooks/useQueryParams";
+import edit from "../../../images/svg/edit.svg";
 
 const BeatsHome = () => {
-  const [searchParams] = useSearchParams();
-  const queryParams: Record<string, any> = {
-    page: searchParams.get("page") || "1",
-    search: searchParams.get("search") || "",
-  };
+  const queryParams = useQueryParams();
   const { data, loading, error } = useFetch<{
     data: IBeat[];
     total: number;
     last_page: number;
-  }>("/admin/beats", queryParams);
+  }>("/admin/beats", {
+    page: queryParams.get("page") || "1",
+    search: queryParams.get("search") || "",
+  });
+  const { data: beatMetrics } = useFetch<BeatMetrics>("/admin/beats/metrics");
 
   return (
     <div className="space-y-8">
@@ -35,7 +30,7 @@ const BeatsHome = () => {
         <PageTitle as="h1">Beats</PageTitle>
         <Button
           text="Upload Beat"
-          href="upload-beat"
+          href="upload"
           extraClassName="rounded-[8px] font-bold !w-fit px-5 !min-h-[unset]"
         />
       </div>
@@ -45,25 +40,25 @@ const BeatsHome = () => {
           {
             icon: <FileUp color="#fff" />,
             bg: "bg-[#F85A7E]",
-            value: formatNumber(10000),
+            value: formatNumber(beatMetrics?.uploads || 0),
             title: "Uploads",
           },
           {
             icon: <SkipForward color="#fff" />,
             bg: "bg-[#181670]",
-            value: formatNumber(10000),
+            value: formatNumber(beatMetrics?.streams || 0),
             title: "Streams",
           },
           {
             icon: <FileDown color="#fff" />,
             bg: "bg-[#00BF00]",
-            value: formatNumber(10000),
+            value: formatNumber(beatMetrics?.downloads || 0),
             title: "Downloads",
           },
           {
             icon: <Bookmark color="#fff" />,
             bg: "bg-[#3B81DC]",
-            value: formatNumber(10000),
+            value: formatNumber(beatMetrics?.saves || 0),
             title: "Saves",
           },
         ].map((item, idx) => (
@@ -123,15 +118,10 @@ const BeatsHome = () => {
             },
             {
               header: "Action",
-              view: () => (
-                <div className="flex items-center gap-4">
-                  <button title="Hide" type="button">
-                    <EyeOff />
-                  </button>
-                  <button title="Delete" className="text-red-600" type="button">
-                    <Trash2 />
-                  </button>
-                </div>
+              view: (item) => (
+                <Link to={`/beats/${item.id}`} title="View">
+                  <img src={edit} alt="edit" className="w-6 ml-4" />
+                </Link>
               ),
             },
           ]}
