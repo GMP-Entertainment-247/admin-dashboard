@@ -3,7 +3,7 @@ import clsx from "clsx";
 interface ICard {
   icon: string | React.ReactNode;
   iconBgColor: string;
-  value: string;
+  value: string | number;
   title: string;
   statsText?: string;
 }
