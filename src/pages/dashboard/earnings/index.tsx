@@ -9,21 +9,35 @@ import investments_icon from "../../../images/svg/investments.svg";
 import edit from "../../../images/svg/edit.svg";
 import { useNavigate } from "react-router-dom";
 import useFetch from '../../../utils/hooks/useFetch';
-import { IFan } from "../../../interface/fans.interface";
 import { useState } from "react";
 import BarChartComponent from "../../../components/Charts/BarChart";
 import PieChartComponent from "../../../components/Charts/PieChart";
 import dayjs from "dayjs";
+import { IEarningsMetrics, ILineGraphData, IPieChartData } from "../../../interface/earnings.interface";
+import { useQueryParams } from "../../../utils/hooks/useQueryParams";
+import { tableOrderOptions, tablePeriodOptions } from "../../../utils/constant";
 // import dayjs from "dayjs";
 
 
 export default function EarningsHome () {
   const navigate = useNavigate()
-  const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+  const queryParam = useQueryParams()
   const [lineChartDataKeys, setLineChartDataKeys] = useState([
     {label: 'Total Earnings', color: "#998100", isActive: true, handleChange: handleLineChartDataKeyChange},
     {label: 'Revenue', color: "#D7C567", isActive: true, handleChange: handleLineChartDataKeyChange},
   ]);
+  const {data: earningsMetrics} = useFetch<IEarningsMetrics>("/admin/earnings-metrics")
+  const {data: graphData} = useFetch<ILineGraphData>("/admin/earnings-chart",{
+    year: queryParam.get("year") || "2026",
+  })
+  const {data: chartData} = useFetch<IPieChartData>("/admin/earnings-pie-chart",{
+    date: queryParam.get("chartPeriod") || "",
+  })
+  const {data: payouts, loading} = useFetch<{data: any[]}>("/admin/list-earnings",{
+    date: queryParam.get("period") || "",
+    recent: queryParam.get("order") || "most-recent",
+    search: queryParam.get("search") || "",
+  })
 
   function handleLineChartDataKeyChange(keyLabel: string) {
     setLineChartDataKeys(prev =>
@@ -42,25 +56,25 @@ export default function EarningsHome () {
                 {
                     icon: investments_icon,
                     bg: "bg-[#CE2A53]",
-                    value: formatNumber(10000),
+                    value: formatNumber(earningsMetrics?.earnings || 0),
                     title: "Total Earnings",
                 },
                 {
                     icon: money,
                     bg: "bg-[#181670]",
-                    value: formatNumber(10000),
+                    value: formatNumber(earningsMetrics?.revenue || 0),
                     title: "Revenue",
                 },
                 {
                     icon: money_change,
                     bg: "bg-[#24CC3E]",
-                    value: formatNumber(10000),
+                    value: formatNumber(earningsMetrics?.transactions || 0),
                     title: "Transactions",
                 },
                 {
                     icon: note,
                     bg: "bg-[#702AC8]",
-                    value: formatNumber(10000),
+                    value: formatNumber(earningsMetrics?.offers || 0),
                     title: "Offers",
                 },
             ].map((item, idx) => (
@@ -76,91 +90,47 @@ export default function EarningsHome () {
         <div className="grid grid-cols-2 gap-6 mt-6">
             <div className="bg-white rounded-[16px] p-5">
                 <div className="flex justify-between items-center mb-6">
-                    <p className="font-semibold text-lg mb-4">Earnings</p>
-                    <Dropdown 
-                        triggerText="This Month" 
-                        options={[]} 
-                    />
+                    <p className="font-semibold text-lg mb-4">Performance</p>
+                        <Dropdown 
+                            triggerText={queryParam.get("year") || "2026"} 
+                            options={[2026,2025,2024].map(year => ({
+                                label: year.toString(),
+                                value: year.toString(),
+                                action: () => queryParam.set("year", year.toString()),
+                            }))}
+                        />
                 </div>
                 <BarChartComponent 
                     dataKeys={lineChartDataKeys}
-                    data={[
-                        {
-                            name: 'Jan',
-                            Revenue: 40,
-                            'Total Earnings': 24,
-                        },
-                        {
-                            name: 'Feb',
-                            Revenue: 30,
-                            'Total Earnings': 10,
-                        },
-                        {
-                            name: 'Mar',
-                            Revenue: 20,
-                            'Total Earnings': 20,
-                        },
-                        {
-                            name: 'Apr',
-                            Revenue: 20,
-                            'Total Earnings': 20,
-                        },
-                        {
-                            name: 'May',
-                            Revenue: 10,
-                            'Total Earnings': 21,
-                        },
-                        {
-                            name: 'Jun',
-                            Revenue: 23,
-                            'Total Earnings': 25,
-                        },
-                        {
-                            name: 'Jul',
-                            Revenue: 34,
-                            'Total Earnings': 21,
-                        },
-                        {
-                            name: 'Aug',
-                            Revenue: 34,
-                            'Total Earnings': 21,
-                        },
-                        {
-                            name: 'Sep',
-                            Revenue: 34,
-                            'Total Earnings': 21,
-                        },
-                        {
-                            name: 'Oct',
-                            Revenue: 34,
-                            'Total Earnings': 21,
-                        },
-                        {
-                            name: 'Nov',
-                            Revenue: 34,
-                            'Total Earnings': 21,
-                        },
-                        {
-                            name: 'Dec',
-                            Revenue: 34,
-                            'Total Earnings': 21,
-                        },
-                    ]}
+                    data={
+                        graphData?.labels.map((item: string, idx: number)=>({
+                            name: item||"--",
+                            Revenue: graphData?.series.revenue[idx]||0,
+                            'Total Earnings': graphData?.series.earning[idx]||0,
+                        })) ?? []
+                    }
                 />
             </div>
             <div className="bg-white rounded-[16px] p-5">
             <div className="flex justify-between items-center">
                 <p className="font-semibold text-lg mb-4">Offers</p>
                 <Dropdown 
-                triggerText="This Month" 
-                options={[]} 
+                    triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("chartPeriod"))?.label || "This Month"}
+                    options={
+                        tablePeriodOptions.map(item => ({
+                            label: item.label,
+                            value: item.value,
+                            action: () => queryParam.set("chartPeriod", item.value),
+                        }))
+                    } 
                 />
             </div>
             <PieChartComponent 
+                totalValue={chartData?.Accepted! + chartData?.Pending! + chartData?.Rejected! || 0}
                 data={[
-                { name: "Accepted", value: 400, color: "#00CC00" },
-                { name: "Pending", value: 300, color: "#FFD700" },
-                { name: "Rejected", value: 300, color: "#FF0000" },
+                    { name: "Accepted", value: chartData?.Accepted || 0, color: "#00CC00" },
+                    { name: "Pending", value: chartData?.Pending || 0, color: "#FFD700" },
+                    { name: "Rejected", value: chartData?.Rejected || 0, color: "#FF0000" },
                 ]}
             />
             </div>
@@ -170,28 +140,29 @@ export default function EarningsHome () {
                 tableTitle="Payouts"
                 searchPlaceHolder="Search"
                 isLoading={loading}
-                data={data?.data ?? []}
+                data={payouts?.data ?? []}
                 slot={
                     <div className="flex gap-4 items-center">
-                        <Dropdown 
-                            triggerText="Most Recent" 
-                            options={[
-                            {label: "Most Recent", value: "recent"},
-                            {label: "Newest First", value: "newest"},
-                            {label: "Oldest First", value: "oldest"},
-                            {label: "A-Z", value: "desc"},
-                            {label: "Z-A", value: "asc"},
-                            ]} 
-                        />
-                        <Dropdown 
-                            triggerText="This Month" 
-                            options={[
-                            {label: "Today", value: "today"},
-                            {label: "This Week", value: "week"},
-                            {label: "This Month", value: "month"},
-                            {label: "This Year", value: "year"},
-                            ]} 
-                        />
+                      <Dropdown 
+                        triggerText={tableOrderOptions.find(item => item.value === queryParam.get("order"))?.label || "Most Recent"}
+                        options={
+                          tableOrderOptions.map(item => ({
+                            label: item.label,
+                            value: item.value,
+                            action: () => queryParam.set("order", item.value),
+                          }))
+                        } 
+                      />
+                      <Dropdown 
+                        triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("period"))?.label || "This Month"}
+                        options={
+                          tablePeriodOptions.map(item => ({
+                            label: item.label,
+                            value: item.value,
+                            action: () => queryParam.set("period", item.value),
+                          }))
+                        } 
+                      />
                     </div>
                 }
                 rows={[

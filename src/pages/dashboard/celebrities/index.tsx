@@ -29,7 +29,7 @@ export default function CelebrityHome () {
     year: queryParam.get("year") || "2026",
   })
   const {data: chartData} = useFetch<IPieChartData>("/admin/celebrities-pie-chart",{
-    // month: "January 2026", // i think it should take the period options instead
+    date: queryParam.get("chartPeriod") || "",
   })
   const {data, loading} = useFetch<{data: ICelebrity[]}>("/admin/list-celebrities",{
     date: queryParam.get("period") || "",
@@ -72,7 +72,7 @@ export default function CelebrityHome () {
           {
             icon: bookmark,
             bg: "bg-[#702AC8]",
-            value: formatNumber(celebMetrics?.uploads || 0),
+            value: formatNumber(celebMetrics?.bookings || 0),
             title: "Bookings",
           },
         ].map((item, idx) => (
@@ -113,8 +113,14 @@ export default function CelebrityHome () {
           <div className="flex justify-between items-center">
             <p className="font-semibold text-lg mb-4">Offers</p>
             <Dropdown 
-              triggerText="This Month" 
-              options={[]} 
+                triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("chartPeriod"))?.label || "This Month"}
+                options={
+                  tablePeriodOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                    action: () => queryParam.set("chartPeriod", item.value),
+                  }))
+                }
             />
           </div>
           <PieChartComponent 
@@ -143,7 +149,7 @@ export default function CelebrityHome () {
                     value: item.value,
                     action: () => queryParam.set("order", item.value),
                   }))
-                } 
+                }
               />
               <Dropdown 
                 triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("period"))?.label || "This Month"}
@@ -153,7 +159,7 @@ export default function CelebrityHome () {
                     value: item.value,
                     action: () => queryParam.set("period", item.value),
                   }))
-                } 
+                }
               />
             </div>
           }

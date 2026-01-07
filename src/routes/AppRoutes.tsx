@@ -60,6 +60,8 @@ import EarningsLayout from "../pages/dashboard/earnings/layout";
 import EarningsHome from "../pages/dashboard/earnings";
 import AllPayouts from "../pages/dashboard/earnings/allpayouts";
 import NotificationsPage from "../pages/dashboard/notifications";
+import BookingDetails from "../pages/dashboard/bookings/details";
+import AllBookingsPage from "../pages/dashboard/bookings/all";
 import AnnouncementDetails from "../pages/dashboard/rap-battle/announcement-details";
 import AnnouncementLayout from "../pages/dashboard/rap-battle/announcements/announcement-layout";
 import EditAnnouncement from "../pages/dashboard/rap-battle/edit-announcement";
@@ -138,15 +140,15 @@ export const appRoutes: IRoutes[] = [
         childElement: <AllArtists />,
       },
       {
-        childPath: "offers",
+        childPath: "offers/:id",
         childElement: <AllOffers />,
       },
       {
-        childPath: "bookings",
+        childPath: "bookings/:id",
         childElement: <AllBookings />,
       },
       {
-        childPath: "uploads",
+        childPath: "uploads/:id",
         childElement: <AllUploads />,
       },
     ],
@@ -341,6 +343,14 @@ export const appRoutes: IRoutes[] = [
         index: true,
         childElement: <BookingsHome />,
       },
+      {
+        childPath: ":bookingId",
+        childElement: <BookingDetails />,
+      },
+      {
+        childPath: "all",
+        childElement: <AllBookingsPage />,
+      }
     ],
   },
   {

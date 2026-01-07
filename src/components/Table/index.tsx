@@ -20,6 +20,7 @@ interface ITable<TRow> {
     isPreview?: boolean;
     seeMoreLink?: string;
     hideSearch?: boolean;
+    searchParamKey?: string;
 }
 
 export default function Table <TRow extends {}> ({
@@ -34,13 +35,14 @@ export default function Table <TRow extends {}> ({
     isPreview=false,
     seeMoreLink="",
     hideSearch=false,
+    searchParamKey="search",
 }: ITable<TRow>) {
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams();
-    const search = searchParams.get("search") ?? ""
+    const search = searchParams.get(searchParamKey) ?? ""
 
     const debounced = useDebouncedCallback((e) => {
-        searchParams.set("search", e.target.value);
+        searchParams.set(searchParamKey, e.target.value);
         setSearchParams(searchParams);
     }, 1000);
 

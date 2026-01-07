@@ -44,4 +44,5 @@ export interface IArtistDetails {
     email_verified_at: string;
     created_at: string;
     is_online: number|string;
+    suspend: number|string;
 }

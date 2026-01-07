@@ -4,14 +4,20 @@ import { imageProp } from "../../../utils/helpers";
 import edit from "../../../images/svg/edit.svg";
 import { useNavigate } from "react-router-dom";
 import useFetch from '../../../utils/hooks/useFetch';
-import { IFan } from "../../../interface/fans.interface";
 import BreadCrumbs from "../../../components/shared/Breadcrumbs";
 import dayjs from "dayjs";
+import { tableOrderOptions, tablePeriodOptions } from "../../../utils/constant";
+import { useQueryParams } from "../../../utils/hooks/useQueryParams";
 
 
 export default function AllPayouts () {
   const navigate = useNavigate()
-  const {data, loading} = useFetch<{data: IFan[]}>("/admin/list-fans")
+  const queryParam = useQueryParams()
+  const {data: payouts, loading} = useFetch<{data: any[]}>("/admin/list-earnings",{
+    date: queryParam.get("period") || "",
+    recent: queryParam.get("order") || "most-recent",
+    search: queryParam.get("search") || "",
+  })
 
   return (
     <div>
@@ -24,33 +30,33 @@ export default function AllPayouts () {
                     {label: "All Payouts"}]}
             />
         </div>
-        <Table                
-            // tableTitle="All Payouts"
+        <Table
             noTitle
             searchPlaceHolder="Search"
             isLoading={loading}
-            data={data?.data ?? []}
+            data={payouts?.data ?? []}
             slot={
                 <div className="flex gap-4 items-center">
-                    <Dropdown 
-                        triggerText="Most Recent" 
-                        options={[
-                        {label: "Most Recent", value: "recent"},
-                        {label: "Newest First", value: "newest"},
-                        {label: "Oldest First", value: "oldest"},
-                        {label: "A-Z", value: "desc"},
-                        {label: "Z-A", value: "asc"},
-                        ]} 
-                    />
-                    <Dropdown 
-                        triggerText="This Month" 
-                        options={[
-                        {label: "Today", value: "today"},
-                        {label: "This Week", value: "week"},
-                        {label: "This Month", value: "month"},
-                        {label: "This Year", value: "year"},
-                        ]} 
-                    />
+                  <Dropdown 
+                    triggerText={tableOrderOptions.find(item => item.value === queryParam.get("order"))?.label || "Most Recent"}
+                    options={
+                      tableOrderOptions.map(item => ({
+                        label: item.label,
+                        value: item.value,
+                        action: () => queryParam.set("order", item.value),
+                      }))
+                    } 
+                  />
+                  <Dropdown 
+                    triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("period"))?.label || "This Month"}
+                    options={
+                      tablePeriodOptions.map(item => ({
+                        label: item.label,
+                        value: item.value,
+                        action: () => queryParam.set("period", item.value),
+                      }))
+                    } 
+                  />
                 </div>
             }
             rows={[

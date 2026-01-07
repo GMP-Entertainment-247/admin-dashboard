@@ -19,10 +19,32 @@ export interface IBooking {
     payment_date: string;
     rejected_date: string;
     reason: string;
+    booked: {
+        name: string;
+        email: string;
+        phone: string;
+        profile_pic: string;
+        profile_picture_url: string;
+    };
     event: string;
     description: string;
     country: string;
     state: string;
     payment_url: string;
     reference: string;
+    images: IBookingImage[];
+}
+
+export interface IBookingImage {
+    id: number;
+    image_url: string;
+}
+
+export interface IBookingMetrics {
+    sessions: number;
+    tickets: number;
+    bookings: number;
+    accepted: number;
+    pending: number;
+    rejected: number;
 }
