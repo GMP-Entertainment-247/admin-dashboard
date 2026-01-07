@@ -1,12 +1,11 @@
-import Dropdown from "../../../../components/shared/Dropdown";
+// import Dropdown from "../../../../components/shared/Dropdown";
 import Table from "../../../../components/Table";
 import { imageProp } from "../../../../utils/helpers";
 import edit from "../../../../images/svg/edit.svg";
-import { useNavigate, useParams } from "react-router-dom";
-import useFetch from '../../../../utils/hooks/useFetch';
+import { useNavigate } from "react-router-dom";
 import BreadCrumbs from "../../../../components/shared/Breadcrumbs";
 import dayjs from "dayjs";
-import { ICelebrity } from "../../../../interface/celebrities.interface";
+import { IBooking } from "../../../../interface/bookings.interface";
 
 export default function AllCelebrityBookings () {
 
@@ -27,45 +26,39 @@ export default function AllCelebrityBookings () {
   );
 }
 
-export const BookingsTable = ({isPreview}:{isPreview?: boolean}) => {
+export const BookingsTable = ({isPreview, data}:{isPreview?: boolean, data?: IBooking[]}) => {
     const navigate = useNavigate()
-    const params = useParams()
-    const {loading} = useFetch<ICelebrity>(
-        "/admin/celebrity-details",{
-            id: params.id || ""
-        }
-    )
 
     return (
         <Table
             tableTitle={isPreview ? "Bookings":""}
             noTitle={!isPreview}
             searchPlaceHolder="Search any events, title, organizer"
-            isLoading={loading}
-            data={[] as any[]}
-            slot={
-            <div className="flex gap-4 items-center">
-                <Dropdown 
-                triggerText="Most Recent" 
-                options={[
-                    {label: "Most Recent", value: "recent"},
-                    {label: "Newest First", value: "newest"},
-                    {label: "Oldest First", value: "oldest"},
-                    {label: "A-Z", value: "desc"},
-                    {label: "Z-A", value: "asc"},
-                ]} 
-                />
-                <Dropdown 
-                triggerText="This Month" 
-                options={[
-                    {label: "Today", value: "today"},
-                    {label: "This Week", value: "week"},
-                    {label: "This Month", value: "month"},
-                    {label: "This Year", value: "year"},
-                ]} 
-                />
-            </div>
-            }
+            isLoading={false}
+            data={data ?? []}
+            // slot={
+            // <div className="flex gap-4 items-center">
+            //     <Dropdown 
+            //     triggerText="Most Recent" 
+            //     options={[
+            //         {label: "Most Recent", value: "recent"},
+            //         {label: "Newest First", value: "newest"},
+            //         {label: "Oldest First", value: "oldest"},
+            //         {label: "A-Z", value: "desc"},
+            //         {label: "Z-A", value: "asc"},
+            //     ]} 
+            //     />
+            //     <Dropdown 
+            //     triggerText="This Month" 
+            //     options={[
+            //         {label: "Today", value: "today"},
+            //         {label: "This Week", value: "week"},
+            //         {label: "This Month", value: "month"},
+            //         {label: "This Year", value: "year"},
+            //     ]} 
+            //     />
+            // </div>
+            // }
             rows={[
             {
                 header: "Event Title",
@@ -74,29 +67,29 @@ export const BookingsTable = ({isPreview}:{isPreview?: boolean}) => {
                     <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                     <img {...imageProp("")} alt="" className="w-full" />
                     </div>
-                    <p>{item.name}</p>
+                    <p>{item.event || "---"}</p>
                 </div>
                 ),
             },
             {
                 header: "Organizer",
-                view: (item) => <span className="lowercase">{item.email}</span>,
+                view: (item) => <span>{item.organizer}</span>,
             },
-            {
-                header: "Guest Artist",
-                view: (item) => <span className="lowercase">{item.email}</span>,
-            },
+            // {
+            //     header: "Guest Artist",
+            //     view: (item) => <span className="lowercase">{item.email}</span>,
+            // },
             {
                 header: "Location",
-                view: (item) => item.phone,
+                view: (item) => <span>{item.location || "---"}</span>,
             },
             {
                 header: "Date",
-                view: (item) => <span>{dayjs(item.created_at).format("DD MMM, YYYY")}</span>,
+                view: (item) => <span>{dayjs(item.created_at).format("DD/MM/YY")}</span>,
             },
             {
                 header: "Time",
-                view: (item) => <span>{dayjs(item.created_at).format("DD MMM, YYYY")}</span>,
+                view: (item) => <span>{dayjs(item.created_at).format("hh:mma")}</span>,
             },
             {
                 header: "Action",
@@ -110,8 +103,8 @@ export const BookingsTable = ({isPreview}:{isPreview?: boolean}) => {
                 ),
             },
             ]}
-            isPreview={isPreview}
-            seeMoreLink="/celebrities/bookings"
+            // isPreview={isPreview}
+            // seeMoreLink="/celebrities/bookings"
         />
     )
 }

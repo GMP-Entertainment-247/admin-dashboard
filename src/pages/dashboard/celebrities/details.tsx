@@ -8,19 +8,36 @@ import useFetch from "../../../utils/hooks/useFetch";
 import { BookingsTable } from "./tables/allBookings";
 import { ICelebrity } from "../../../interface/celebrities.interface";
 import dayjs from "dayjs";
+import useMutation from "../../../utils/hooks/useMutation";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 export default function CelebrityDetails () {
     const showModal = useSingleState(false)
     const params = useParams()
+    const suspendUser = useMutation("/admin/suspend-user", "post")
+    const unsuspendUser = useMutation("/admin/unsuspend-user", "post")
+    const queryClient = useQueryClient();
 
     const {data} = useFetch<ICelebrity>(
         "/admin/celebrity-details",{
             id: params.id || ""
         }
     )
-
-    console.log(data)
+    
+    const handleSuspend = () => {
+        (data?.suspend==="0" ? suspendUser : unsuspendUser).mutate({
+            id: params.id || ""
+        }) 
+            .then(resp => {
+                if(resp?.status) {
+                    queryClient.invalidateQueries({queryKey: [
+                        "/admin/celebrity-details"
+                    ]})
+                    showModal.set(false)
+                }
+            })
+    }
 
     return (
         <div>
@@ -75,13 +92,14 @@ export default function CelebrityDetails () {
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-7 mt-10">
-                <BookingsTable isPreview={true} />
+                <BookingsTable isPreview={true} data={data?.bookings} />
             </div>
             <div className="flex justify-end gap-3 bg-white p-5 rounded-lg mt-5">
                 <Button 
-                    text="Suspend"
+                    text={data?.suspend==="1" ? "Unsuspend" : "Suspend"}
                     extraClassName={clsx(
-                        "rounded-[8px] !font-bold !w-[100px] !min-h-10 !text-[#EB2904] !bg-[#FFE5E5]"
+                        "rounded-[8px] !font-bold !w-[100px] !min-h-10",
+                        data?.suspend==="0" && "!text-[#EB2904] !bg-[#FFE5E5]"
                     )}
                     onClick={()=>showModal.set(true)}
                 />
@@ -91,8 +109,8 @@ export default function CelebrityDetails () {
                 onClose={() => {
                     showModal.set(false)
                 }}
-                submitClick={()=>console.log("submit")}
-                submitLoading={false}
+                submitClick={()=>handleSuspend()}
+                submitLoading={suspendUser.loading || unsuspendUser.loading}
             >
                 <div className="flex items-center flex-col">
                     <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -105,8 +123,8 @@ export default function CelebrityDetails () {
                             <path d="M16 16H48V48H16V16Z" fill="#FEFEFE"/>
                         </g>
                     </svg>
-                    <p className="text-base font-semibold text-[#212121] mt-4">Suspend</p>
-                    <p className="text-sm text-[#595959]">Are you sure you want to suspend this user?</p>
+                    <p className="text-base font-semibold text-[#212121] mt-4">{data?.suspend==="1" ? "Unsuspend" : "Suspend"}</p>
+                    <p className="text-sm text-[#595959]">Are you sure you want to {data?.suspend==="1" ? "unsuspend" : "suspend"} this user?</p>
                 </div>
             </Modal>
         </div>

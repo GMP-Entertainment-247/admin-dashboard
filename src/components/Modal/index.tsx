@@ -11,6 +11,7 @@ interface ModalProp {
     submitClick: Function,
     submitLoading: boolean,
     submitText?: string,
+    hideButtons?: boolean,
 }
 
 export const Modal = ({
@@ -21,6 +22,7 @@ export const Modal = ({
     submitClick,
     submitLoading,
     submitText,
+    hideButtons=false,
 }: ModalProp) => {
     return (
         <AnimatePresence>
@@ -46,21 +48,25 @@ export const Modal = ({
                         >
                             <XMarkIcon className="h-5 w-5 cursor-pointer float-right" onClick={() => onClose()} />
                             <div className="pt-6 pb-5">{children}</div>
-                            <div className="flex gap-5">
-                                <Button 
-                                    text="Cancel"
-                                    type="button"
-                                    onClick={()=>onClose()}
-                                    extraClassName="!bg-[#E6E6E6] !text-[#1A1A1A] rounded-[8px] font-semibold"
-                                />
-                                <Button 
-                                    text={submitText || "Confirm"}
-                                    type="button"
-                                    isLoading={submitLoading}
-                                    onClick={()=>submitClick()}
-                                    extraClassName="rounded-[8px] font-semibold"
-                                />
-                            </div>
+                            {
+                                !hideButtons && (
+                                    <div className="flex gap-5">
+                                        <Button 
+                                            text="Cancel"
+                                            type="button"
+                                            onClick={()=>onClose()}
+                                            extraClassName="!bg-[#E6E6E6] !text-[#1A1A1A] rounded-[8px] font-semibold"
+                                        />
+                                        <Button 
+                                            text={submitText || "Confirm"}
+                                            type="button"
+                                            isLoading={submitLoading}
+                                            onClick={()=>submitClick()}
+                                            extraClassName="rounded-[8px] font-semibold"
+                                        />
+                                    </div>
+                                )
+                            }
                         </div>
                     </motion.div>
                 </motion.div>

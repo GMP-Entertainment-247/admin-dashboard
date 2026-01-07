@@ -1,17 +1,16 @@
-import Dropdown from "../../../../components/shared/Dropdown";
-import Table from "../../../../components/Table";
-import { imageProp } from "../../../../utils/helpers";
-import edit from "../../../../images/svg/edit.svg";
-import { useNavigate, useParams } from "react-router-dom";
-import useFetch from '../../../../utils/hooks/useFetch';
-import BreadCrumbs from "../../../../components/shared/Breadcrumbs";
+import Dropdown from "../../../components/shared/Dropdown";
+import Table from "../../../components/Table";
+import { imageProp } from "../../../utils/helpers";
+import edit from "../../../images/svg/edit.svg";
+import { useNavigate } from "react-router-dom";
+import useFetch from '../../../utils/hooks/useFetch';
+import BreadCrumbs from "../../../components/shared/Breadcrumbs";
 import dayjs from "dayjs";
-import { IBooking } from "../../../../interface/bookings.interface";
-import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
-import { tableOrderOptions, tablePeriodOptions } from "../../../../utils/constant";
+import { IBooking } from "../../../interface/bookings.interface";
+import { useQueryParams } from "../../../utils/hooks/useQueryParams";
+import { tableOrderOptions, tablePeriodOptions } from "../../../utils/constant";
 
-export default function AllBookings () {
-  const params = useParams()
+export default function AllBookingsPage () {
 
   return (
     <div>
@@ -20,10 +19,10 @@ export default function AllBookings () {
             <BreadCrumbs 
                 title="All Bookings"
                 links={[
-                    {label: "Home", path: "/artists"}, 
+                    {label: "Home", path: "/bookings"}, 
                     {label: "All Bookings"}
                 ]}
-                backNavigation={`/artists/${params.id}`}
+                backNavigation={`/bookings`}
             />
         </div>
         <BookingsTable />
@@ -35,9 +34,7 @@ export default function AllBookings () {
 export const BookingsTable = ({isPreview}:{isPreview?: boolean}) => {
   const navigate = useNavigate()
   const queryParam = useQueryParams()
-  const params = useParams()
-  const {data, loading} = useFetch<{bookings: {data: IBooking[], last_page: number}}>("/admin/artist-bookings", {
-    id: params.id || "",
+  const {data, loading} = useFetch<{bookings: {data: IBooking[], last_page: number}}>("/admin/list-bookings", {
     date: queryParam.get("booking-period") || "",
     recent: queryParam.get("booking-order") || "most-recent",
     search: queryParam.get("booking-search") || "",
@@ -122,7 +119,7 @@ export const BookingsTable = ({isPreview}:{isPreview?: boolean}) => {
         },
         ]}
         isPreview={isPreview}
-        seeMoreLink={`/artists/bookings/${params.id}`}
+        seeMoreLink={`/bookings/all`}
     />
   )
 }

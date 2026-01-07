@@ -24,9 +24,8 @@ export default function ArtistsHome () {
     year: queryParam.get("year") || "2026",
   })
   const {data: chartData} = useFetch<IPieChartData>("/admin/artists-pie-chart",{
-    // month: "January 2026", // i think it should take the period options instead
+    date: queryParam.get("chartPeriod") || "",
   })
-  console.log(chartData)
   const {data, loading} = useFetch<{data: IArtist[]}>("/admin/list-artists",{
     date: queryParam.get("period") || "",
     recent: queryParam.get("order") || "most-recent",
@@ -115,8 +114,14 @@ export default function ArtistsHome () {
           <div className="flex justify-between items-center">
             <p className="font-semibold text-lg mb-4">Offers</p>
             <Dropdown 
-              triggerText="This Month" 
-              options={[]} 
+                triggerText={tablePeriodOptions.find(item => item.value === queryParam.get("chartPeriod"))?.label || "This Month"}
+                options={
+                  tablePeriodOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                    action: () => queryParam.set("chartPeriod", item.value),
+                  }))
+                } 
             />
           </div>
           <PieChartComponent 
@@ -177,7 +182,7 @@ export default function ArtistsHome () {
             },
             {
               header: "Location",
-              view: (item) => <span className="lowercase">{item.location ?? "---"}</span>,
+              view: (item) => <span>{item.location ?? "---"}</span>,
             },
             {
               header: "Phone Number",

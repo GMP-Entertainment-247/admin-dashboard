@@ -1,7 +1,7 @@
 import { IBooking } from "./bookings.interface";
 
 export interface ICelebritiesMetrics {
-    uploads: number;
+    bookings: number;
     revenue: number;
     celebrity: number;
     sessions: number;
@@ -34,4 +34,5 @@ export interface ICelebrity {
     profile_picture_url: string;
     email_verified_at: string;  
     bookings: IBooking[];
+    suspend: number|string;
 }
