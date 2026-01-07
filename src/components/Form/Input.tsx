@@ -62,6 +62,7 @@ const Input: React.FC<InputProps> = ({
           max={type === "number" ? max : undefined}
           maxLength={maxLength}
           minLength={minLength}
+          type={type}
           // Call onChange prop if provided when input value changes
           onChange={(event) => {
             let { value } = event.target;

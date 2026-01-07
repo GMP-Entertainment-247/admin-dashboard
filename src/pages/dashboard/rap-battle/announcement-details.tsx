@@ -1,0 +1,109 @@
+import { useParams, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import AnnouncementInnerLayout from "./announcements/inner-layout";
+import Button from "../../../components/shared/Button";
+import LoadingSpinner from "../../../components/shared/LoadingSpinner";
+import StateContainer from "../../../components/shared/StateContainer";
+import AnnouncementViewLayout from "./announcements/announcement-view-layout";
+import useFetch from "../../../utils/hooks/useFetch";
+import type { Announcement } from "../../../interface/announcement.interface";
+import {
+  flattenErrorMessage,
+  handleApiError,
+} from "../../../utils/errorHelpers";
+import { deleteAnnouncement } from "./announcements/data";
+import { splitDateTime } from "../../../utils/helpers";
+
+const AnnouncementDetails = () => {
+  const { announcementId } = useParams<{ announcementId: string }>();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const {
+    data: announcementData,
+    loading,
+    error,
+  } = useFetch<Announcement | null>("/admin/announcement/details", {
+    id: announcementId,
+  });
+
+  const handleEdit = () => {
+    if (!announcementId) return;
+    navigate("edit");
+  };
+
+  const handleDelete = async () => {
+    if (!announcementId) return;
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this announcement?"
+    );
+    if (!confirmed) return;
+    try {
+      const res = await deleteAnnouncement(announcementId);
+      if (!res.status) {
+        toast.error(
+          flattenErrorMessage(res.message, "Failed to delete announcement")
+        );
+        return;
+      }
+      // Invalidate the announcement list query to refetch updated data
+      await queryClient.invalidateQueries({
+        queryKey: ["/admin/announcement"],
+      });
+      toast.success("Announcement deleted successfully");
+      navigate("/rap-battle/announcement");
+    } catch (error) {
+      toast.error(handleApiError(error, "Failed to delete announcement"));
+    }
+  };
+  return (
+    <AnnouncementInnerLayout title="Details">
+      {loading ? (
+        <LoadingSpinner message="Loading announcement..." />
+      ) : error ? (
+        <StateContainer>
+          <p className="text-red-600 mb-4">Error loading announcement</p>
+          <p className="text-gray-600">{error.message}</p>
+        </StateContainer>
+      ) : (
+        <>
+          <AnnouncementViewLayout
+            title={announcementData?.title || ""}
+            description={announcementData?.description || ""}
+            startDate={splitDateTime(announcementData?.start_date ?? null).date}
+            startTime={splitDateTime(announcementData?.start_date ?? null).time}
+            endDate={splitDateTime(announcementData?.end_date ?? null).date}
+            endTime={splitDateTime(announcementData?.end_date ?? null).time}
+            image={announcementData?.image || ""}
+            creatorName={announcementData?.creator?.name}
+            creatorAvatar={
+              announcementData?.creator?.profile_picture_url ||
+              announcementData?.creator?.profile_pic ||
+              ""
+            }
+          />
+
+          {/* Bottom action bar */}
+          <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+            <Button
+              text="Delete Announcement"
+              type="button"
+              extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
+              onClick={handleDelete}
+              variant="cancel"
+            />
+            <Button
+              text="Edit Announcement"
+              type="button"
+              extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
+              onClick={handleEdit}
+            />
+          </div>
+        </>
+      )}
+    </AnnouncementInnerLayout>
+  );
+};
+
+export default AnnouncementDetails;

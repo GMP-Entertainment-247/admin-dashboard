@@ -11,6 +11,7 @@ import Dropdown from "../../../components/shared/Dropdown";
 import useFetch from "../../../utils/hooks/useFetch";
 import { BlogListData } from "../../../interface/blog.interface";
 import { BLOG_TABS } from "./data";
+import { tablePeriodOptions } from "../../../utils/constant";
 
 export default function BlogsHome() {
   const [searchParams] = useSearchParams();
@@ -74,7 +75,7 @@ export default function BlogsHome() {
       <>
         <AutoResizingGrid minWidth={300}>
           {blogData.data.map((blog) => (
-            <Link key={blog.id} to={`/blogs/${blog.id}`}>
+            <Link key={blog.id} to={`${blog.id}`}>
               <BlogCard blog={blog} />
             </Link>
           ))}
@@ -95,7 +96,7 @@ export default function BlogsHome() {
         <PageTitle as="h1">News & Blogs</PageTitle>
         <Button
           text="Create Blog"
-          href="/blogs/create-blog"
+          href="create-blog"
           extraClassName="rounded-[8px] font-bold !w-fit px-5 !min-h-[unset]"
         />
       </div>
@@ -112,10 +113,10 @@ export default function BlogsHome() {
                 paramKey="date"
                 options={[
                   { label: "All", value: "all" },
-                  { label: "Today", value: "today" },
-                  { label: "This week", value: "this-week" },
-                  { label: "This month", value: "this-month" },
-                  { label: "This year", value: "this-year" },
+                  ...tablePeriodOptions.map(item => ({
+                    label: item.label,
+                    value: item.value,
+                  })),
                 ]}
               />
             </div>

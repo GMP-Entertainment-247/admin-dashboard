@@ -30,9 +30,10 @@ export default function Dropdown({
   );
 
   const handleParamUpdate = (value: string) => {
-    searchParams.set(paramKey ?? "", value);
-    setSearchParams(searchParams);
-    setOpen(false); // close dropdown
+     const newParams = new URLSearchParams(searchParams);
+     newParams.set(paramKey ?? "", value);
+     setSearchParams(newParams);
+     setOpen(false);
   };
 
   const displayedText = activeOption?.label || triggerText || "Select Option";

@@ -40,7 +40,7 @@ const BlogForm: React.FC = () => {
   // console.log(content);
   // File upload hook for new images
   const fileUpload = useFileUpload({
-    accept: ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"],
+    accept: ["image/jpeg", "image/jpg", "image/png"],
     maxSizeKb: 2 * 1024, // 2MB
     multiple: true,
     maxFiles: 10, // Maximum 5 images
@@ -244,7 +244,7 @@ const BlogForm: React.FC = () => {
             />
           )}
           <Button
-            text={mode === "create" ? "Preview" : "Preview"}
+            text="Preview"
             type="submit"
             extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
           />

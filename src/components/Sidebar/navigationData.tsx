@@ -63,6 +63,10 @@ export const navigationItems: NavigationItem[] = [
         link: "/rap-battle/livestream",
       },
       {
+        text: "Announcement",
+        link: "/rap-battle/announcement",
+      },
+      {
         text: "Votes",
         link: "/rap-battle/votes",
       },

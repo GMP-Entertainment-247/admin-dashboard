@@ -17,6 +17,7 @@ module.exports = {
           35: "#B08A03",
         },
         brand: {
+          25: "#F6F1D5",
           500: "#BFA100",
         },
         red: {
