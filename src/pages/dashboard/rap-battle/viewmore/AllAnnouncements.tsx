@@ -27,7 +27,7 @@ export default function AllAnnouncements() {
     <div>
       <h2 className="text-[24px] font-semibold mb-3">All Announcements</h2>
       <div>
-        <div className="bg-white px-5 py-2 -mb-5 rounded-t-xl"></div>
+        <div className="bg-white px-5 py-2 -mb-5 rounded-t-xl" />
         <Table
           noTitle={true}
           searchPlaceHolder="Search any announcement"
