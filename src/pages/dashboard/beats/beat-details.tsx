@@ -28,12 +28,12 @@ const BeatDetails = () => {
   });
 
   // Fetch genre and rap battle names for display
-  //   const { data: genresData } = useFetch<
-  //     {
-  //       id: number;
-  //       name: string;
-  //     }[]
-  //   >("/genres");
+  const { data: genresData } = useFetch<
+    {
+      id: number;
+      name: string;
+    }[]
+  >("/genres");
 
   const { data: rapBattlesData } = useFetch<
     {
@@ -42,13 +42,17 @@ const BeatDetails = () => {
     }[]
   >("/admin/rap-battles");
 
-  const genreName = beatData?.genre || "";
+  const genreName =
+    beatData?.genre && genresData
+      ? genresData?.find((g) => g.id.toString() === beatData.genre?.toString())
+          ?.name
+      : "";
 
   const rapBattleTitle =
     beatData?.rap_battle_id && rapBattlesData
       ? rapBattlesData?.find(
           (b) => b.id.toString() === beatData.rap_battle_id?.toString()
-        )?.title || ""
+        )?.title
       : "";
 
   const handleEdit = () => {

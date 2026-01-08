@@ -121,7 +121,7 @@ const PreviewBeat = () => {
       } else {
         const targetBeatId = beatId;
         if (targetBeatId) {
-          formData.set("id", String(targetBeatId));
+          formData.set("beat_id", String(targetBeatId));
         }
         await updateBeat(formData);
         toast.success("Beat updated successfully");
