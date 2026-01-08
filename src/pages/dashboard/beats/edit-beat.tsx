@@ -1,21 +1,11 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import BeatForm from "../../../components/BeatForm";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../../components/shared/LoadingSpinner";
 import StateContainer from "../../../components/shared/StateContainer";
 import { useBeatDraft } from "./beat-draft-context";
 import useFetch from "../../../utils/hooks/useFetch";
-
-interface BeatDetails {
-  id: number;
-  name: string;
-  description: string;
-  image_url: string;
-  beat_file: string;
-  genre: string | null;
-  rap_battle_id: number | null;
-  created_at: string;
-}
+import { IBeatDetails } from "../../../interface/beats.interface";
 
 const EditBeat = () => {
   const { beatId } = useParams<{ beatId: string }>();
@@ -29,30 +19,13 @@ const EditBeat = () => {
     data: fetchedData,
     loading,
     error,
-  } = useFetch<BeatDetails>(
+  } = useFetch<IBeatDetails>(
     "/admin/beats/details",
     {
       id: beatId,
     },
     { enabled: !shouldUseDraft }
   );
-
-  // Fetch genres to map genre name to ID
-  const { data: genresData } = useFetch<{
-    data: { id: number; name: string }[];
-  }>("/genres");
-
-  // Map genre name to ID if needed
-  const genreId = useMemo(() => {
-    if (!fetchedData?.genre || !genresData?.data) return "";
-    // If genre is already an ID (numeric string), return it
-    if (!isNaN(Number(fetchedData.genre))) {
-      return fetchedData.genre;
-    }
-    // Otherwise, find the ID by name
-    const found = genresData.data.find((g) => g.name === fetchedData.genre);
-    return found?.id.toString() || "";
-  }, [fetchedData?.genre, genresData]);
 
   // Seed draft from API when needed
   useEffect(() => {
@@ -63,15 +36,15 @@ const EditBeat = () => {
         beatId: fetchedData.id,
         name: fetchedData.name || "",
         description: fetchedData.description || "",
-        genre: genreId,
-        rap_battle_id: fetchedData.rap_battle_id?.toString() || "",
+        genre: fetchedData.gen?.id?.toString() || "",
+        rap_battle_id: fetchedData.battle?.id?.toString() || "",
         image: fetchedData.image_url || "",
         newImage: [],
         beat_file: fetchedData.beat_file || "",
         newBeatFile: [],
       },
     });
-  }, [fetchedData, shouldUseDraft, setDraft, genreId]);
+  }, [fetchedData, shouldUseDraft, setDraft]);
 
   if (loading) {
     return <LoadingSpinner message="Loading beat..." />;

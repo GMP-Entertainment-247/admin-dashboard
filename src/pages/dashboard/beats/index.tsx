@@ -10,7 +10,7 @@ import StateContainer from "../../../components/shared/StateContainer";
 import type { IBeat, BeatMetrics } from "../../../interface/beats.interface";
 import LoadingSpinner from "../../../components/shared/LoadingSpinner";
 import { useQueryParams } from "../../../utils/hooks/useQueryParams";
-import edit from "../../../images/svg/edit.svg";
+import { ReactComponent as EditIcon } from "../../../images/svg/edit.svg";
 
 const BeatsHome = () => {
   const queryParams = useQueryParams();
@@ -103,9 +103,10 @@ const BeatsHome = () => {
             {
               header: "Description",
               view: (item) => (
-                <span className="text-sm text-[#6B6B6B] line-clamp-1">
-                  {item.description}
-                </span>
+                <span
+                  className="text-sm text-[#6B6B6B] line-clamp-1"
+                  dangerouslySetInnerHTML={{ __html: item.description }}
+                />
               ),
             },
             {
@@ -120,7 +121,7 @@ const BeatsHome = () => {
               header: "Action",
               view: (item) => (
                 <Link to={`/beats/${item.id}`} title="View">
-                  <img src={edit} alt="edit" className="w-6 ml-4" />
+                  <EditIcon className="w-6 ml-4 text-gray-700" />
                 </Link>
               ),
             },

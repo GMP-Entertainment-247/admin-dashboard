@@ -40,7 +40,7 @@ const EditAnnouncement = () => {
       data: {
         announcementId: fetchedData.id,
         title: fetchedData.title || "",
-        status: fetchedData.status === "1" ? "Active" : "Inactive",
+        status: fetchedData.status,
         startDate: start.date,
         startTime: start.time,
         endDate: end.date,

@@ -7,6 +7,7 @@ export const createBeat = async (
     "/admin/beats/create",
     formData,
     {
+      timeout: 50000,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -19,11 +20,16 @@ export const createBeat = async (
 export const updateBeat = async (
   formData: FormData
 ): Promise<ApiResponse<null>> => {
-  const response = await createApiClient().post("/admin/beats/update", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await createApiClient().post(
+    "/admin/beats/update",
+    formData,
+    {
+      timeout: 50000,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
 
   return response.data;
 };
