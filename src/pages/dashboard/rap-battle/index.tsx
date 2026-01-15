@@ -112,11 +112,18 @@ export default function RapBattleHome() {
               },
               {
                 header: "Action",
-                view: (item) => (
-                  <Link to={`/rap-battle/user/${item.id}`} title="View">
-                    <EditIcon className="w-6 ml-4 text-gray-700" />
-                  </Link>
-                ),
+                view: (item) => {
+                  const to = item.user_id
+                    ? `/rap-battle/${item.id}?userId=${encodeURIComponent(
+                        item.user_id
+                      )}`
+                    : `/rap-battle/${item.id}`;
+                  return (
+                    <Link to={to} state={{ audition: item }} title="View">
+                      <EditIcon className="w-6 ml-4 text-gray-700" />
+                    </Link>
+                  );
+                },
               },
             ]}
             isPreview

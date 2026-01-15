@@ -1,9 +1,10 @@
 export interface IAudition {
-  id: number;
+  id: string;
   name: string;
   email: string;
   phone: string;
   link: string;
+  user_id: string | null
   created_at: string;
 }
 

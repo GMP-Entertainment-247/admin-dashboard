@@ -36,13 +36,13 @@ function CreateEventModal({
           <div className="mt-6 w-full max-w-[120px]">
             <Button
               text={
-                <span className="inline-flex items-center gap-2">
+                <>
                   <Plus className="w-5 h-5" />
                   Create
-                </span>
+                </>
               }
-              onClick={() => go("/admin/events/create")} // <-- change to your route
-              extraClassName="rounded-[10px] font-semibold !w-full"
+              onClick={() => go("/rap-battle/create-event")}
+              extraClassName="rounded-[10px] font-semibold !w-full inline-flex items-center gap-2 justify-center"
             />
           </div>
         </div>
@@ -64,13 +64,13 @@ function CreateEventModal({
           <div className="mt-6 w-full max-w-[120px]">
             <Button
               text={
-                <span className="inline-flex items-center gap-2">
+                <>
                   <Plus className="w-5 h-5" />
                   Create
-                </span>
+                </>
               }
               onClick={() => go("announcement/create-announcement")}
-              extraClassName="rounded-[10px] font-semibold !w-full"
+              extraClassName="rounded-[10px] font-semibold !w-full inline-flex items-center gap-2 justify-center"
             />
           </div>
         </div>
