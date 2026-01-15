@@ -17,26 +17,32 @@ export default function IndexWrapper({
   title,
   buttonText,
   buttonLink,
+  onButtonClick,
 }: {
   title: string;
   buttonText?: string;
   buttonLink?: string;
+  onButtonClick?: () => void;
   children: React.ReactNode;
 }) {
   let navigate = useNavigate();
+
   const { data: metrics } = useFetch<IAuditionMetrics>(
     "/admin/announcement/metrics-by-one"
   );
 
   return (
-    <div>
+    <>
       <div className="flex justify-between items-center py-5">
         <h1 className="page-title">{title}</h1>
         {!!buttonText && (
           <Button
             text={buttonText}
             type="button"
-            onClick={() => navigate(buttonLink || "")}
+            onClick={() => {
+              if (onButtonClick) return onButtonClick();
+              if (buttonLink) return navigate(buttonLink);
+            }}
             extraClassName="rounded-[8px] font-semibold !w-fit !h-10 !px-5"
           />
         )}
@@ -97,6 +103,6 @@ export default function IndexWrapper({
         </div>
       </div>
       <div className="py-10">{children}</div>
-    </div>
+    </>
   );
 }
