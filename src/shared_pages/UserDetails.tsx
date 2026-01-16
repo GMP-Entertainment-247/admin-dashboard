@@ -9,6 +9,9 @@ import useMutation from "../utils/hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import type { IFan } from "../interface/fans.interface";
 import type { IAudition } from "../interface/rapbattle.interface";
+import useFetch from "../utils/hooks/useFetch";
+import type { TicketHistoryItem } from "../interface/tickets.interface";
+import type { VoteHistoryItem } from "../interface/votes.interface";
 
 export default function UserDetails({
   isContestant,
@@ -22,6 +25,8 @@ export default function UserDetails({
   const showModal = useSingleState(false);
   const nextStageModal = useSingleState(false);
   const queryClient = useQueryClient();
+
+  const hasUser = !!fan?.id;
 
   const nextStageApi = useMutation(
     "/admin/audition/move-to-next-stage",
@@ -48,10 +53,18 @@ export default function UserDetails({
   const displayName = fan?.name || audition?.name || "";
   const displayEmail = fan?.email || audition?.email || "---";
   const displayPhone = fan?.phone || audition?.phone || "---";
+    const displayImageUrl = fan?.profile_picture_url;
 
-//   const displayVideoLink = audition?.link || "---";
+  //   const displayVideoLink = audition?.link || "---";
 
-//   const displayImageUrl = fan?.profile_picture_url;
+
+  const { data: voteHistory, loading: voteLoading } = useFetch<
+    VoteHistoryItem[]
+  >("/admin/vote-history", { id: fan?.id }, { enabled: hasUser });
+
+  const { data: ticketHistory, loading: ticketLoading } = useFetch<
+    TicketHistoryItem[]
+  >("/admin/ticket-history", { id: fan?.id }, { enabled: hasUser });
 
   return (
     <div>
