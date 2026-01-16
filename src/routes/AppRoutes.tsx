@@ -24,7 +24,6 @@ import VotesHome from "../pages/dashboard/rap-battle/vote";
 import AllRapBattleTickets from "../pages/dashboard/rap-battle/viewmore/AllTickets";
 import AllRapBattleVotes from "../pages/dashboard/rap-battle/viewmore/AllVotes";
 import CreateEvent from "../pages/dashboard/rap-battle/create/events";
-import CreateTicket from "../pages/dashboard/rap-battle/create/tickets";
 import BlogsHome from "../pages/dashboard/blogs";
 import BlogsLayout from "../pages/dashboard/blogs/layout";
 import CreateBlog from "../pages/dashboard/blogs/create-blog";
@@ -266,10 +265,6 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: "tickets/all",
         childElement: <AllRapBattleTickets />,
-      },
-      {
-        childPath: "create-ticket",
-        childElement: <CreateTicket />,
       },
       {
         childPath: "create-event",
