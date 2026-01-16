@@ -8,8 +8,8 @@ import Verification from "../pages/auth/Verification";
 import FansHome from "../pages/dashboard/fans";
 import FanDetails from "../pages/dashboard/fans/details";
 import AllFans from "../pages/dashboard/fans/viewmore/AllFans";
-import AllTickets from "../pages/dashboard/fans/viewmore/AllTickets";
-import AllVotes from "../pages/dashboard/fans/viewmore/AllVotes";
+import AllFanTickets from "../pages/dashboard/fans/viewmore/AllFanTickets";
+import AllFanVotes from "../pages/dashboard/fans/viewmore/AllFanVotes";
 import { ReactElement } from "react";
 import FansLayout from "../pages/dashboard/fans/layout";
 import RapBattleLayout from "../pages/dashboard/rap-battle/layout";
@@ -217,12 +217,12 @@ export const appRoutes: IRoutes[] = [
         childElement: <AllFans />,
       },
       {
-        childPath: "tickets",
-        childElement: <AllTickets />,
+        childPath: ":fanId/tickets",
+        childElement: <AllFanTickets />,
       },
       {
-        childPath: "votes",
-        childElement: <AllVotes />,
+        childPath: ":fanId/votes",
+        childElement: <AllFanVotes />,
       },
     ],
   },

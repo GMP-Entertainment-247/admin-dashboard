@@ -104,7 +104,7 @@ export default function AllRapBattleVotes() {
             {
               header: "Action",
               view: (item) => (
-                <Link to={"to"} title="View">
+                <Link to={`/fans/${item.voter_id}`} title="View">
                   <EditIcon className="w-6 ml-4 text-gray-700" />
                 </Link>
               ),
