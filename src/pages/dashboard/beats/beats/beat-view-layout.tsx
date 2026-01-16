@@ -30,18 +30,16 @@ const BeatViewLayout: React.FC<BeatViewLayoutProps> = ({
           dangerouslySetInnerHTML={{ __html: description }}
         />
         <div className="space-y-6 [&>div]:space-y-2">
-          {genre && (
-            <div>
-              <p className="text-lg font-medium text-[#212121]">Genre</p>
-              <p className="text-sm text-gray-600">{genre}</p>
-            </div>
-          )}
-          {rapBattleTitle && (
-            <div>
-              <p className="text-lg font-medium text-[#212121]">Rap Battle</p>
-              <p className="text-sm text-gray-600">{rapBattleTitle}</p>
-            </div>
-          )}
+          <div>
+            <p className="text-lg font-medium text-[#212121]">Genre</p>
+            <p className="text-sm text-gray-600">{genre || "---"}</p>
+          </div>
+
+          <div>
+            <p className="text-lg font-medium text-[#212121]">Rap Battle</p>
+            <p className="text-sm text-gray-600">{rapBattleTitle || "---"}</p>
+          </div>
+
           {createdDate && (
             <div>
               <p className="text-lg font-medium text-[#212121]">Created</p>

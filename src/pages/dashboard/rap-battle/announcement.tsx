@@ -3,7 +3,7 @@ import Dropdown from "../../../components/shared/Dropdown";
 import Table from "../../../components/Table";
 import { imageProp, formatDateTime } from "../../../utils/helpers";
 import IndexWrapper from "./components/indexWrapper";
-import edit from "../../../images/svg/edit.svg";
+import { ReactComponent as EditIcon } from "../../../images/svg/edit.svg";
 import useFetch from "../../../utils/hooks/useFetch";
 import type { AnnouncementListData } from "../../../interface/announcement.interface";
 import { useQueryParams } from "../../../utils/hooks/useQueryParams";
@@ -106,7 +106,7 @@ export default function AnnouncementHome() {
               header: "Action",
               view: (item) => (
                 <Link to={String(item.id)} title="View">
-                  <img src={edit} alt="edit" className="w-6 ml-4" />
+                  <EditIcon className="w-6 ml-4 text-gray-700" />
                 </Link>
               ),
             },

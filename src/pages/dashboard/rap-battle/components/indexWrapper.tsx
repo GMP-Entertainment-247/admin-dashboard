@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import link from "../../../../images/svg/link.svg";
 import note from "../../../../images/svg/note.svg";
 import ticket from "../../../../images/svg/ticket.svg";
@@ -9,29 +8,36 @@ import { formatNumber } from "../../../../utils/helpers";
 import Card from "../../../../components/shared/Card";
 import Button from "../../../../components/shared/Button";
 import EventCalendar from "../../../../components/EventCalendar";
+import { IAuditionMetrics } from "../../../../interface/rapbattle.interface";
+import useFetch from "../../../../utils/hooks/useFetch";
 
 export default function IndexWrapper({
   children,
   title,
   buttonText,
   buttonLink,
+  onButtonClick,
 }: {
   title: string;
   buttonText?: string;
   buttonLink?: string;
+  onButtonClick?: () => void;
   children: React.ReactNode;
 }) {
-  let navigate = useNavigate();
+  const { data: metrics } = useFetch<IAuditionMetrics>(
+    "/admin/announcement/metrics-by-one"
+  );
 
   return (
-    <div>
+    <>
       <div className="flex justify-between items-center py-5">
         <h1 className="page-title">{title}</h1>
         {!!buttonText && (
           <Button
             text={buttonText}
             type="button"
-            onClick={() => navigate(buttonLink || "")}
+            onClick={onButtonClick}
+            href={buttonLink}
             extraClassName="rounded-[8px] font-semibold !w-fit !h-10 !px-5"
           />
         )}
@@ -43,37 +49,37 @@ export default function IndexWrapper({
               {
                 icon: link,
                 bg: "bg-[#F85A7E]",
-                value: formatNumber(10000),
+                value: formatNumber(metrics?.entries || 0),
                 title: "Entries",
               },
               {
                 icon: note,
                 bg: "bg-[#3B81DC]",
-                value: formatNumber(10000),
+                value: formatNumber(Number(metrics?.votes) || 0),
                 title: "Votes",
               },
               {
                 icon: ticket,
                 bg: "bg-[#C25589]",
-                value: formatNumber(10000),
+                value: formatNumber(metrics?.tickets || 0),
                 title: "Tickets",
               },
               {
                 icon: video,
                 bg: "bg-[#38BDF8]",
-                value: formatNumber(10000),
+                value: formatNumber(metrics?.livestreams || 0),
                 title: "Livestreams",
               },
               {
                 icon: calendar,
                 bg: "bg-[#FF0000]",
-                value: formatNumber(10000),
+                value: formatNumber(metrics?.event || 0),
                 title: "Event",
               },
               {
                 icon: ranking,
                 bg: "bg-[#00BF00]",
-                value: formatNumber(10000),
+                value: formatNumber(metrics?.contestants || 0),
                 title: "Contestants",
               },
             ].map((item, idx) => (
@@ -88,12 +94,10 @@ export default function IndexWrapper({
           </div>
         </div>
         <div className="">
-          <EventCalendar
-            categoryColors={{ event: '#FF0000' }} 
-          />
+          <EventCalendar categoryColors={{ event: "#FF0000" }} />
         </div>
       </div>
       <div className="py-10">{children}</div>
-    </div>
+    </>
   );
 }

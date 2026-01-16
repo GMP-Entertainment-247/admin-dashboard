@@ -59,7 +59,7 @@ const PreviewAnnouncement = () => {
       const formData = new FormData();
       formData.set("title", title);
       formData.set("description", description);
-      formData.set("status", status.toLowerCase() === "active" ? "1" : "0");
+      formData.set("status", status);
       formData.set("start_date", combineDateTime(startDate, startTime));
       formData.set("end_date", combineDateTime(endDate, endTime));
 
@@ -82,16 +82,20 @@ const PreviewAnnouncement = () => {
         await updateAnnouncement(formData);
         toast.success("Announcement updated");
         // Invalidate both the list and details queries to refetch updated data
-        await queryClient.invalidateQueries({
-          queryKey: ["/admin/announcement"],
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ["/admin/announcement"],
+          }),
+          queryClient.invalidateQueries({
+            queryKey: [
+              "/admin/announcement/details",
+              { id: targetAnnouncementId },
+            ],
+          }),
+        ]);
+        navigate(`/rap-battle/announcement/${announcementId}`, {
+          replace: true,
         });
-        await queryClient.invalidateQueries({
-          queryKey: [
-            "/admin/announcement/details",
-            { id: targetAnnouncementId },
-          ],
-        });
-        navigate(`/rap-battle/announcement/${announcementId}`);
       }
     } catch (error: any) {
       toast.error(handleApiError(error, "Failed to save announcement"));

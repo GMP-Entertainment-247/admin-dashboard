@@ -29,7 +29,6 @@ import BlogsHome from "../pages/dashboard/blogs";
 import BlogsLayout from "../pages/dashboard/blogs/layout";
 import CreateBlog from "../pages/dashboard/blogs/create-blog";
 import EditBlog from "../pages/dashboard/blogs/edit-blog";
-import ContestantDetails from "../pages/dashboard/rap-battle/user";
 import PreviewBlog from "../pages/dashboard/blogs/preview-blog";
 import BlogDetails from "../pages/dashboard/blogs/blog-details";
 import Profile from "../pages/dashboard/settings/profile";
@@ -73,6 +72,7 @@ import UploadBeat from "../pages/dashboard/beats/upload";
 import EditBeat from "../pages/dashboard/beats/edit-beat";
 import PreviewBeat from "../pages/dashboard/beats/preview-beat";
 import BeatDetails from "../pages/dashboard/beats/beat-details";
+import ContestantDetails from "../pages/dashboard/rap-battle/ContestantDetails";
 
 interface RouteNode {
   index?: boolean;
@@ -209,7 +209,7 @@ export const appRoutes: IRoutes[] = [
         childElement: <FansHome />,
       },
       {
-        childPath: ":id",
+        childPath: ":fanId",
         childElement: <FanDetails />,
       },
       {
@@ -240,7 +240,7 @@ export const appRoutes: IRoutes[] = [
         childElement: <AllContestants />,
       },
       {
-        childPath: "user/:id",
+        childPath: ":auditionId",
         childElement: <ContestantDetails />,
       },
       {
@@ -350,7 +350,7 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: "all",
         childElement: <AllBookingsPage />,
-      }
+      },
     ],
   },
   {

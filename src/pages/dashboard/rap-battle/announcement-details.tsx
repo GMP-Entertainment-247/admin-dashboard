@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import AnnouncementInnerLayout from "./announcements/inner-layout";
@@ -24,6 +25,7 @@ const AnnouncementDetails = () => {
     data: announcementData,
     loading,
     error,
+    refetch,
   } = useFetch<Announcement | null>("/admin/announcement/details", {
     id: announcementId,
   });
@@ -47,16 +49,24 @@ const AnnouncementDetails = () => {
         );
         return;
       }
-      // Invalidate the announcement list query to refetch updated data
-      await queryClient.invalidateQueries({
-        queryKey: ["/admin/announcement"],
-      });
+      // Invalidate the announcement list and details query to refetch updated data
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["/admin/announcement"],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["/admin/announcement/details", { id: announcementId }],
+        }),
+      ]);
       toast.success("Announcement deleted successfully");
       navigate("/rap-battle/announcement");
     } catch (error) {
       toast.error(handleApiError(error, "Failed to delete announcement"));
     }
   };
+  useEffect(() => {
+    refetch();
+  }, [announcementId, refetch]);
   return (
     <AnnouncementInnerLayout title="Details">
       {loading ? (

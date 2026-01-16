@@ -31,6 +31,12 @@ export interface IBeatDetails {
   beat_file: string;
   created_at: string;
   updated_at: string;
-  rap_battle_id: number | null;
-  genre: string | null;
+  battle: {
+    id: number;
+    title: string;
+  };
+  gen: {
+    id: number;
+    name: string;
+  };
 }

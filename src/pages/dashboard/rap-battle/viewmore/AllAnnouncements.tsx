@@ -2,7 +2,7 @@ import Dropdown from "../../../../components/shared/Dropdown";
 import { Link } from "react-router-dom";
 import Table from "../../../../components/Table";
 import { imageProp, formatDateTime } from "../../../../utils/helpers";
-import edit from "../../../../images/svg/edit.svg";
+import { ReactComponent as EditIcon } from "../../../../images/svg/edit.svg";
 import useFetch from "../../../../utils/hooks/useFetch";
 import type { AnnouncementListData } from "../../../../interface/announcement.interface";
 import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
@@ -27,7 +27,7 @@ export default function AllAnnouncements() {
     <div>
       <h2 className="text-[24px] font-semibold mb-3">All Announcements</h2>
       <div>
-        <div className="bg-white px-5 py-2 -mb-5 rounded-t-xl"></div>
+        <div className="bg-white px-5 py-2 -mb-5 rounded-t-xl" />
         <Table
           noTitle={true}
           searchPlaceHolder="Search any announcement"
@@ -105,7 +105,7 @@ export default function AllAnnouncements() {
               header: "Action",
               view: (item) => (
                 <Link to={`/rap-battle/announcement/${item.id}`} title="View">
-                  <img src={edit} alt="edit" className="w-6 ml-4" />
+                  <EditIcon className="w-6 ml-4 text-gray-700" />
                 </Link>
               ),
             },

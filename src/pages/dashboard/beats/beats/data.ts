@@ -7,6 +7,7 @@ export const createBeat = async (
     "/admin/beats/create",
     formData,
     {
+      timeout: 50000,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -19,32 +20,25 @@ export const createBeat = async (
 export const updateBeat = async (
   formData: FormData
 ): Promise<ApiResponse<null>> => {
-  const response = await createApiClient().post("/admin/beats/edit", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await createApiClient().post(
+    "/admin/beats/update",
+    formData,
+    {
+      timeout: 50000,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
 
   return response.data;
 };
 
 export const deleteBeat = async (
-  id: number | string
+  beat_id: number | string
 ): Promise<ApiResponse<null>> => {
-  // TODO: Replace with actual endpoint when ready
-  // const response = await createApiClient().post("/admin/beats/delete", {
-  //   id,
-  // });
-  // return response.data;
-
-  // Placeholder for now
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        status: true,
-        message: "Beat deleted successfully",
-        data: null,
-      });
-    }, 500);
+  const response = await createApiClient().post("/admin/beats/remove", {
+    beat_id,
   });
+  return response.data;
 };

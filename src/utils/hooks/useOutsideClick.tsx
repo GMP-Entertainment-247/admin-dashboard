@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 // Hook to detect outside click
-export default function useOutsideClick (
+export default function useOutsideClick(
   refOrRefs: React.RefObject<HTMLElement> | React.RefObject<HTMLElement>[],
   callback: () => void
 ) {
@@ -17,12 +17,12 @@ export default function useOutsideClick (
       }
     };
 
-    // Add event listener
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
 
-    // Cleanup function to remove event listener
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [refOrRefs, callback]); // Dependencies array
-};
+}

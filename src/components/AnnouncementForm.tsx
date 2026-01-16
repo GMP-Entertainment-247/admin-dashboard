@@ -48,6 +48,8 @@ const AnnouncementForm = () => {
     );
   }, [draft]);
 
+  console.log(status);
+
   const fileUpload = useFileUpload({
     accept: ["image/jpeg", "image/jpg", "image/png"],
     maxSizeKb: 2 * 1024, // 2MB
@@ -150,8 +152,8 @@ const AnnouncementForm = () => {
                 id="status"
                 placeholder="Select Status"
                 options={[
-                  { label: "Active", value: "active" },
-                  { label: "Inactive", value: "inactive" },
+                  { label: "Active", value: "1" },
+                  { label: "Inactive", value: "0" },
                 ]}
                 value={status}
               />

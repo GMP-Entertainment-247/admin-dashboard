@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import BeatInnerLayout from "./inner-layout";
 import Button from "../../../components/shared/Button";
@@ -23,33 +24,10 @@ const BeatDetails = () => {
     data: beatData,
     loading,
     error,
+    refetch,
   } = useFetch<IBeatDetails>("/admin/beats/details", {
     id: beatId,
   });
-
-  // Fetch genre and rap battle names for display
-  //   const { data: genresData } = useFetch<
-  //     {
-  //       id: number;
-  //       name: string;
-  //     }[]
-  //   >("/genres");
-
-  const { data: rapBattlesData } = useFetch<
-    {
-      id: number;
-      title: string;
-    }[]
-  >("/admin/rap-battles");
-
-  const genreName = beatData?.genre || "";
-
-  const rapBattleTitle =
-    beatData?.rap_battle_id && rapBattlesData
-      ? rapBattlesData?.find(
-          (b) => b.id.toString() === beatData.rap_battle_id?.toString()
-        )?.title || ""
-      : "";
 
   const handleEdit = () => {
     if (!beatId) return;
@@ -68,16 +46,24 @@ const BeatDetails = () => {
         toast.error(flattenErrorMessage(res.message, "Failed to delete beat"));
         return;
       }
-      // Invalidate the beat list query to refetch updated data
-      await queryClient.invalidateQueries({
-        queryKey: ["/admin/beats"],
-      });
+      // Invalidate the beat list and metrics query to refetch updated data
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["/admin/beats"],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["/admin/beats/metrics"],
+        }),
+      ]);
       toast.success("Beat deleted successfully");
       navigate("/beats");
     } catch (error) {
       toast.error(handleApiError(error, "Failed to delete beat"));
     }
   };
+  useEffect(() => {
+    refetch();
+  }, [beatId, refetch]);
 
   return (
     <BeatInnerLayout title="Details">
@@ -93,8 +79,8 @@ const BeatDetails = () => {
           <BeatViewLayout
             name={beatData?.name || ""}
             description={beatData?.description || ""}
-            genre={genreName}
-            rapBattleTitle={rapBattleTitle}
+            genre={beatData?.gen?.name}
+            rapBattleTitle={beatData?.battle?.title}
             image={beatData?.image_url || ""}
             beatFile={beatData?.beat_file || ""}
             createdDate={beatData?.created_at}

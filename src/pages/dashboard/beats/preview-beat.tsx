@@ -65,9 +65,7 @@ const PreviewBeat = () => {
 
   const rapBattleTitle = useMemo(() => {
     if (!rap_battle_id || !rapBattlesData) return "";
-    const found = rapBattlesData.find(
-      (b) => b.id.toString() === rap_battle_id
-    );
+    const found = rapBattlesData.find((b) => b.id.toString() === rap_battle_id);
     return found?.title || "";
   }, [rap_battle_id, rapBattlesData]);
 
@@ -113,26 +111,35 @@ const PreviewBeat = () => {
       if (draft.mode === "create") {
         await createBeat(formData);
         toast.success("Beat created successfully");
-        // Invalidate the beat list query to refetch updated data
-        await queryClient.invalidateQueries({
-          queryKey: ["/admin/beats"],
-        });
+        // Invalidate the beat list and metrics query to refetch updated data
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ["/admin/beats"],
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ["/admin/beats/metrics"],
+          }),
+        ]);
         navigate("/beats");
       } else {
         const targetBeatId = beatId;
         if (targetBeatId) {
-          formData.set("id", String(targetBeatId));
+          formData.set("beat_id", String(targetBeatId));
         }
         await updateBeat(formData);
         toast.success("Beat updated successfully");
         // Invalidate both the list and details queries to refetch updated data
-        await queryClient.invalidateQueries({
-          queryKey: ["/admin/beats"],
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ["/admin/beats"],
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ["/admin/beats/details", { id: targetBeatId }],
+          }),
+        ]);
+        navigate(`/beats/${beatId}`, {
+          replace: true,
         });
-        await queryClient.invalidateQueries({
-          queryKey: ["/admin/beats/details", { id: targetBeatId }],
-        });
-        navigate(`/beats/${beatId}`);
       }
     } catch (error: any) {
       toast.error(handleApiError(error, "Failed to save beat"));
