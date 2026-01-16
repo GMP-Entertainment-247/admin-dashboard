@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import link from "../../../../images/svg/link.svg";
 import note from "../../../../images/svg/note.svg";
 import ticket from "../../../../images/svg/ticket.svg";
@@ -25,8 +24,6 @@ export default function IndexWrapper({
   onButtonClick?: () => void;
   children: React.ReactNode;
 }) {
-  let navigate = useNavigate();
-
   const { data: metrics } = useFetch<IAuditionMetrics>(
     "/admin/announcement/metrics-by-one"
   );
@@ -39,10 +36,8 @@ export default function IndexWrapper({
           <Button
             text={buttonText}
             type="button"
-            onClick={() => {
-              if (onButtonClick) return onButtonClick();
-              if (buttonLink) return navigate(buttonLink);
-            }}
+            onClick={onButtonClick}
+            href={buttonLink}
             extraClassName="rounded-[8px] font-semibold !w-fit !h-10 !px-5"
           />
         )}

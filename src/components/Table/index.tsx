@@ -1,7 +1,7 @@
 import Pagination from "./Pagination";
 import { useDebouncedCallback } from "use-debounce";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import Button from "../shared/Button";
 import clsx from "clsx";
 
@@ -37,7 +37,6 @@ export default function Table<TRow extends {}>({
   hideSearch = false,
   searchParamKey = "search",
 }: ITable<TRow>) {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get(searchParamKey) ?? "";
 
@@ -126,7 +125,7 @@ export default function Table<TRow extends {}>({
                   <Button
                     text="See More"
                     extraClassName="rounded-[8px] !font-bold !w-[100px] !min-h-10"
-                    onClick={() => navigate(seeMoreLink)}
+                    href={seeMoreLink}
                   />
                 </div>
               ) : (

@@ -25,6 +25,8 @@ export default function RapBattleHome() {
     "/admin/audition/fetch-by-stage",
     {
       stage: queryParams.get("tab") || "",
+      search: queryParams.get("search") || "",
+      filter: queryParams.get("search") || "",
     }
   );
   const tabOptions = auditionStages?.map((item) => ({
@@ -37,7 +39,6 @@ export default function RapBattleHome() {
       <IndexWrapper
         title="Rap Battle"
         buttonText="Create Event"
-        buttonLink="/rap-battle/create-event"
         onButtonClick={() => setShowCreateModal(true)}
       >
         <div>

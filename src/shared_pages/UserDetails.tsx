@@ -2,7 +2,6 @@ import clsx from "clsx";
 import { Modal } from "../components/Modal";
 import Button from "../components/shared/Button";
 import Table from "../components/Table";
-import { dataRows } from "../utils/constant";
 import { imageProp } from "../utils/helpers";
 import { useSingleState } from "../utils/hooks/useSingleState";
 import useMutation from "../utils/hooks/useMutation";
@@ -27,6 +26,7 @@ export default function UserDetails({
   const queryClient = useQueryClient();
 
   const hasUser = !!fan?.id;
+  console.log(hasUser);
 
   const nextStageApi = useMutation(
     "/admin/audition/move-to-next-stage",
@@ -53,28 +53,34 @@ export default function UserDetails({
   const displayName = fan?.name || audition?.name || "";
   const displayEmail = fan?.email || audition?.email || "---";
   const displayPhone = fan?.phone || audition?.phone || "---";
-    const displayImageUrl = fan?.profile_picture_url;
-
   //   const displayVideoLink = audition?.link || "---";
+  const rawImage = fan?.profile_picture_url;
 
+  const displayImageUrl = rawImage
+    ? rawImage.startsWith("/avatars")
+      ? `https://api.gmpentertainment247.com${rawImage}`
+      : rawImage
+    : "/images/profile-default.png";
 
-  const { data: voteHistory, loading: voteLoading } = useFetch<
-    VoteHistoryItem[]
-  >("/admin/vote-history", { id: fan?.id }, { enabled: hasUser });
+  const { data: voteHistory, loading: voteLoading } = useFetch<{
+    current_page: number;
+    last_page: number;
+    data: VoteHistoryItem[];
+  }>("/admin/vote-history", { id: fan?.id }, { enabled: hasUser });
 
-  const { data: ticketHistory, loading: ticketLoading } = useFetch<
-    TicketHistoryItem[]
-  >("/admin/ticket-history", { id: fan?.id }, { enabled: hasUser });
+  const { data: ticketHistory, loading: ticketLoading } = useFetch<{
+    current_page: number;
+    last_page: number;
+    data: TicketHistoryItem[];
+  }>("/admin/ticket-history", { id: fan?.id }, { enabled: hasUser });
+
+  // console.log(voteHistory);
 
   return (
     <div>
       <div className="bg-white rounded-lg flex gap-5 p-6 max-[1200px]:block">
         <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center overflow-hidden">
-          <img
-            {...imageProp("/images/profile-default.png")}
-            alt=""
-            className="w-full"
-          />
+          <img {...imageProp(displayImageUrl)} alt="" className="w-full" />
         </div>
         <div className="w-full">
           <div className="flex gap-2 flex-wrap">
@@ -121,71 +127,73 @@ export default function UserDetails({
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-7 mt-10 max-[1200px]:grid-cols-1">
-        <Table
-          tableTitle="Vote History"
-          searchPlaceHolder="Search any artist"
-          isLoading={false}
-          data={dataRows}
-          hideSearch={true}
-          rows={[
-            {
-              header: "Artist",
-              view: (item) => (
-                <div className="flex gap-2 items-center">
-                  <p>{item.name}</p>
-                </div>
-              ),
-            },
-            {
-              header: "No of votes",
-              view: (item) => <span>2,210</span>,
-            },
-            {
-              header: "Date",
-              view: (item) => item.date,
-            },
-          ]}
-          isPreview
-          seeMoreLink="/fans/votes"
-        />
-        <Table
-          tableTitle="Ticket History"
-          searchPlaceHolder="Search any artist"
-          isLoading={false}
-          data={dataRows}
-          hideSearch={true}
-          rows={[
-            {
-              header: "Event",
-              view: (item) => (
-                <div className="flex gap-2 items-center">
-                  <p>{item.name}</p>
-                </div>
-              ),
-            },
-            {
-              header: "No of tickets",
-              view: (item) => <span>2,210</span>,
-            },
-            {
-              header: "Date",
-              view: (item) => item.date,
-            },
-          ]}
-          isPreview
-          seeMoreLink="/fans/tickets"
-        />
-      </div>
+      {hasUser && (
+        <div className="grid grid-cols-2 gap-7 mt-10 max-[1200px]:grid-cols-1">
+          <Table
+            tableTitle="Vote History"
+            isLoading={voteLoading}
+            data={voteHistory?.data ?? []}
+            hideSearch={true}
+            rows={[
+              {
+                header: "Atrist",
+                view: (item) => item.contestant?.name || "---",
+              },
+              {
+                header: "Votes",
+                view: (item) => item.vote || "---",
+              },
+              {
+                header: "Amount",
+                view: (item) => item.amount || "---",
+              },
+              {
+                header: "Date",
+                view: (item) =>
+                  item.created_at
+                    ? new Date(item.created_at).toLocaleString()
+                    : "---",
+              },
+            ]}
+            isPreview
+            seeMoreLink="/fans/votes"
+          />
+          <Table
+            tableTitle="Ticket History"
+            isLoading={ticketLoading}
+            data={ticketHistory?.data ?? []}
+            hideSearch={true}
+            rows={[
+              {
+                header: "Event",
+                view: (item) => item.event?.title || "---",
+              },
+              {
+                header: "No of Tickets",
+                view: (item) => 1,
+              },
+              {
+                header: "Date",
+                view: (item) =>
+                  `${item.event?.event_start_date} - ${item.event?.event_end_date}`,
+              },
+            ]}
+            isPreview
+            seeMoreLink="/fans/tickets"
+          />
+        </div>
+      )}
       <div className="flex justify-end gap-3 bg-white p-5 rounded-lg mt-5">
-        <Button
-          text="Suspend"
-          extraClassName={clsx(
-            "rounded-[8px] !font-bold !w-[100px] !min-h-10",
-            isContestant && "!text-[#EB2904] !bg-[#FFE5E5]"
-          )}
-          onClick={() => showModal.set(true)}
-        />
+        {hasUser && (
+          <Button
+            text="Suspend"
+            extraClassName={clsx(
+              "rounded-[8px] !font-bold !w-[100px] !min-h-10",
+              isContestant && "!text-[#EB2904] !bg-[#FFE5E5]"
+            )}
+            onClick={() => showModal.set(true)}
+          />
+        )}
         {isContestant && (
           <Button
             text="Move to next stage"

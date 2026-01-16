@@ -24,6 +24,8 @@ export default function AllContestants() {
     "/admin/audition/fetch-by-stage",
     {
       stage: queryParams.get("tab") || "",
+      page: queryParams.get("page") || 1,
+      filter: queryParams.get("search") || "",
     }
   );
   const tabOptions = auditionStages?.map((item) => ({
@@ -43,6 +45,7 @@ export default function AllContestants() {
         </div>
         <Table
           noTitle={true}
+          totalPages={data?.last_page}
           searchPlaceHolder="Search any contestant"
           isLoading={loading}
           data={data?.data ?? []}
