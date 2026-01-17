@@ -1,4 +1,3 @@
-
 import clsx from "clsx";
 import loader from "../../images/gif/white-loader.gif";
 import { Link } from "react-router-dom";
@@ -49,7 +48,7 @@ export default function Button({
     <Link
       to={props.href}
       className={clsx(
-        "text-center rounded-[16px] text-sm font-medium cursor-pointer py-2.5 relative w-full min-h-[50px]",
+        "text-center rounded-[16px] text-sm font-medium cursor-pointer py-2.5 relative w-full min-h-[50px] content-center",
         props.extraClassName,
         getVariantClasses(),
         props.isLoading && "opacity-70"
@@ -61,7 +60,7 @@ export default function Button({
     <button
       type={type}
       className={clsx(
-        "text-center rounded-[16px] text-sm font-medium cursor-pointer py-2.5 relative w-full min-h-[50px]",
+        "text-center rounded-[16px] text-sm font-medium cursor-pointer py-2.5 relative w-full min-h-[50px] content-center",
         props.extraClassName,
         getVariantClasses(),
         props.isLoading && "opacity-70"

@@ -25,7 +25,6 @@ export default function RapBattleHome() {
     "/admin/audition/fetch-by-stage",
     {
       stage: queryParams.get("tab") || "",
-      search: queryParams.get("search") || "",
       filter: queryParams.get("search") || "",
     }
   );

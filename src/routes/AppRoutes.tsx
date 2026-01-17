@@ -8,8 +8,8 @@ import Verification from "../pages/auth/Verification";
 import FansHome from "../pages/dashboard/fans";
 import FanDetails from "../pages/dashboard/fans/details";
 import AllFans from "../pages/dashboard/fans/viewmore/AllFans";
-import AllTickets from "../pages/dashboard/fans/viewmore/AllTickets";
-import AllVotes from "../pages/dashboard/fans/viewmore/AllVotes";
+import AllFanTickets from "../pages/dashboard/fans/viewmore/AllFanTickets";
+import AllFanVotes from "../pages/dashboard/fans/viewmore/AllFanVotes";
 import { ReactElement } from "react";
 import FansLayout from "../pages/dashboard/fans/layout";
 import RapBattleLayout from "../pages/dashboard/rap-battle/layout";
@@ -24,7 +24,6 @@ import VotesHome from "../pages/dashboard/rap-battle/vote";
 import AllRapBattleTickets from "../pages/dashboard/rap-battle/viewmore/AllTickets";
 import AllRapBattleVotes from "../pages/dashboard/rap-battle/viewmore/AllVotes";
 import CreateEvent from "../pages/dashboard/rap-battle/create/events";
-import CreateTicket from "../pages/dashboard/rap-battle/create/tickets";
 import BlogsHome from "../pages/dashboard/blogs";
 import BlogsLayout from "../pages/dashboard/blogs/layout";
 import CreateBlog from "../pages/dashboard/blogs/create-blog";
@@ -73,6 +72,10 @@ import EditBeat from "../pages/dashboard/beats/edit-beat";
 import PreviewBeat from "../pages/dashboard/beats/preview-beat";
 import BeatDetails from "../pages/dashboard/beats/beat-details";
 import ContestantDetails from "../pages/dashboard/rap-battle/ContestantDetails";
+import EventLayout from "../pages/dashboard/rap-battle/events/event-layout";
+import EventDetails from "../pages/dashboard/rap-battle/event-details";
+import EditEvent from "../pages/dashboard/rap-battle/edit-event";
+import PreviewEvent from "../pages/dashboard/rap-battle/preview-event";
 
 interface RouteNode {
   index?: boolean;
@@ -217,12 +220,12 @@ export const appRoutes: IRoutes[] = [
         childElement: <AllFans />,
       },
       {
-        childPath: "tickets",
-        childElement: <AllTickets />,
+        childPath: ":fanId/tickets",
+        childElement: <AllFanTickets />,
       },
       {
-        childPath: "votes",
-        childElement: <AllVotes />,
+        childPath: ":fanId/votes",
+        childElement: <AllFanVotes />,
       },
     ],
   },
@@ -245,11 +248,37 @@ export const appRoutes: IRoutes[] = [
       },
       {
         childPath: "livestream",
-        childElement: <LivestreamHome />,
-      },
-      {
-        childPath: "livestream/all",
-        childElement: <AllLivestreams />,
+        childElement: <EventLayout />,
+        children: [
+          {
+            index: true,
+            childElement: <LivestreamHome />,
+          },
+          {
+            childPath: "all",
+            childElement: <AllLivestreams />,
+          },
+          {
+            childPath: "create-event",
+            childElement: <CreateEvent />,
+          },
+          {
+            childPath: "preview",
+            childElement: <PreviewEvent />,
+          },
+          {
+            childPath: ":eventId",
+            childElement: <EventDetails />,
+          },
+          {
+            childPath: ":eventId/edit",
+            childElement: <EditEvent />,
+          },
+          {
+            childPath: ":eventId/preview",
+            childElement: <PreviewEvent />,
+          },
+        ],
       },
       {
         childPath: "votes",
@@ -266,14 +295,6 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: "tickets/all",
         childElement: <AllRapBattleTickets />,
-      },
-      {
-        childPath: "create-ticket",
-        childElement: <CreateTicket />,
-      },
-      {
-        childPath: "create-event",
-        childElement: <CreateEvent />,
       },
       {
         childPath: "announcement",

@@ -11,6 +11,7 @@ import type { IAudition } from "../interface/rapbattle.interface";
 import useFetch from "../utils/hooks/useFetch";
 import type { TicketHistoryItem } from "../interface/tickets.interface";
 import type { VoteHistoryItem } from "../interface/votes.interface";
+import { formatEventDateTime, formatDateMDY } from "../utils/helpers";
 
 export default function UserDetails({
   isContestant,
@@ -150,13 +151,11 @@ export default function UserDetails({
               {
                 header: "Date",
                 view: (item) =>
-                  item.created_at
-                    ? new Date(item.created_at).toLocaleString()
-                    : "---",
+                  item.created_at ? formatDateMDY(item.created_at) : "---",
               },
             ]}
             isPreview
-            seeMoreLink="/fans/votes"
+            seeMoreLink={`/fans/${fan.id}/votes`}
           />
           <Table
             tableTitle="Ticket History"
@@ -175,11 +174,13 @@ export default function UserDetails({
               {
                 header: "Date",
                 view: (item) =>
-                  `${item.event?.event_start_date} - ${item.event?.event_end_date}`,
+                  `${formatEventDateTime(
+                    item.event?.event_start_date
+                  )} - ${formatEventDateTime(item.event?.event_end_date)}`,
               },
             ]}
             isPreview
-            seeMoreLink="/fans/tickets"
+            seeMoreLink={`/fans/${fan.id}/tickets`}
           />
         </div>
       )}
