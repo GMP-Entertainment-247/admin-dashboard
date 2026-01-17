@@ -72,6 +72,10 @@ import EditBeat from "../pages/dashboard/beats/edit-beat";
 import PreviewBeat from "../pages/dashboard/beats/preview-beat";
 import BeatDetails from "../pages/dashboard/beats/beat-details";
 import ContestantDetails from "../pages/dashboard/rap-battle/ContestantDetails";
+import EventLayout from "../pages/dashboard/rap-battle/events/event-layout";
+import EventDetails from "../pages/dashboard/rap-battle/event-details";
+import EditEvent from "../pages/dashboard/rap-battle/edit-event";
+import PreviewEvent from "../pages/dashboard/rap-battle/preview-event";
 
 interface RouteNode {
   index?: boolean;
@@ -244,11 +248,37 @@ export const appRoutes: IRoutes[] = [
       },
       {
         childPath: "livestream",
-        childElement: <LivestreamHome />,
-      },
-      {
-        childPath: "livestream/all",
-        childElement: <AllLivestreams />,
+        childElement: <EventLayout />,
+        children: [
+          {
+            index: true,
+            childElement: <LivestreamHome />,
+          },
+          {
+            childPath: "all",
+            childElement: <AllLivestreams />,
+          },
+          {
+            childPath: "create-event",
+            childElement: <CreateEvent />,
+          },
+          {
+            childPath: "preview",
+            childElement: <PreviewEvent />,
+          },
+          {
+            childPath: ":eventId",
+            childElement: <EventDetails />,
+          },
+          {
+            childPath: ":eventId/edit",
+            childElement: <EditEvent />,
+          },
+          {
+            childPath: ":eventId/preview",
+            childElement: <PreviewEvent />,
+          },
+        ],
       },
       {
         childPath: "votes",
@@ -265,10 +295,6 @@ export const appRoutes: IRoutes[] = [
       {
         childPath: "tickets/all",
         childElement: <AllRapBattleTickets />,
-      },
-      {
-        childPath: "create-event",
-        childElement: <CreateEvent />,
       },
       {
         childPath: "announcement",
