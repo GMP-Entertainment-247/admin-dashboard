@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Dropdown from "../../../components/shared/Dropdown";
 import Table from "../../../components/Table";
-import { imageProp, formatDateTime } from "../../../utils/helpers";
+import { imageProp, formatEventDateTime } from "../../../utils/helpers";
 import IndexWrapper from "./components/indexWrapper";
 import { ReactComponent as EditIcon } from "../../../images/svg/edit.svg";
 import useFetch from "../../../utils/hooks/useFetch";
@@ -96,11 +96,11 @@ export default function AnnouncementHome() {
             },
             {
               header: "Start",
-              view: (item) => formatDateTime(item.start_date),
+              view: (item) => formatEventDateTime(item.start_date),
             },
             {
               header: "End",
-              view: (item) => formatDateTime(item.end_date),
+              view: (item) => formatEventDateTime(item.end_date),
             },
             {
               header: "Action",

@@ -1,7 +1,7 @@
 import Dropdown from "../../../../components/shared/Dropdown";
 import { Link } from "react-router-dom";
 import Table from "../../../../components/Table";
-import { imageProp, formatDateTime } from "../../../../utils/helpers";
+import { imageProp, formatEventDateTime } from "../../../../utils/helpers";
 import { ReactComponent as EditIcon } from "../../../../images/svg/edit.svg";
 import useFetch from "../../../../utils/hooks/useFetch";
 import type { AnnouncementListData } from "../../../../interface/announcement.interface";
@@ -95,11 +95,11 @@ export default function AllAnnouncements() {
             },
             {
               header: "Start",
-              view: (item) => formatDateTime(item.start_date),
+              view: (item) => formatEventDateTime(item.start_date),
             },
             {
               header: "End",
-              view: (item) => formatDateTime(item.end_date),
+              view: (item) => formatEventDateTime(item.end_date),
             },
             {
               header: "Action",

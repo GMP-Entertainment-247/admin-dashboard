@@ -6,26 +6,34 @@ import { Link } from "react-router-dom";
 import { ReactComponent as EditIcon } from "../../../../images/svg/edit.svg";
 import useFetch from "../../../../utils/hooks/useFetch";
 import type { Event } from "../../../../interface/events.interface";
+import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
+import type { IAuditionStage } from "../../../../interface/rapbattle.interface";
 
 export default function AllLivestreams() {
+  const queryParams = useQueryParams();
+  const { data: auditionStages } = useFetch<IAuditionStage[]>(
+    "/admin/audition/list-stages"
+  );
   const { data, loading } = useFetch<{
-    data: Event[]
-  }>("/admin/events/list");
+    data: Event[],
+    current_page: number
+    last_page: number
+  }>("/admin/events/list", {
+    stage: queryParams.get("tab") !== "all" ? (queryParams.get("tab") || '') : '',
+    filter: queryParams.get("search") || "",
+    page: queryParams.get("page") ?? 1
+  });
+  const tabOptions = auditionStages?.map((item) => ({
+    label: item.name,
+    key: item.id.toString(),
+  }));
   return (
     <div>
       <h2 className="text-[24px] font-semibold mb-3">All Livestreams</h2>
       <div>
         <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
           <Tabs
-            tabs={[
-              { label: "All Entries", key: "all" },
-              { label: "Audition", key: `audition` },
-              { label: "Stage 1", key: "stage-1" },
-              { label: "Stage 2", key: "stage-2" },
-              { label: "Stage 3", key: "stage-3" },
-              { label: "Finale", key: "finale" },
-            ]}
-          // useAsLink
+            tabs={[{ label: "All Entries", key: "all" }, ...(tabOptions || [])]}
           />
         </div>
         <Table
@@ -33,6 +41,7 @@ export default function AllLivestreams() {
           searchPlaceHolder="Search any event"
           isLoading={loading}
           data={data?.data ?? []}
+          totalPages={data?.last_page}
           // slot={<Dropdown triggerText="Season 1" options={[]} />}
           rows={[
             {

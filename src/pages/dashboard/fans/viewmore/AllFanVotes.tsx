@@ -8,7 +8,7 @@ import {
   tableOrderOptions,
   tablePeriodOptions,
 } from "../../../../utils/constant";
-import { formatDateMDY } from "../../../../utils/helpers";
+import { formatDateMDY, formatNumber } from "../../../../utils/helpers";
 
 export default function AllFanVotes() {
   const { fanId } = useParams<{ fanId: string }>();
@@ -70,7 +70,7 @@ export default function AllFanVotes() {
           },
           {
             header: "Amount",
-            view: (item) => item.amount || "---",
+            view: (item) => formatNumber(Number(item.amount)),
           },
           {
             header: "Date",

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Dropdown from "../../../../components/shared/Dropdown";
 import Tabs from "../../../../components/shared/Tabs";
 import Table from "../../../../components/Table";
-import { imageProp } from "../../../../utils/helpers";
+import { formatNumber, imageProp } from "../../../../utils/helpers";
 import type { IAuditionStage } from "../../../../interface/rapbattle.interface";
 import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
 import {
@@ -99,7 +99,7 @@ export default function AllRapBattleVotes() {
             },
             {
               header: "Amount",
-              view: (item) => item.amount,
+              view: (item) => formatNumber(Number(item.amount)),
             },
             {
               header: "Action",

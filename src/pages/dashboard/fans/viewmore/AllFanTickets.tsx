@@ -8,7 +8,7 @@ import {
   tablePeriodOptions,
 } from "../../../../utils/constant";
 import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
-import { formatEventDateTime } from "../../../../utils/helpers";
+import { formatDateMDY, formatEventDateTime } from "../../../../utils/helpers";
 
 export default function AllFanTickets() {
   const { fanId } = useParams<{ fanId: string }>();
@@ -71,11 +71,19 @@ export default function AllFanTickets() {
             view: (item) => 1,
           },
           {
-            header: "Date",
+            header: "Event Date",
             view: (item) =>
               `${formatEventDateTime(
                 item.event?.event_start_date
               )} - ${formatEventDateTime(item.event?.event_end_date)}`,
+          },
+          {
+            header: "Order ID",
+            view: (item) => item.unique,
+          },
+          {
+            header: "Order Date",
+            view: (item) => formatDateMDY(item.created_at),
           },
         ]}
       />

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Dropdown from "../../../components/shared/Dropdown";
 import Table from "../../../components/Table";
-import { imageProp } from "../../../utils/helpers";
+import { imageProp, formatNumber } from "../../../utils/helpers";
 import IndexWrapper from "./components/indexWrapper";
 import Tabs from "../../../components/shared/Tabs";
 import useFetch from "../../../utils/hooks/useFetch";
@@ -29,7 +29,7 @@ export default function VotesHome() {
       <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
         <Tabs
           tabs={[{ label: "All Entries", key: "" }, ...(tabOptions || [])]}
-          // useAsLink
+        // useAsLink
         />
       </div>
       <Table
@@ -91,7 +91,7 @@ export default function VotesHome() {
           },
           {
             header: "Amount",
-            view: (item) => item.amount,
+            view: (item) => formatNumber(Number(item.amount)),
           },
           {
             header: "Action",

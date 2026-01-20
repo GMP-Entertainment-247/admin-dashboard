@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { Modal } from "../components/Modal";
 import Button from "../components/shared/Button";
 import Table from "../components/Table";
-import { imageProp } from "../utils/helpers";
+import { formatNumber, imageProp } from "../utils/helpers";
 import { useSingleState } from "../utils/hooks/useSingleState";
 import useMutation from "../utils/hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -189,7 +189,7 @@ export default function UserDetails({
               },
               {
                 header: "Amount",
-                view: (item) => item.amount || "---",
+                view: (item) => formatNumber(Number(item.amount)),
               },
               {
                 header: "Date",
@@ -215,11 +215,19 @@ export default function UserDetails({
                 view: (item) => 1,
               },
               {
-                header: "Date",
+                header: "Event Date",
                 view: (item) =>
                   `${formatEventDateTime(
                     item.event?.event_start_date
                   )} - ${formatEventDateTime(item.event?.event_end_date)}`,
+              },
+              {
+                header: "Order ID",
+                view: (item) => item.unique,
+              },
+              {
+                header: "Order Date",
+                view: (item) => formatDateMDY(item.created_at),
               },
             ]}
             isPreview
