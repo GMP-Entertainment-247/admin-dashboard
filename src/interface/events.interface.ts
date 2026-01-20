@@ -3,6 +3,8 @@ export interface EventCreator {
   name: string;
   profile_pic: string | null;
   profile_picture_url: string;
+  phone: string;
+  email: string;
 }
 
 /**
@@ -29,5 +31,5 @@ export interface Event {
   rap_battle_id: string | null;
   stage: string | null;
   link: string | null;
-  creator?: EventCreator;
+  user?: EventCreator;
 }

@@ -9,6 +9,7 @@ import Label from "./Form/Label";
 import TextArea from "./Form/TextArea";
 import { useFileUpload } from "../utils/hooks/useFileUpload";
 import { UploadIcon } from "lucide-react";
+import { toast } from "react-toastify";
 
 const EventForm = () => {
     const { draft, setDraft } = useEventDraft();
@@ -129,6 +130,33 @@ const EventForm = () => {
         const derivedSaleEndDate = (formData.get("sale_end_date") as string) || "";
         const derivedSaleEndTime = (formData.get("sale_end_time") as string) || "";
 
+        const hasImage =
+            fileUpload.files.length > 0 ||
+            (newImage && newImage.length > 0) ||
+            Boolean(image);
+
+        // Required: all fields except description & link (image required too)
+        const missingFields: string[] = [];
+        if (!derivedTitle.trim()) missingFields.push("Title");
+        if (!derivedVenue.trim()) missingFields.push("Venue");
+        if (!derivedLocation.trim()) missingFields.push("Location");
+        if (!String(derivedPrice).trim()) missingFields.push("Price");
+        if (!String(derivedAvailableTickets).trim()) missingFields.push("Available Tickets");
+        if (!derivedEventStartDate) missingFields.push("Event Start Date");
+        if (!derivedEventStartTime) missingFields.push("Event Start Time");
+        if (!derivedEventEndDate) missingFields.push("Event End Date");
+        if (!derivedEventEndTime) missingFields.push("Event End Time");
+        if (!derivedSaleStartDate) missingFields.push("Sale Start Date");
+        if (!derivedSaleStartTime) missingFields.push("Sale Start Time");
+        if (!derivedSaleEndDate) missingFields.push("Sale End Date");
+        if (!derivedSaleEndTime) missingFields.push("Sale End Time");
+        if (!hasImage) missingFields.push("Event Image");
+
+        if (missingFields.length > 0) {
+            toast.error(`Please fill: ${missingFields.join(", ")}`);
+            return;
+        }
+
         setDraft((prev) => {
             if (!prev) return null;
 
@@ -240,7 +268,7 @@ const EventForm = () => {
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <Label id="sale_start">Sale Start Date & Time (Optional)</Label>
+                                <Label id="sale_start">Sale Start Date & Time</Label>
                                 <div className="flex items-center w-full gap-5">
                                     <Input
                                         id="sale_start_date"
@@ -255,7 +283,7 @@ const EventForm = () => {
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <Label id="sale_end">Sale End Date & Time (Optional)</Label>
+                                <Label id="sale_end">Sale End Date & Time</Label>
                                 <div className="flex items-center w-full gap-5">
                                     <Input
                                         id="sale_end_date"
@@ -292,8 +320,8 @@ const EventForm = () => {
                                 // Drag and Drop Area
                                 <div
                                     className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${fileUpload.isDragOver
-                                            ? "border-brand-500 bg-brand-50"
-                                            : "border-[#999999] hover:border-brand-500"
+                                        ? "border-brand-500 bg-brand-50"
+                                        : "border-[#999999] hover:border-brand-500"
                                         }`}
                                     onDrop={fileUpload.handleDrop}
                                     onDragOver={fileUpload.handleDragOver}

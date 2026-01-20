@@ -19,6 +19,12 @@ export default function FansHome() {
     filter: queryParams.get("search") || "",
     // date: queryParams.get("period") || "",
   });
+  const { data: fansMetrics } = useFetch<{
+    votes: number,
+    revenue: string,
+    fans: number,
+    tickets: number
+  }>("/admin/fans-metrics");
 
   return (
     <>
@@ -27,25 +33,25 @@ export default function FansHome() {
           {
             icon: user,
             bg: "bg-[#F6917F]",
-            value: formatNumber(10000),
+            value: formatNumber(fansMetrics?.fans ?? 0),
             title: "Fans",
           },
           {
             icon: money,
             bg: "bg-[#181670]",
-            value: formatNumber(10000),
+            value: formatNumber(Number(fansMetrics?.revenue) ?? 0),
             title: "Revenue",
           },
           {
             icon: ticket,
             bg: "bg-[#3BDC54]",
-            value: formatNumber(10000),
+            value: formatNumber(fansMetrics?.tickets ?? 0),
             title: "Tickets",
           },
           {
             icon: money,
             bg: "bg-[#702AC8]",
-            value: formatNumber(10000),
+            value: formatNumber(fansMetrics?.votes ?? 0),
             title: "Votes",
           },
         ].map((item, idx) => (

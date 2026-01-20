@@ -125,7 +125,7 @@ const PreviewEvent = () => {
                         queryKey: ["/admin/events/list"],
                     }),
                     queryClient.invalidateQueries({
-                        queryKey: ["/admin/events/list", { id: targetEventId }],
+                        queryKey: ["/admin/events/details", { id: targetEventId }],
                     }),
                 ]);
                 navigate(`/rap-battle/livestream/${eventId}`, {
@@ -155,8 +155,17 @@ const PreviewEvent = () => {
                         description={description}
                         venue={venue}
                         location={location}
+                        price={price}
+                        availableTickets={available_tickets}
+                        link={link}
                         eventStartDate={event_start_date}
                         eventStartTime={event_start_time}
+                        eventEndDate={event_end_date}
+                        eventEndTime={event_end_time}
+                        saleStartDate={sale_start_date}
+                        saleStartTime={sale_start_time}
+                        saleEndDate={sale_end_date}
+                        saleEndTime={sale_end_time}
                         image={
                             newImage && newImage.length > 0
                                 ? URL.createObjectURL(newImage[0])
@@ -173,6 +182,8 @@ const PreviewEvent = () => {
                                 ? profile?.profile_picture_url || profile?.profile_pic || ""
                                 : creator?.profile_picture_url || creator?.profile_pic || ""
                         }
+                        creatorEmail={creator?.email}
+                        creatorPhone={creator?.phone}
                     />
 
                     {/* Bottom action bar */}

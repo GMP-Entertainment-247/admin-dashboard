@@ -7,11 +7,24 @@ import { Link } from "react-router-dom";
 import { ReactComponent as EditIcon } from "../../../images/svg/edit.svg";
 import useFetch from "../../../utils/hooks/useFetch";
 import type { Event } from "../../../interface/events.interface";
+import type { IAuditionStage } from "../../../interface/rapbattle.interface";
+import { useQueryParams } from "../../../utils/hooks/useQueryParams";
 
 export default function LivestreamHome() {
+  const queryParams = useQueryParams();
+  const { data: auditionStages } = useFetch<IAuditionStage[]>(
+    "/admin/audition/list-stages"
+  );
   const { data, loading } = useFetch<{
     data: Event[]
-  }>("/admin/events/list");
+  }>("/admin/events/list", {
+    stage: queryParams.get("tab") !== "all" ? (queryParams.get("tab") || '') : '',
+    filter: queryParams.get("search") || "",
+  });
+  const tabOptions = auditionStages?.map((item) => ({
+    label: item.name,
+    key: item.id.toString(),
+  }));
   return (
     <IndexWrapper
       title="Livestream"
@@ -20,15 +33,7 @@ export default function LivestreamHome() {
     >
       <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
         <Tabs
-          tabs={[
-            { label: "All Entries", key: "all" },
-            { label: "Audition", key: `audition` },
-            { label: "Stage 1", key: "stage-1" },
-            { label: "Stage 2", key: "stage-2" },
-            { label: "Stage 3", key: "stage-3" },
-            { label: "Finale", key: "finale" },
-          ]}
-        // useAsLink
+          tabs={[{ label: "All Entries", key: "all" }, ...(tabOptions || [])]}
         />
       </div>
       <Table

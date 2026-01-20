@@ -56,7 +56,7 @@ const EditEvent = () => {
                 sale_end_time: saleEnd.time,
                 image: fetchedData.image_url || "",
                 newImage: [],
-                creator: fetchedData.creator,
+                creator: fetchedData.user,
             },
         });
     }, [fetchedData, shouldUseDraft, setDraft]);

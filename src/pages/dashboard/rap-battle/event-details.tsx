@@ -26,7 +26,7 @@ const EventDetails = () => {
         loading,
         error,
         refetch,
-    } = useFetch<Event | null>("/admin/events/list", {
+    } = useFetch<Event | null>("/admin/events/details", {
         id: eventId,
     });
 
@@ -55,7 +55,7 @@ const EventDetails = () => {
                     queryKey: ["/admin/events/list"],
                 }),
                 queryClient.invalidateQueries({
-                    queryKey: ["/admin/events/list", { id: eventId }],
+                    queryKey: ["/admin/events/details", { id: eventId }],
                 }),
             ]);
             toast.success("Event deleted successfully");
@@ -83,15 +83,26 @@ const EventDetails = () => {
                         description={eventData?.description || ""}
                         venue={eventData?.venue || ""}
                         location={eventData?.location || ""}
+                        price={eventData?.price || ""}
+                        availableTickets={eventData?.available_tickets || ""}
+                        link={eventData?.link || ""}
                         eventStartDate={splitDateTime(eventData?.event_start_date ?? null).date}
                         eventStartTime={splitDateTime(eventData?.event_start_date ?? null).time}
+                        eventEndDate={splitDateTime(eventData?.event_end_date ?? null).date}
+                        eventEndTime={splitDateTime(eventData?.event_end_date ?? null).time}
+                        saleStartDate={splitDateTime(eventData?.sale_start_date ?? null).date}
+                        saleStartTime={splitDateTime(eventData?.sale_start_date ?? null).time}
+                        saleEndDate={splitDateTime(eventData?.sale_end_date ?? null).date}
+                        saleEndTime={splitDateTime(eventData?.sale_end_date ?? null).time}
                         image={eventData?.image_url || ""}
-                        creatorName={eventData?.creator?.name}
+                        creatorName={eventData?.user?.name}
                         creatorAvatar={
-                            eventData?.creator?.profile_picture_url ||
-                            eventData?.creator?.profile_pic ||
+                            eventData?.user?.profile_picture_url ||
+                            eventData?.user?.profile_pic ||
                             ""
                         }
+                        creatorEmail={eventData?.user?.email}
+                        creatorPhone={eventData?.user?.phone}
                     />
 
                     {/* Bottom action bar */}

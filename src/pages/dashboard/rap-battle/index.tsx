@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import IndexWrapper from "./components/indexWrapper";
 import Tabs from "../../../components/shared/Tabs";
 import useFetch from "../../../utils/hooks/useFetch";
-import {
+import type {
   IAudition,
   IAuditionStage,
 } from "../../../interface/rapbattle.interface";

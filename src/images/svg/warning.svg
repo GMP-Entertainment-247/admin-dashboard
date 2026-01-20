@@ -1,0 +1,36 @@
+ <svg
+            width="64"
+            height="64"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect width="64" height="64" rx="32" fill="#EB2904" />
+            <mask
+              id="mask0_1852_36415"
+              maskUnits="userSpaceOnUse"
+              x="15"
+              y="17"
+              width="34"
+              height="30"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M32 19.3333L17.3334 44.6666H46.6667L32 19.3333Z"
+                fill="white"
+                stroke="white"
+                stroke-width="4"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M32 39.3332V39.9998M32 28.6665L32.0053 35.3332"
+                stroke="black"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+            </mask>
+            <g mask="url(#mask0_1852_36415)">
+              <path d="M16 16H48V48H16V16Z" fill="#FEFEFE" />
+            </g>
+          </svg>

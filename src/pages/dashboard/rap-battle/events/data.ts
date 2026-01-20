@@ -20,7 +20,7 @@ export const updateEvent = async (
   formData: FormData
 ): Promise<ApiResponse<null>> => {
   const response = await createApiClient().post(
-    "/admin/events/edit",
+    "/admin/events/update",
     formData,
     {
       headers: {
