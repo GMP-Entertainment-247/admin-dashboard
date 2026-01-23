@@ -26,7 +26,7 @@ const Navbar = () => {
   );
 
   return (
-    <header className="flex items-center justify-between h-[80px] px-5 bg-[#FFFFFF] rounded-[8px] border shadow-sm">
+    <header className="flex items-center justify-between h-[80px] px-5 bg-[#FFFFFF] rounded-[8px] border shadow-sm sticky top-0 z-[2]">
       <div className="flex items-center gap-2.5 px-2.5 rounded-[8px] bg-[#F5F5F5] h-[46px] w-[200px] sm:w-[300px] md:w-[360px]">
         <Search className="w-6 h-6" />
         <input

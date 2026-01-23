@@ -13,6 +13,8 @@ import type { TicketHistoryItem } from "../interface/tickets.interface";
 import type { VoteHistoryItem } from "../interface/votes.interface";
 import { formatEventDateTime, formatDateMDY } from "../utils/helpers";
 import { ReactComponent as WarningIcon } from "../images/svg/warning.svg";
+import { useDashboardLayout } from "../context/DashboardLayoutContext";
+import useWindowWidth from "../utils/hooks/useWindowsWidth";
 
 export default function UserDetails({
   isContestant,
@@ -26,6 +28,9 @@ export default function UserDetails({
   const showModal = useSingleState(false);
   const nextStageModal = useSingleState(false);
   const queryClient = useQueryClient();
+  const { isSideNavOpen } = useDashboardLayout();
+  const { isMobile, windowWidth } = useWindowWidth();
+  const isLargeScreen = windowWidth !== undefined && windowWidth >= 1024;
 
   const hasUser = !!fan?.id;
   // console.log(hasUser);
@@ -38,8 +43,7 @@ export default function UserDetails({
   const suspendApi = useMutation("/admin/suspend-user", "post");
   const unsuspendApi = useMutation("/admin/unsuspend-user", "post");
 
-  const isSuspended =
-    fan?.suspend === 1 || fan?.suspend === "1" ? true : false;
+  const isSuspended = fan?.suspend === 1 || fan?.suspend === "1" ? true : false;
 
   const handleNextStage = () => {
     const auditionId = audition?.id;
@@ -109,7 +113,7 @@ export default function UserDetails({
   // console.log(voteHistory);
 
   return (
-    <div>
+    <div className="pb-[85px]">
       <div className="bg-white rounded-lg flex gap-5 p-6 max-[1200px]:block">
         <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center overflow-hidden">
           <img {...imageProp(displayImageUrl)} alt="" className="w-full" />
@@ -235,7 +239,19 @@ export default function UserDetails({
           />
         </div>
       )}
-      <div className="flex justify-end gap-3 bg-white p-5 rounded-lg mt-5">
+      <div
+        className="flex justify-end gap-3 bg-white p-5 rounded-lg fixed bottom-0 shadow-[0_0_12px_0_#00000014] duration-300 ease-in-out z-[2]"
+        style={{
+          left: isMobile
+            ? "20px"
+            : isSideNavOpen
+            ? isLargeScreen
+              ? "calc(256px + 20px)"
+              : "calc(235px + 20px)"
+            : "calc(78px + 20px)",
+          right: "20px",
+        }}
+      >
         {hasUser && (
           <Button
             text={isSuspended ? "Unsuspend" : "Suspend"}

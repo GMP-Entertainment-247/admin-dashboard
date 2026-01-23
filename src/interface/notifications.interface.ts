@@ -8,7 +8,7 @@ export interface NotificationItem {
   title: string | null;
   admin_narration: string;
   user_id: string;
-  user: NotificationUser;
+  user: NotificationUser | null;
   created_at?: string;
 }
 
