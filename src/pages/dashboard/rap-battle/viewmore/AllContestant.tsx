@@ -14,6 +14,7 @@ import {
   tableOrderOptions,
 } from "../../../../utils/constant";
 import { Link } from "react-router-dom";
+import PageTitle from "../../../../components/shared/PageTitle";
 
 export default function AllContestants() {
   const queryParams = useQueryParams();
@@ -35,7 +36,9 @@ export default function AllContestants() {
 
   return (
     <>
-      <h2 className="page-title mb-3">All Rap Battles</h2>
+      <PageTitle as="h1" showBackButton className="my-3">
+        All Rap Battles
+      </PageTitle>
       <div>
         <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
           <Tabs

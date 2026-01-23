@@ -12,12 +12,12 @@ import { BLOG_CATEGORIES } from "../pages/dashboard/blogs/data";
 import { useBlogDraft } from "../pages/dashboard/blogs/BlogDraftContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import FixedFooter from "./shared/FixedFooter";
 
 const BlogForm: React.FC = () => {
   const { draft, setDraft } = useBlogDraft();
   const navigate = useNavigate();
   const mode = draft?.mode || "create";
-  // const blogId = draft?.data?.blogId;
 
   const {
     category,
@@ -105,7 +105,10 @@ const BlogForm: React.FC = () => {
       "";
 
     const stripHtml = (html: string) =>
-      html.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim();
+      html
+        .replace(/<[^>]*>/g, "")
+        .replace(/&nbsp;/g, " ")
+        .trim();
 
     const plainContent = stripHtml(derivedContent);
 
@@ -154,7 +157,7 @@ const BlogForm: React.FC = () => {
 
   return (
     <InnerLayout title={mode === "create" ? "Create Blog" : "Edit Blog"}>
-      <form ref={formRef} onSubmit={handleSubmit}>
+      <form ref={formRef} onSubmit={handleSubmit} className="pb-[95px]">
         <div className="bg-white p-5 rounded-2xl">
           <div className="w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10 mb-10">
             <div className="space-y-5 lg:w-[56%]">
@@ -184,10 +187,11 @@ const BlogForm: React.FC = () => {
             <div className="lg:flex-1 space-y-7 lg:space-y-10 overflow-hidden">
               {/* Drag and Drop Area */}
               <div
-                className={`h-[259px] items-center justify-center border border-dashed rounded-lg lg:mt-[42px] hidden lg:flex cursor-pointer transition-colors duration-200 ${fileUpload.isDragOver
+                className={`h-[259px] items-center justify-center border border-dashed rounded-lg lg:mt-[42px] hidden lg:flex cursor-pointer transition-colors duration-200 ${
+                  fileUpload.isDragOver
                     ? "border-brand-500 bg-brand-50"
                     : "border-[#999999] hover:border-brand-500"
-                  }`}
+                }`}
                 onDrop={fileUpload.handleDrop}
                 onDragOver={fileUpload.handleDragOver}
                 onDragLeave={fileUpload.handleDragLeave}
@@ -219,9 +223,9 @@ const BlogForm: React.FC = () => {
                     src={img.file}
                     alt={`Existing image ${index + 1}`}
                     onRemove={() => handleExistingImageRemove(img)}
-                  // hideRemove={
+                    // hideRemove={
 
-                  // }
+                    // }
                   />
                 ))}
 
@@ -232,17 +236,18 @@ const BlogForm: React.FC = () => {
                     src={URL.createObjectURL(file)}
                     alt={`Uploaded image ${index + 1}`}
                     onRemove={() => handleNewImageRemove(index)}
-                  // hideRemove={false}
+                    // hideRemove={false}
                   />
                 ))}
 
                 {/* Add Photo Button - Always show on mobile, only show on lg when we have at least 1 image */}
                 <button
                   type="button"
-                  className={`w-[147px] h-[100px] rounded-lg flex items-center justify-center border border-dashed border-[#999999] cursor-pointer hover:border-brand-500 transition-colors duration-200 ${existingImages.length + fileUpload.files.length > 0
+                  className={`w-[147px] h-[100px] rounded-lg flex items-center justify-center border border-dashed border-[#999999] cursor-pointer hover:border-brand-500 transition-colors duration-200 ${
+                    existingImages.length + fileUpload.files.length > 0
                       ? "lg:flex"
                       : "lg:hidden"
-                    }`}
+                  }`}
                   onClick={handleBrowseFiles}
                 >
                   <div className="space-y-3 text-center">
@@ -262,8 +267,8 @@ const BlogForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Action Buttons - separate container at the bottom */}
-        <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+        {/* Action Buttons - Fixed footer */}
+        <FixedFooter>
           {mode === "edit" && (
             <Button
               text="Cancel"
@@ -277,7 +282,7 @@ const BlogForm: React.FC = () => {
             type="submit"
             extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
           />
-        </div>
+        </FixedFooter>
       </form>
     </InnerLayout>
   );

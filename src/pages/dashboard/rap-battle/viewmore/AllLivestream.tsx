@@ -1,13 +1,19 @@
 // import Dropdown from "../../../../components/shared/Dropdown";
 import Tabs from "../../../../components/shared/Tabs";
 import Table from "../../../../components/Table";
-import { imageProp, splitDateTime, formatDateMDY, formatTime12Hour } from "../../../../utils/helpers";
+import {
+  imageProp,
+  splitDateTime,
+  formatDateMDY,
+  formatTime12Hour,
+} from "../../../../utils/helpers";
 import { Link } from "react-router-dom";
 import { ReactComponent as EditIcon } from "../../../../images/svg/edit.svg";
 import useFetch from "../../../../utils/hooks/useFetch";
 import type { Event } from "../../../../interface/events.interface";
 import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
 import type { IAuditionStage } from "../../../../interface/rapbattle.interface";
+import PageTitle from "../../../../components/shared/PageTitle";
 
 export default function AllLivestreams() {
   const queryParams = useQueryParams();
@@ -15,13 +21,13 @@ export default function AllLivestreams() {
     "/admin/audition/list-stages"
   );
   const { data, loading } = useFetch<{
-    data: Event[],
-    current_page: number
-    last_page: number
+    data: Event[];
+    current_page: number;
+    last_page: number;
   }>("/admin/events/list", {
-    stage: queryParams.get("tab") !== "all" ? (queryParams.get("tab") || '') : '',
+    stage: queryParams.get("tab") !== "all" ? queryParams.get("tab") : "",
     filter: queryParams.get("search") || "",
-    page: queryParams.get("page") ?? 1
+    page: queryParams.get("page") ?? 1,
   });
   const tabOptions = auditionStages?.map((item) => ({
     label: item.name,
@@ -29,11 +35,13 @@ export default function AllLivestreams() {
   }));
   return (
     <div>
-      <h2 className="text-[24px] font-semibold mb-3">All Livestreams</h2>
+      <PageTitle as="h1" showBackButton className="my-3">
+        All Livestreams
+      </PageTitle>
       <div>
         <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
           <Tabs
-            tabs={[{ label: "All Entries", key: "all" }, ...(tabOptions || [])]}
+            tabs={[{ label: "All Entries", key: "" }, ...(tabOptions || [])]}
           />
         </div>
         <Table
@@ -49,7 +57,11 @@ export default function AllLivestreams() {
               view: (item: Event) => (
                 <div className="flex gap-2 items-center">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
-                    <img {...imageProp(item.image_url)} alt="" className="w-full" />
+                    <img
+                      {...imageProp(item.image_url)}
+                      alt=""
+                      className="w-full h-full"
+                    />
                   </div>
                   <p>{item.title}</p>
                 </div>

@@ -1,10 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useMemo } from "react";
 import AnnouncementInnerLayout from "../pages/dashboard/rap-battle/announcements/inner-layout";
-import {
-  useAnnouncementDraft,
-  // type AnnouncementDraftData,
-} from "../pages/dashboard/rap-battle/announcements/announcement-draft-context";
+import { useAnnouncementDraft } from "../pages/dashboard/rap-battle/announcements/announcement-draft-context";
 import Button from "./shared/Button";
 import ImageItem from "./ImageItem";
 import Input from "./Form/Input";
@@ -14,6 +11,7 @@ import TextArea from "./Form/TextArea";
 import { useFileUpload } from "../utils/hooks/useFileUpload";
 import { UploadIcon } from "lucide-react";
 import { toast } from "react-toastify";
+import FixedFooter from "./shared/FixedFooter";
 
 const AnnouncementForm = () => {
   const { draft, setDraft } = useAnnouncementDraft();
@@ -49,7 +47,7 @@ const AnnouncementForm = () => {
     );
   }, [draft]);
 
-  console.log(status);
+  // console.log(status);
 
   const fileUpload = useFileUpload({
     accept: ["image/jpeg", "image/jpg", "image/png"],
@@ -108,7 +106,10 @@ const AnnouncementForm = () => {
       "";
 
     const stripHtml = (html: string) =>
-      html.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim();
+      html
+        .replace(/<[^>]*>/g, "")
+        .replace(/&nbsp;/g, " ")
+        .trim();
 
     const plainDescription = stripHtml(derivedDescription);
 
@@ -168,7 +169,7 @@ const AnnouncementForm = () => {
     <AnnouncementInnerLayout
       title={mode === "create" ? "Create Announcement" : "Edit Announcement"}
     >
-      <form ref={formRef} onSubmit={handleSubmit}>
+      <form ref={formRef} onSubmit={handleSubmit} className="pb-[95px]">
         <div className="bg-white p-5 rounded-2xl">
           <div className="w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10 mb-10">
             <div className="space-y-5 lg:w-[56%]">
@@ -224,10 +225,11 @@ const AnnouncementForm = () => {
               ) : (
                 // Drag and Drop Area
                 <div
-                  className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${fileUpload.isDragOver
+                  className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${
+                    fileUpload.isDragOver
                       ? "border-brand-500 bg-brand-50"
                       : "border-[#999999] hover:border-brand-500"
-                    }`}
+                  }`}
                   onDrop={fileUpload.handleDrop}
                   onDragOver={fileUpload.handleDragOver}
                   onDragLeave={fileUpload.handleDragLeave}
@@ -259,8 +261,8 @@ const AnnouncementForm = () => {
             </div>
           </div>
         </div>
-        {/* Action Buttons - separate container at the bottom */}
-        <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+        {/* Action Buttons - Fixed footer */}
+        <FixedFooter>
           {mode === "edit" && (
             <Button
               text="Cancel"
@@ -274,7 +276,7 @@ const AnnouncementForm = () => {
             type="submit"
             extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
           />
-        </div>
+        </FixedFooter>
       </form>
     </AnnouncementInnerLayout>
   );

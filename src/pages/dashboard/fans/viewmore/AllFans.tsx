@@ -8,6 +8,7 @@ import { imageProp } from "../../../../utils/helpers";
 import useFetch from "../../../../utils/hooks/useFetch";
 import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
 import { tablePeriodOptions } from "../../../../utils/constant";
+import PageTitle from "../../../../components/shared/PageTitle";
 
 export default function AllFans() {
   const queryParams = useQueryParams();
@@ -22,9 +23,11 @@ export default function AllFans() {
 
   return (
     <>
-      {/* <h2 className="text-[24px] font-semibold mb-3">All Fans</h2> */}
+      <PageTitle as="h1" showBackButton className="my-3">
+        All Fans
+      </PageTitle>
       <Table
-        tableTitle="All Fans"
+        noTitle
         searchPlaceHolder="Search any fan"
         isLoading={loading}
         data={data?.data ?? []}

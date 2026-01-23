@@ -9,6 +9,7 @@ import {
   tablePeriodOptions,
 } from "../../../../utils/constant";
 import { formatDateMDY, formatNumber } from "../../../../utils/helpers";
+import PageTitle from "../../../../components/shared/PageTitle";
 
 export default function AllFanVotes() {
   const { fanId } = useParams<{ fanId: string }>();
@@ -24,9 +25,11 @@ export default function AllFanVotes() {
   });
   return (
     <>
-      {/* <h2 className="text-[24px] font-semibold mb-3">All Votes History</h2> */}
+      <PageTitle as="h1" showBackButton className="my-3">
+        All Fan's Votes History
+      </PageTitle>
       <Table
-        tableTitle="All Fan's Votes History"
+        noTitle
         searchPlaceHolder="Search..."
         isLoading={loading}
         data={data?.data ?? []}

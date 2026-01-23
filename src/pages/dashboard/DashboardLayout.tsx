@@ -76,7 +76,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           // min height is 100vh - 40px (padding)
         >
           <Navbar />
-          <main className="mt-6">{children}</main>
+          <main className="mt-6 z-[1]">{children}</main>
         </div>
       </div>
     </DashboardLayoutContext.Provider>

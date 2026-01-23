@@ -13,6 +13,7 @@ import {
   flattenErrorMessage,
   handleApiError,
 } from "../../../utils/errorHelpers";
+import FixedFooter from "../../../components/shared/FixedFooter";
 
 const BlogDetails = () => {
   const { blogId } = useParams<{ blogId: string }>();
@@ -95,7 +96,7 @@ const BlogDetails = () => {
           <p className="text-gray-600">{error.message}</p>
         </StateContainer>
       ) : (
-        <>
+        <div className="pb-[95px]">
           <BlogViewLayout
             title={title}
             content={content}
@@ -107,7 +108,7 @@ const BlogDetails = () => {
           />
 
           {/* Bottom action bar */}
-          <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+          <FixedFooter>
             <Button
               text="Delete Post"
               type="button"
@@ -121,8 +122,8 @@ const BlogDetails = () => {
               extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
               onClick={handleEdit}
             />
-          </div>
-        </>
+          </FixedFooter>
+        </div>
       )}
     </BlogInnerLayout>
   );

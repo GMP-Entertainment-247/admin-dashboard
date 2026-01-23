@@ -87,7 +87,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>((_, ref) => {
             link={item.link}
             isDropdown={item.isDropdown}
             dropdownItems={item.dropdownItems}
-            index={index}
+            // index={index}
           />
         ))}
       </nav>

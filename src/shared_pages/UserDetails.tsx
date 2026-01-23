@@ -13,6 +13,7 @@ import type { TicketHistoryItem } from "../interface/tickets.interface";
 import type { VoteHistoryItem } from "../interface/votes.interface";
 import { formatEventDateTime, formatDateMDY } from "../utils/helpers";
 import { ReactComponent as WarningIcon } from "../images/svg/warning.svg";
+import FixedFooter from "../components/shared/FixedFooter";
 
 export default function UserDetails({
   isContestant,
@@ -38,8 +39,7 @@ export default function UserDetails({
   const suspendApi = useMutation("/admin/suspend-user", "post");
   const unsuspendApi = useMutation("/admin/unsuspend-user", "post");
 
-  const isSuspended =
-    fan?.suspend === 1 || fan?.suspend === "1" ? true : false;
+  const isSuspended = fan?.suspend === 1 || fan?.suspend === "1" ? true : false;
 
   const handleNextStage = () => {
     const auditionId = audition?.id;
@@ -109,10 +109,14 @@ export default function UserDetails({
   // console.log(voteHistory);
 
   return (
-    <div>
+    <div className="pb-[95px]">
       <div className="bg-white rounded-lg flex gap-5 p-6 max-[1200px]:block">
         <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center overflow-hidden">
-          <img {...imageProp(displayImageUrl)} alt="" className="w-full" />
+          <img
+            {...imageProp(displayImageUrl)}
+            alt=""
+            className="w-full h-full object-cover"
+          />
         </div>
         <div className="w-full">
           <div className="flex gap-2 flex-wrap">
@@ -235,7 +239,7 @@ export default function UserDetails({
           />
         </div>
       )}
-      <div className="flex justify-end gap-3 bg-white p-5 rounded-lg mt-5">
+      <FixedFooter>
         {hasUser && (
           <Button
             text={isSuspended ? "Unsuspend" : "Suspend"}
@@ -253,7 +257,7 @@ export default function UserDetails({
             onClick={() => nextStageModal.set(true)}
           />
         )}
-      </div>
+      </FixedFooter>
       <Modal
         show={showModal.get}
         onClose={() => {

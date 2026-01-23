@@ -11,6 +11,7 @@ import { handleApiError } from "../../../utils/errorHelpers";
 import AnnouncementViewLayout from "./announcements/announcement-view-layout";
 import { combineDateTime } from "../../../utils/helpers";
 import { useProfile } from "../../../context/ProfileContext";
+import FixedFooter from "../../../components/shared/FixedFooter";
 
 const PreviewAnnouncement = () => {
   const { draft } = useAnnouncementDraft();
@@ -114,7 +115,7 @@ const PreviewAnnouncement = () => {
           </p>
         </StateContainer>
       ) : (
-        <>
+        <div className="pb-[95px]">
           <AnnouncementViewLayout
             title={title}
             description={description}
@@ -141,8 +142,8 @@ const PreviewAnnouncement = () => {
             }
           />
 
-          {/* Bottom action bar */}
-          <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+          {/* Bottom action bar - Fixed footer */}
+          <FixedFooter>
             <Button
               text="Continue Editing"
               type="button"
@@ -158,8 +159,8 @@ const PreviewAnnouncement = () => {
               isLoading={isSubmitting}
               onClick={handlePrimaryAction}
             />
-          </div>
-        </>
+          </FixedFooter>
+        </div>
       )}
     </AnnouncementInnerLayout>
   );

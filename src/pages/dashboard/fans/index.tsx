@@ -20,10 +20,10 @@ export default function FansHome() {
     // date: queryParams.get("period") || "",
   });
   const { data: fansMetrics } = useFetch<{
-    votes: number,
-    revenue: string,
-    fans: number,
-    tickets: number
+    votes: number;
+    revenue: string;
+    fans: number;
+    tickets: number;
   }>("/admin/fans-metrics");
 
   return (
@@ -39,7 +39,7 @@ export default function FansHome() {
           {
             icon: money,
             bg: "bg-[#181670]",
-            value: formatNumber(Number(fansMetrics?.revenue) ?? 0),
+            value: formatNumber(Number(fansMetrics?.revenue ?? 0)),
             title: "Revenue",
           },
           {

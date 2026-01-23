@@ -50,8 +50,8 @@ export default function NotificationsPage() {
   ];
 
   // Map user_type from API to category key, fallback to "artist"
-  const getUserTypeCategory = (userType: string): CategoryKey => {
-    const normalizedType = userType.toLowerCase().trim();
+  const getUserTypeCategory = (userType?: string): CategoryKey => {
+    const normalizedType = userType?.toLowerCase().trim();
 
     if (normalizedType === "artist") return "artist";
     if (normalizedType === "investor" || normalizedType === "investors")
@@ -66,7 +66,7 @@ export default function NotificationsPage() {
   };
 
   // Generate title based on user type and narration
-  const generateTitle = (userType: string): string => {
+  const generateTitle = (userType?: string): string => {
     const category = getUserTypeCategory(userType);
 
     const categoryNames: Record<CategoryKey, string> = {
@@ -110,13 +110,13 @@ export default function NotificationsPage() {
       <>
         <div className="px-5 py-2.5">
           {notificationData.data.map((notif, idx) => {
-            const category = getUserTypeCategory(notif.user.user_type);
+            const category = getUserTypeCategory(notif.user?.user_type);
             const categoryConfig = categories.find(
               (cat) => cat.key === category
             );
             const title =
               notif.title ||
-              generateTitle(notif.user.user_type);
+              generateTitle(notif.user?.user_type);
             const timeDisplay = notif.created_at
               ? formatTimestamp(notif.created_at)
               : "";

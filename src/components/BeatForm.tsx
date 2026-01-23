@@ -11,6 +11,7 @@ import { useFileUpload } from "../utils/hooks/useFileUpload";
 import { UploadIcon, Music, X } from "lucide-react";
 import useFetch from "../utils/hooks/useFetch";
 import { toast } from "react-toastify";
+import FixedFooter from "./shared/FixedFooter";
 
 const BeatForm = () => {
   const { draft, setDraft } = useBeatDraft();
@@ -213,7 +214,7 @@ const BeatForm = () => {
 
   return (
     <BeatInnerLayout title={mode === "create" ? "Upload Beat" : "Edit Beat"}>
-      <form ref={formRef} onSubmit={handleSubmit}>
+      <form ref={formRef} onSubmit={handleSubmit} className="pb-[95px]">
         <div className="bg-white p-5 rounded-2xl">
           <div className="w-full max-w-full flex flex-col lg:flex-row gap-7 lg:gap-10 mb-10">
             <div className="space-y-5 lg:w-[56%]">
@@ -265,10 +266,11 @@ const BeatForm = () => {
                   />
                 ) : (
                   <div
-                    className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${imageUpload.isDragOver
+                    className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${
+                      imageUpload.isDragOver
                         ? "border-brand-500 bg-brand-50"
                         : "border-[#999999] hover:border-brand-500"
-                      }`}
+                    }`}
                     onDrop={imageUpload.handleDrop}
                     onDragOver={imageUpload.handleDragOver}
                     onDragLeave={imageUpload.handleDragLeave}
@@ -316,13 +318,13 @@ const BeatForm = () => {
                           <p className="text-xs text-gray-500">
                             {beatFileUpload.files[0]
                               ? beatFileUpload.formatFileSize(
-                                beatFileUpload.files[0].size
-                              )
+                                  beatFileUpload.files[0].size
+                                )
                               : newBeatFile[0]
-                                ? beatFileUpload.formatFileSize(
+                              ? beatFileUpload.formatFileSize(
                                   newBeatFile[0].size
                                 )
-                                : "Audio file"}
+                              : "Audio file"}
                           </p>
                         </div>
                       </div>
@@ -341,10 +343,11 @@ const BeatForm = () => {
                   </div>
                 ) : (
                   <div
-                    className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${beatFileUpload.isDragOver
+                    className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${
+                      beatFileUpload.isDragOver
                         ? "border-brand-500 bg-brand-50"
                         : "border-[#999999] hover:border-brand-500"
-                      }`}
+                    }`}
                     onDrop={beatFileUpload.handleDrop}
                     onDragOver={beatFileUpload.handleDragOver}
                     onDragLeave={beatFileUpload.handleDragLeave}
@@ -376,8 +379,8 @@ const BeatForm = () => {
             </div>
           </div>
         </div>
-        {/* Action Buttons */}
-        <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+        {/* Action Buttons - Fixed footer */}
+        <FixedFooter>
           {mode === "edit" && (
             <Button
               text="Cancel"
@@ -391,7 +394,7 @@ const BeatForm = () => {
             type="submit"
             extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
           />
-        </div>
+        </FixedFooter>
       </form>
     </BeatInnerLayout>
   );

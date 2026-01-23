@@ -135,10 +135,6 @@ export const appRoutes: IRoutes[] = [
         childElement: <ArtistsHome />,
       },
       {
-        childPath: ":id",
-        childElement: <ArtistDetails />,
-      },
-      {
         childPath: "all",
         childElement: <AllArtists />,
       },
@@ -154,6 +150,10 @@ export const appRoutes: IRoutes[] = [
         childPath: "uploads/:id",
         childElement: <AllUploads />,
       },
+      {
+        childPath: ":id",
+        childElement: <ArtistDetails />,
+      },
     ],
   },
   {
@@ -166,16 +166,16 @@ export const appRoutes: IRoutes[] = [
         childElement: <InvestorsHome />,
       },
       {
-        childPath: ":id",
-        childElement: <InvestorDetails />,
-      },
-      {
         childPath: "investments",
         childElement: <AllInvestments />,
       },
       {
         childPath: "investment/:id",
         childElement: <InvestmentDetail />,
+      },
+      {
+        childPath: ":id",
+        childElement: <InvestorDetails />,
       },
     ],
   },
@@ -189,16 +189,16 @@ export const appRoutes: IRoutes[] = [
         childElement: <CelebrityHome />,
       },
       {
-        childPath: ":id",
-        childElement: <CelebrityDetails />,
-      },
-      {
         childPath: "all",
         childElement: <AllCelebrities />,
       },
       {
         childPath: "bookings",
         childElement: <AllCelebrityBookings />,
+      },
+      {
+        childPath: ":id",
+        childElement: <CelebrityDetails />,
       },
     ],
   },
@@ -212,12 +212,12 @@ export const appRoutes: IRoutes[] = [
         childElement: <FansHome />,
       },
       {
-        childPath: ":fanId",
-        childElement: <FanDetails />,
-      },
-      {
         childPath: "all",
         childElement: <AllFans />,
+      },
+      {
+        childPath: ":fanId",
+        childElement: <FanDetails />,
       },
       {
         childPath: ":fanId/tickets",
@@ -273,10 +273,6 @@ export const appRoutes: IRoutes[] = [
           {
             childPath: ":eventId/edit",
             childElement: <EditEvent />,
-          },
-          {
-            childPath: ":eventId/preview",
-            childElement: <PreviewEvent />,
           },
         ],
       },
@@ -365,12 +361,12 @@ export const appRoutes: IRoutes[] = [
         childElement: <BookingsHome />,
       },
       {
-        childPath: ":bookingId",
-        childElement: <BookingDetails />,
-      },
-      {
         childPath: "all",
         childElement: <AllBookingsPage />,
+      },
+      {
+        childPath: ":bookingId",
+        childElement: <BookingDetails />,
       },
     ],
   },

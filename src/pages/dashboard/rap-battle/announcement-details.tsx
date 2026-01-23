@@ -15,6 +15,7 @@ import {
 } from "../../../utils/errorHelpers";
 import { deleteAnnouncement } from "./announcements/data";
 import { splitDateTime } from "../../../utils/helpers";
+import FixedFooter from "../../../components/shared/FixedFooter";
 
 const AnnouncementDetails = () => {
   const { announcementId } = useParams<{ announcementId: string }>();
@@ -77,7 +78,7 @@ const AnnouncementDetails = () => {
           <p className="text-gray-600">{error.message}</p>
         </StateContainer>
       ) : (
-        <>
+        <div className="pb-[95px]">
           <AnnouncementViewLayout
             title={announcementData?.title || ""}
             description={announcementData?.description || ""}
@@ -95,7 +96,7 @@ const AnnouncementDetails = () => {
           />
 
           {/* Bottom action bar */}
-          <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+          <FixedFooter>
             <Button
               text="Delete Announcement"
               type="button"
@@ -109,8 +110,8 @@ const AnnouncementDetails = () => {
               extraClassName="!w-fit !min-h-[unset] py-2 md:py-4 px-3 md:px-5 !rounded-[8px] !font-bold"
               onClick={handleEdit}
             />
-          </div>
-        </>
+          </FixedFooter>
+        </div>
       )}
     </AnnouncementInnerLayout>
   );

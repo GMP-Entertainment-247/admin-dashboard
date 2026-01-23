@@ -9,6 +9,7 @@ import UserDetails from "../../../shared_pages/UserDetails";
 import type { IAudition } from "../../../interface/rapbattle.interface";
 import type { IFan } from "../../../interface/fans.interface";
 import LoadingSpinner from "../../../components/shared/LoadingSpinner";
+import PageTitle from "../../../components/shared/PageTitle";
 
 export default function ContestantDetails() {
   const { auditionId } = useParams<{ auditionId: string }>();
@@ -46,10 +47,15 @@ export default function ContestantDetails() {
   if (userId && fanLoading) return <LoadingSpinner />;
 
   return (
-    <UserDetails
-      isContestant
-      fan={fan} // will be defined only when userId exists
-      audition={{ ...(stateAudition || {}), id: auditionId }} // will be defined only when no userId (or when you want video link)
-    />
+    <>
+      <PageTitle as="h1" showBackButton className="my-3">
+        Contestant's Profile
+      </PageTitle>
+      <UserDetails
+        isContestant
+        fan={fan} // will be defined only when userId exists
+        audition={{ ...(stateAudition || {}), id: auditionId }} // will be defined only when no userId (or when you want video link)
+      />
+    </>
   );
 }
