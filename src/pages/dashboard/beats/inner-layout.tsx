@@ -6,7 +6,7 @@ const BeatInnerLayout: React.FC<{
 }> = ({ title, children }) => {
   return (
     <div className="space-y-5">
-      <PageTitle as="h2" showBackButton>
+      <PageTitle as="h1" showBackButton>
         {title}
       </PageTitle>
       {children}

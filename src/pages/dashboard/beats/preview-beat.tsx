@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { handleApiError } from "../../../utils/errorHelpers";
 import BeatViewLayout from "./beats/beat-view-layout";
 import useFetch from "../../../utils/hooks/useFetch";
+import FixedFooter from "../../../components/shared/FixedFooter";
 
 const PreviewBeat = () => {
   const { draft } = useBeatDraft();
@@ -158,7 +159,7 @@ const PreviewBeat = () => {
           </p>
         </StateContainer>
       ) : (
-        <>
+        <div className="pb-[95px]">
           <BeatViewLayout
             name={name}
             description={description}
@@ -168,8 +169,8 @@ const PreviewBeat = () => {
             beatFile={previewBeatFileUrl}
           />
 
-          {/* Bottom action bar */}
-          <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+          {/* Bottom action bar - Fixed footer */}
+          <FixedFooter>
             <Button
               text="Continue Editing"
               type="button"
@@ -183,8 +184,8 @@ const PreviewBeat = () => {
               isLoading={isSubmitting}
               onClick={handlePrimaryAction}
             />
-          </div>
-        </>
+          </FixedFooter>
+        </div>
       )}
     </BeatInnerLayout>
   );

@@ -9,6 +9,7 @@ import {
 } from "../../../../utils/constant";
 import { useQueryParams } from "../../../../utils/hooks/useQueryParams";
 import { formatDateMDY, formatEventDateTime } from "../../../../utils/helpers";
+import PageTitle from "../../../../components/shared/PageTitle";
 
 export default function AllFanTickets() {
   const { fanId } = useParams<{ fanId: string }>();
@@ -24,11 +25,11 @@ export default function AllFanTickets() {
   });
   return (
     <>
-      {/* <h2 className="text-[24px] font-semibold mb-3">
+      <PageTitle as="h1" showBackButton className="my-3">
         All Fan's Tickets History
-      </h2> */}
+      </PageTitle>
       <Table
-        tableTitle="All Fan's Tickets History"
+        noTitle
         searchPlaceHolder="Search..."
         isLoading={loading}
         data={data?.data ?? []}

@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { handleApiError } from "../../../utils/errorHelpers";
 import BlogViewLayout from "../../../components/BlogViewLayout";
 import { type CommentProps } from "../../../components/Comment";
+import FixedFooter from "../../../components/shared/FixedFooter";
 
 const PreviewBlog = () => {
   const { draft } = useBlogDraft();
@@ -135,7 +136,7 @@ const PreviewBlog = () => {
           </p>
         </StateContainer>
       ) : (
-        <>
+        <div className="pb-[95px]">
           <BlogViewLayout
             title={title}
             content={content}
@@ -150,8 +151,8 @@ const PreviewBlog = () => {
             }
           />
 
-          {/* Bottom action bar */}
-          <div className="mt-6 bg-white p-5 rounded-2xl flex items-center justify-end gap-4">
+          {/* Bottom action bar - Fixed footer */}
+          <FixedFooter>
             <Button
               text="Continue Editing"
               type="button"
@@ -165,8 +166,8 @@ const PreviewBlog = () => {
               isLoading={isSubmitting}
               onClick={handlePrimaryAction}
             />
-          </div>
-        </>
+          </FixedFooter>
+        </div>
       )}
     </BlogInnerLayout>
   );
