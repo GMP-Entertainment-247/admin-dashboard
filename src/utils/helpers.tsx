@@ -161,3 +161,33 @@ export const formatDateTime = (value: string | null) => {
   const {date, time} = splitDateTime(value);
   return `${date} ${formatTime12Hour(time)}`;
 };
+
+export const formatDateMDY = (value?: string | null) => {
+  if (!value) return "---";
+
+  // If it's ISO (contains T), let Date parse it directly
+  const d = value.includes("T")
+    ? new Date(value)
+    : new Date(`${value}T00:00:00`);
+
+  if (isNaN(d.getTime())) return "---";
+
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
+};
+
+
+export const formatEventDateTime = (value?: string | null) => {
+  if (!value) return "---";
+
+  const { date, time } = splitDateTime(value); // you already have this
+  if (!date) return "---";
+
+  // use your existing 12hr formatter
+  const time12 = formatTime12Hour(time);
+
+  return `${formatDateMDY(date)} ${time12}`;
+};

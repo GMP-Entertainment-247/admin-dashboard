@@ -13,6 +13,7 @@ import Label from "./Form/Label";
 import TextArea from "./Form/TextArea";
 import { useFileUpload } from "../utils/hooks/useFileUpload";
 import { UploadIcon } from "lucide-react";
+import { toast } from "react-toastify";
 
 const AnnouncementForm = () => {
   const { draft, setDraft } = useAnnouncementDraft();
@@ -106,6 +107,36 @@ const AnnouncementForm = () => {
       (formData.get("content") as string) ||
       "";
 
+    const stripHtml = (html: string) =>
+      html.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim();
+
+    const plainDescription = stripHtml(derivedDescription);
+
+    const hasImage =
+      fileUpload.files.length > 0 ||
+      (newImage && newImage.length > 0) ||
+      Boolean(image);
+
+    const missingFields: string[] = [];
+    if (!derivedTitle.trim()) missingFields.push("Title");
+    if (!derivedStatus.trim()) missingFields.push("Status");
+    if (!derivedStartDtate) missingFields.push("Start Date");
+    if (!derivedStartTime) missingFields.push("Start Time");
+    if (!derivedEndDate) missingFields.push("End Date");
+    if (!derivedEndTime) missingFields.push("End Time");
+    if (!plainDescription) missingFields.push("Description");
+    if (!hasImage) missingFields.push("Announcement Image");
+
+    if (missingFields.length > 0) {
+      toast.error(`Please fill: ${missingFields.join(", ")}`);
+      return;
+    }
+
+    if (plainDescription.length < 20) {
+      toast.error("Description must be at least 20 characters.");
+      return;
+    }
+
     setDraft((prev) => {
       if (!prev) return null;
 
@@ -193,11 +224,10 @@ const AnnouncementForm = () => {
               ) : (
                 // Drag and Drop Area
                 <div
-                  className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${
-                    fileUpload.isDragOver
+                  className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${fileUpload.isDragOver
                       ? "border-brand-500 bg-brand-50"
                       : "border-[#999999] hover:border-brand-500"
-                  }`}
+                    }`}
                   onDrop={fileUpload.handleDrop}
                   onDragOver={fileUpload.handleDragOver}
                   onDragLeave={fileUpload.handleDragLeave}

@@ -10,6 +10,7 @@ import TextArea from "./Form/TextArea";
 import { useFileUpload } from "../utils/hooks/useFileUpload";
 import { UploadIcon, Music, X } from "lucide-react";
 import useFetch from "../utils/hooks/useFetch";
+import { toast } from "react-toastify";
 
 const BeatForm = () => {
   const { draft, setDraft } = useBeatDraft();
@@ -165,6 +166,25 @@ const BeatForm = () => {
       (formData.get("description") as string) ||
       "";
 
+    const missingFields: string[] = [];
+    if (!derivedName.trim()) missingFields.push("Title");
+    if (!derivedGenre.trim()) missingFields.push("Genre");
+
+    const hasBeatFile =
+      beatFileUpload.files.length > 0 ||
+      (newBeatFile && newBeatFile.length > 0) ||
+      Boolean(beat_file);
+
+    if (!hasBeatFile) {
+      toast.error("Please upload a beat file (MP3).");
+      return;
+    }
+
+    if (missingFields.length > 0) {
+      toast.error(`Please fill: ${missingFields.join(", ")}`);
+      return;
+    }
+
     setDraft((prev) => {
       if (!prev) return null;
 
@@ -245,11 +265,10 @@ const BeatForm = () => {
                   />
                 ) : (
                   <div
-                    className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${
-                      imageUpload.isDragOver
+                    className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${imageUpload.isDragOver
                         ? "border-brand-500 bg-brand-50"
                         : "border-[#999999] hover:border-brand-500"
-                    }`}
+                      }`}
                     onDrop={imageUpload.handleDrop}
                     onDragOver={imageUpload.handleDragOver}
                     onDragLeave={imageUpload.handleDragLeave}
@@ -297,13 +316,13 @@ const BeatForm = () => {
                           <p className="text-xs text-gray-500">
                             {beatFileUpload.files[0]
                               ? beatFileUpload.formatFileSize(
-                                  beatFileUpload.files[0].size
-                                )
+                                beatFileUpload.files[0].size
+                              )
                               : newBeatFile[0]
-                              ? beatFileUpload.formatFileSize(
+                                ? beatFileUpload.formatFileSize(
                                   newBeatFile[0].size
                                 )
-                              : "Audio file"}
+                                : "Audio file"}
                           </p>
                         </div>
                       </div>
@@ -322,11 +341,10 @@ const BeatForm = () => {
                   </div>
                 ) : (
                   <div
-                    className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${
-                      beatFileUpload.isDragOver
+                    className={`h-[259px] items-center justify-center border border-dashed rounded-lg flex cursor-pointer transition-colors duration-200 ${beatFileUpload.isDragOver
                         ? "border-brand-500 bg-brand-50"
                         : "border-[#999999] hover:border-brand-500"
-                    }`}
+                      }`}
                     onDrop={beatFileUpload.handleDrop}
                     onDragOver={beatFileUpload.handleDragOver}
                     onDragLeave={beatFileUpload.handleDragLeave}

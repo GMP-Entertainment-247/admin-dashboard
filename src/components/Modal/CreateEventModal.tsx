@@ -41,7 +41,7 @@ function CreateEventModal({
                   Create
                 </>
               }
-              onClick={() => go("/rap-battle/create-event")}
+              onClick={() => go("/rap-battle/livestream/create-event")}
               extraClassName="rounded-[10px] font-semibold !w-full inline-flex items-center gap-2 justify-center"
             />
           </div>

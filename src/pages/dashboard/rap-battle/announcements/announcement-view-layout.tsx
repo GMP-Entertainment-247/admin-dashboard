@@ -73,7 +73,7 @@ const AnnouncementViewLayout: React.FC<AnnouncementViewLayoutProps> = ({
         <img
           src={image}
           alt="announcement-pic"
-          className="w-full aspect-[1.7]"
+          className="w-full aspect-[1.7] object-cover"
         />
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
