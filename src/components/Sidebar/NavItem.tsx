@@ -17,7 +17,7 @@ interface NavItemProps {
   isDropdown?: boolean;
   dropdownItems?: DropdownItem[];
   isActive?: boolean;
-  index: number;
+  // index: number;
 }
 
 export default function NavItem({
@@ -27,7 +27,7 @@ export default function NavItem({
   isDropdown = false,
   dropdownItems = [],
   isActive = false,
-  index,
+  // index,
 }: NavItemProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();

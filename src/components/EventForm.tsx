@@ -192,7 +192,7 @@ const EventForm = () => {
       };
     });
 
-    navigate("preview");
+    navigate("/rap-battle/livestream/preview");
   };
 
   return (

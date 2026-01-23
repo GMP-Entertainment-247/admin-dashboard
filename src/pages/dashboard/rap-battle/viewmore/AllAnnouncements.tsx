@@ -10,6 +10,7 @@ import {
   tablePeriodOptions,
   tableOrderOptions,
 } from "../../../../utils/constant";
+import PageTitle from "../../../../components/shared/PageTitle";
 
 export default function AllAnnouncements() {
   const queryParams = useQueryParams();
@@ -25,7 +26,9 @@ export default function AllAnnouncements() {
   );
   return (
     <div>
-      <h2 className="text-[24px] font-semibold mb-3">All Announcements</h2>
+      <PageTitle as="h1" showBackButton className="my-3">
+        All Announcements
+      </PageTitle>
       <div>
         <div className="bg-white px-5 py-2 -mb-5 rounded-t-xl" />
         <Table

@@ -12,6 +12,7 @@ import {
 import useFetch from "../../../../utils/hooks/useFetch";
 import type { IVote } from "../../../../interface/votes.interface";
 import { ReactComponent as EditIcon } from "../../../../images/svg/edit.svg";
+import PageTitle from "../../../../components/shared/PageTitle";
 
 export default function AllRapBattleVotes() {
   const queryParams = useQueryParams();
@@ -32,7 +33,9 @@ export default function AllRapBattleVotes() {
   }));
   return (
     <div>
-      <h2 className="text-[24px] font-semibold mb-3">All Votes</h2>
+      <PageTitle as="h1" showBackButton className="my-3">
+        All Votes
+      </PageTitle>
       <div>
         <div className="bg-white px-5 py-7 -mb-5 rounded-t-xl">
           <Tabs
