@@ -17,9 +17,9 @@ export interface BlogDraftData {
   category: string;
   title: string;
   content: string;
-  existingImages: { id: string; file: string }[];
-  newImages: File[];
-  deletedImageIds: string[];
+  existingMedia: { id: string; file: string; type: "video" | "image" }[];
+  newMedia: File[];
+  deletedMediaIds: string[];
   blogId?: string | number;
   comments?: BlogDetailsComment[];
   likes?: BlogDetailsLike[];

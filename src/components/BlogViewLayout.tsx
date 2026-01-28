@@ -2,11 +2,19 @@
 import PostActions from "./PostActions";
 import Comment from "./Comment";
 import { type CommentProps } from "./Comment";
+import { Play } from "lucide-react";
+
+type BlogMediaType = "image" | "video";
+
+interface BlogMediaItem {
+  src: string;
+  type?: BlogMediaType | null;
+}
 
 interface BlogViewLayoutProps {
   title: string;
   content: string;
-  images: string[];
+  images: BlogMediaItem[];
   likes: number;
   comments: CommentProps[];
   disableActions?: boolean;
@@ -41,18 +49,41 @@ const BlogViewLayout: React.FC<BlogViewLayoutProps> = ({
       </article>
       <aside className="lg:flex-1 space-y-10 lg:mt-4">
         <div className="w-full flex gap-3">
-          {images.slice(0, 3).map((src, idx) => (
+          {images.slice(0, 3).map((media, idx) => {
+            const isVideo = media.type === "video";
+            const src = media.src;
+
+            return (
             <div
               key={idx}
               className="flex-1 aspect-[1.47] rounded-lg overflow-hidden relative"
             >
-              <img
-                src={src}
-                alt="blog"
-                className="w-full h-full object-cover absolute inset-0"
-              />
+              {isVideo ? (
+                <video
+                  src={src}
+                  className="w-full h-full object-cover absolute inset-0"
+                  muted
+                  playsInline
+                  preload="metadata"
+                />
+              ) : (
+                <img
+                  src={src}
+                  alt="blog"
+                  className="w-full h-full object-cover absolute inset-0"
+                />
+              )}
+
+              {isVideo && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black-default/20">
+                  <div className="w-10 h-10 rounded-full bg-black-default/60 flex items-center justify-center">
+                    <Play className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+              )}
             </div>
-          ))}
+            );
+          })}
         </div>
         <div>
           <h3 className="text-base md:text-lg font-semibold text-[#000] mb-5">

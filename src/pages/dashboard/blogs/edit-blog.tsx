@@ -36,13 +36,14 @@ const EditBlog = () => {
         category: fetchedData.category || "",
         title: fetchedData.title || "",
         content: fetchedData.content || "",
-        existingImages:
+        existingMedia:
           fetchedData.pictures?.map((p) => ({
             id: String(p.id),
             file: p.file,
+            type: p.type ?? "image",
           })) || [],
-        newImages: [],
-        deletedImageIds: [],
+        newMedia: [],
+        deletedMediaIds: [],
         blogId: fetchedData.id,
         comments: fetchedData.comments,
         likes: fetchedData.likes,

@@ -71,7 +71,7 @@ export const createBlog = async (formData: FormData): Promise<ApiResponse<null>>
 // Update blog
 export const updateBlog = async (formData: FormData): Promise<ApiResponse<null>> => {
   const response = await createApiClient().post(
-    "/admin/blog/update",
+  "/admin/blog/update",
     formData,
     {
       headers: {

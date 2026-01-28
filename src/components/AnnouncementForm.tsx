@@ -3,7 +3,7 @@ import { useRef, useMemo } from "react";
 import AnnouncementInnerLayout from "../pages/dashboard/rap-battle/announcements/inner-layout";
 import { useAnnouncementDraft } from "../pages/dashboard/rap-battle/announcements/announcement-draft-context";
 import Button from "./shared/Button";
-import ImageItem from "./ImageItem";
+import ImageItem from "./MediaItem";
 import Input from "./Form/Input";
 import Select from "./Form/Select";
 import Label from "./Form/Label";
