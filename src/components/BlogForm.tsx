@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import Input from "./Form/Input";
 import Select from "./Form/Select";
 import TextArea from "./Form/TextArea";
@@ -13,11 +13,14 @@ import { useBlogDraft } from "../pages/dashboard/blogs/BlogDraftContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import FixedFooter from "./shared/FixedFooter";
+import GalleryModal from "./Modal/GalleryModal";
 
 const BlogForm: React.FC = () => {
   const { draft, setDraft } = useBlogDraft();
   const navigate = useNavigate();
   const mode = draft?.mode || "create";
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
 
   const {
     category,
@@ -52,8 +55,28 @@ const BlogForm: React.FC = () => {
 
   const resolvedCategoryOptions = BLOG_CATEGORIES;
 
+  const combinedMedia = useMemo(
+    () => [
+      ...(existingMedia || []).map((m) => ({
+        src: m.file as string,
+        type: (m.type === "video" ? "video" : "image") as "image" | "video",
+      })),
+      ...(fileUpload.files || []).map((f) => ({
+        src: URL.createObjectURL(f),
+        type: (f.type.startsWith("video/") ? "video" : "image") as "image" | "video",
+      })),
+    ],
+    [existingMedia, fileUpload.files]
+  );
+
   const handleBrowseFiles = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleOpenGallery = (index: number) => {
+    if (!combinedMedia.length) return;
+    setActiveMediaIndex(index);
+    setIsGalleryOpen(true);
   };
 
   const handleNewMediaRemove = (index: number) => {
@@ -219,6 +242,7 @@ const BlogForm: React.FC = () => {
                     src={m.file}
                     alt={`Existing media ${index + 1}`}
                     isVideo={m.type === "video"}
+                    onClick={() => handleOpenGallery(index)}
                     onRemove={() => handleExistingMediaRemove(m)}
                     // hideRemove={
 
@@ -233,12 +257,15 @@ const BlogForm: React.FC = () => {
                     src={URL.createObjectURL(file)}
                     alt={`Uploaded file ${index + 1}`}
                     isVideo={file.type.startsWith("video/")}
+                    onClick={() =>
+                      handleOpenGallery(existingMedia.length + index)
+                    }
                     onRemove={() => handleNewMediaRemove(index)}
                     // hideRemove={false}
                   />
                 ))}
 
-                {/* Add Photo Button - Always show on mobile, only show on lg when we have at least 1 media */}
+                {/* Add Media Button - Always show on mobile, only show on lg when we have at least 1 media */}
                 <button
                   type="button"
                   className={`w-[147px] h-[100px] rounded-lg flex items-center justify-center border border-dashed border-[#999999] cursor-pointer hover:border-brand-500 transition-colors duration-200 ${
@@ -282,6 +309,13 @@ const BlogForm: React.FC = () => {
           />
         </FixedFooter>
       </form>
+
+      <GalleryModal
+        show={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+        media={combinedMedia}
+        initialIndex={activeMediaIndex}
+      />
     </InnerLayout>
   );
 };

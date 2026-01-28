@@ -9,6 +9,7 @@ interface MediaItemProps {
   hideRemove?: boolean;
   imgClass?: string;
   isVideo?: boolean;
+  onClick?: () => void;
 }
 
 const MediaItem: React.FC<MediaItemProps> = ({
@@ -19,13 +20,16 @@ const MediaItem: React.FC<MediaItemProps> = ({
   hideRemove,
   imgClass,
   isVideo,
+  onClick,
 }) => {
   return (
     <div
       className={clsx(
         "relative w-[147px] h-[100px] rounded-lg object-cover overflow-hidden group",
+        { "cursor-pointer": onClick },
         className
       )}
+      onClick={onClick}
     >
       {isVideo ? (
         <video
@@ -55,7 +59,10 @@ const MediaItem: React.FC<MediaItemProps> = ({
       {!hideRemove && (
         <button
           type="button"
-          onClick={onRemove}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
           className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
           title="Remove Media"
         >

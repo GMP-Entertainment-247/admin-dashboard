@@ -59,19 +59,27 @@ export const comments: CommentProps[] = [
 ];
 
 // Blog API functions
-export const createBlog = async (formData: FormData): Promise<ApiResponse<null>> => {
-  const response = await createApiClient().post("/admin/blog/store", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+export const createBlog = async (
+  formData: FormData
+): Promise<ApiResponse<null>> => {
+  const response = await createApiClient({ noTimeout: true }).post(
+    "/admin/blog/store",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
   return response.data;
 };
 
 // Update blog
-export const updateBlog = async (formData: FormData): Promise<ApiResponse<null>> => {
-  const response = await createApiClient().post(
-  "/admin/blog/update",
+export const updateBlog = async (
+  formData: FormData
+): Promise<ApiResponse<null>> => {
+  const response = await createApiClient({ noTimeout: true }).post(
+    "/admin/blog/update",
     formData,
     {
       headers: {
