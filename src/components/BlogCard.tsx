@@ -20,7 +20,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
           alt="cover"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <p className="bg-white rounded-lg text-center absolute left-2 bottom-2 p-2 text-[#212121] text-xs font-medium capitalize">
+        <p className="bg-white rounded-lg text-center absolute left-2 bottom-2 p-2 text-[#212121] text-xs font-medium capitalize shadow">
           {blog.category}
         </p>
       </div>
