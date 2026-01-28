@@ -32,13 +32,17 @@ const BlogDetails = () => {
       return {
         title: "",
         content: "",
-        images: [] as string[],
+        images: [] as { src: string; type?: "image" | "video" | null }[],
         likes: 0,
         comments: [] as CommentProps[],
       };
     }
 
-    const mappedImages = blogData.pictures?.map((p) => p.file) || [];
+    const mappedImages =
+      blogData.pictures?.map((p) => ({
+        src: p.file,
+        type: p.type ?? "image",
+      })) || [];
 
     const mappedComments: CommentProps[] =
       blogData.comments?.map((c) => ({

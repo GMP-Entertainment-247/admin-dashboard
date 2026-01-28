@@ -6,6 +6,7 @@ export interface BlogPicture {
   file: string;
   created_at: string;
   updated_at: string;
+  type: "video" | "image" | null;
 }
 
 export interface Blog {

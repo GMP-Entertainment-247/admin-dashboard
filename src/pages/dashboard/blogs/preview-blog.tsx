@@ -30,7 +30,7 @@ const PreviewBlog = () => {
       return {
         title: "",
         content: "",
-        images: [] as string[],
+        images: [] as { src: string; type?: "image" | "video" }[],
         comments: [] as CommentProps[],
         likes: 0,
         blogId: undefined as string | number | undefined,
@@ -41,14 +41,20 @@ const PreviewBlog = () => {
 
     const { data } = draft;
     const filteredExisting =
-      data.existingImages?.filter((img) => {
+      data.existingMedia?.filter((img) => {
         if (!img.file) return false;
-        return !data.deletedImageIds.includes(String(img.id));
+        return !data.deletedMediaIds.includes(String(img.id));
       }) || [];
 
-    const derivedImages: string[] = [
-      ...filteredExisting.map((img) => img.file),
-      ...(data.newImages || []).map((f) => URL.createObjectURL(f)),
+    const derivedImages: { src: string; type: "image" | "video" }[] = [
+      ...filteredExisting.map((img) => ({
+        src: img.file as string,
+        type: (img.type === "video" ? "video" : "image") as "image" | "video",
+      })),
+      ...(data.newMedia || []).map((f) => ({
+        src: URL.createObjectURL(f),
+        type: (f.type.startsWith("video/") ? "video" : "image") as "image" | "video",
+      })),
     ];
 
     // Map comments from draft data
@@ -72,8 +78,8 @@ const PreviewBlog = () => {
       comments: mappedComments,
       likes: data.likes?.length || 0,
       blogId: data.blogId,
-      deletedIds: data.deletedImageIds || [],
-      newFiles: data.newImages || [],
+      deletedIds: data.deletedMediaIds || [],
+      newFiles: data.newMedia || [],
     };
   }, [draft]);
 

@@ -3,7 +3,7 @@ import { useRef, useMemo } from "react";
 import BeatInnerLayout from "../pages/dashboard/beats/inner-layout";
 import { useBeatDraft } from "../pages/dashboard/beats/beat-draft-context";
 import Button from "./shared/Button";
-import ImageItem from "./ImageItem";
+import ImageItem from "./MediaItem";
 import Input from "./Form/Input";
 import Select from "./Form/Select";
 import TextArea from "./Form/TextArea";

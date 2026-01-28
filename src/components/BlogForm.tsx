@@ -1,8 +1,8 @@
-import { useRef, useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import Input from "./Form/Input";
 import Select from "./Form/Select";
 import TextArea from "./Form/TextArea";
-import ImageItem from "./ImageItem";
+import MediaItem from "./MediaItem";
 import { UploadIcon } from "../icons/icons";
 import { PlusIcon } from "lucide-react";
 import Button from "./shared/Button";
@@ -13,39 +13,40 @@ import { useBlogDraft } from "../pages/dashboard/blogs/BlogDraftContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import FixedFooter from "./shared/FixedFooter";
+import GalleryModal from "./Modal/GalleryModal";
 
 const BlogForm: React.FC = () => {
   const { draft, setDraft } = useBlogDraft();
   const navigate = useNavigate();
   const mode = draft?.mode || "create";
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
 
   const {
     category,
     title,
     content,
-    existingImages,
-    newImages,
-    // deletedImageIds,
+    existingMedia,
+    newMedia,
   } = useMemo(() => {
     return (
       draft?.data || {
         category: "",
         title: "",
         content: "",
-        existingImages: [],
-        newImages: [],
-        deletedImageIds: [],
+        existingMedia: [],
+        newMedia: [],
+        deletedMediaIds: [],
       }
     );
   }, [draft]);
   // console.log(content);
-  // File upload hook for new images
   const fileUpload = useFileUpload({
-    accept: ["image/jpeg", "image/jpg", "image/png"],
-    maxSizeKb: 2 * 1024, // 2MB
+    accept: ["image/jpeg", "image/jpg", "image/png", "video/mp4"],
+    maxSizeKb: 5 * 1024, // 5MB
     multiple: true,
-    maxFiles: 10, // Maximum 5 images
-    initialFiles: newImages,
+    maxFiles: 5, 
+    initialFiles: newMedia,
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -54,11 +55,31 @@ const BlogForm: React.FC = () => {
 
   const resolvedCategoryOptions = BLOG_CATEGORIES;
 
+  const combinedMedia = useMemo(
+    () => [
+      ...(existingMedia || []).map((m) => ({
+        src: m.file as string,
+        type: (m.type === "video" ? "video" : "image") as "image" | "video",
+      })),
+      ...(fileUpload.files || []).map((f) => ({
+        src: URL.createObjectURL(f),
+        type: (f.type.startsWith("video/") ? "video" : "image") as "image" | "video",
+      })),
+    ],
+    [existingMedia, fileUpload.files]
+  );
+
   const handleBrowseFiles = () => {
     fileInputRef.current?.click();
   };
 
-  const handleNewImageRemove = (index: number) => {
+  const handleOpenGallery = (index: number) => {
+    if (!combinedMedia.length) return;
+    setActiveMediaIndex(index);
+    setIsGalleryOpen(true);
+  };
+
+  const handleNewMediaRemove = (index: number) => {
     fileUpload.removeFile(index);
 
     // Sync with draft immediately
@@ -68,24 +89,22 @@ const BlogForm: React.FC = () => {
         ...prev,
         data: {
           ...prev.data,
-          newImages: fileUpload.files.filter((_, i) => i !== index),
+          newMedia: fileUpload.files.filter((_, i) => i !== index),
         },
       };
     });
   };
 
-  const handleExistingImageRemove = (image: { id: string; file: string }) => {
+  const handleExistingMediaRemove = (m: { id: string; file: string }) => {
     setDraft((prev) => {
       if (!prev) return prev;
       return {
         ...prev,
         data: {
           ...prev.data,
-          existingImages: prev.data.existingImages.filter(
-            (img) => img.id !== image.id
-          ),
-          deletedImageIds: Array.from(
-            new Set([...(prev.data.deletedImageIds || []), String(image.id)])
+          existingMedia: prev.data.existingMedia.filter((x) => x.id !== m.id),
+          deletedMediaIds: Array.from(
+            new Set([...(prev.data.deletedMediaIds || []), String(m.id)])
           ),
         },
       };
@@ -112,18 +131,18 @@ const BlogForm: React.FC = () => {
 
     const plainContent = stripHtml(derivedContent);
 
-    const hasImage =
-      existingImages.length > 0 ||
+    const hasMedia =
+      existingMedia.length > 0 ||
       fileUpload.files.length > 0 ||
-      (newImages && newImages.length > 0);
+      (newMedia && newMedia.length > 0);
 
     const missingFields: string[] = [];
     if (!derivedCategory.trim()) missingFields.push("Category");
     if (!derivedTitle.trim()) missingFields.push("Post Title");
     if (!plainContent) missingFields.push("Post Content");
 
-    if (!hasImage) {
-      toast.error("Please upload at least one image for this post.");
+    if (!hasMedia) {
+      toast.error("Please upload at least one image or video for this post.");
       return;
     }
 
@@ -147,7 +166,7 @@ const BlogForm: React.FC = () => {
           category: derivedCategory,
           title: derivedTitle,
           content: derivedContent,
-          newImages: fileUpload.files,
+          newMedia: fileUpload.files,
         },
       };
     });
@@ -208,21 +227,23 @@ const BlogForm: React.FC = () => {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/*,video/mp4"
                 multiple
                 onChange={fileUpload.handleFileInput}
                 className="hidden"
               />
 
-              {/* Image Gallery */}
+              {/* Media Gallery */}
               <div className="flex items-center gap-3 [&>*]:flex-shrink-0 max-w-full overflow-auto">
-                {/* Display existing images */}
-                {existingImages.map((img, index) => (
-                  <ImageItem
+                {/* Display existing media */}
+                {existingMedia.map((m, index) => (
+                  <MediaItem
                     key={`existing-${index}`}
-                    src={img.file}
-                    alt={`Existing image ${index + 1}`}
-                    onRemove={() => handleExistingImageRemove(img)}
+                    src={m.file}
+                    alt={`Existing media ${index + 1}`}
+                    isVideo={m.type === "video"}
+                    onClick={() => handleOpenGallery(index)}
+                    onRemove={() => handleExistingMediaRemove(m)}
                     // hideRemove={
 
                     // }
@@ -231,20 +252,24 @@ const BlogForm: React.FC = () => {
 
                 {/* Display uploaded files */}
                 {fileUpload.files.map((file, index) => (
-                  <ImageItem
+                  <MediaItem
                     key={`uploaded-${index}`}
                     src={URL.createObjectURL(file)}
-                    alt={`Uploaded image ${index + 1}`}
-                    onRemove={() => handleNewImageRemove(index)}
+                    alt={`Uploaded file ${index + 1}`}
+                    isVideo={file.type.startsWith("video/")}
+                    onClick={() =>
+                      handleOpenGallery(existingMedia.length + index)
+                    }
+                    onRemove={() => handleNewMediaRemove(index)}
                     // hideRemove={false}
                   />
                 ))}
 
-                {/* Add Photo Button - Always show on mobile, only show on lg when we have at least 1 image */}
+                {/* Add Media Button - Always show on mobile, only show on lg when we have at least 1 media */}
                 <button
                   type="button"
                   className={`w-[147px] h-[100px] rounded-lg flex items-center justify-center border border-dashed border-[#999999] cursor-pointer hover:border-brand-500 transition-colors duration-200 ${
-                    existingImages.length + fileUpload.files.length > 0
+                    existingMedia.length + fileUpload.files.length > 0
                       ? "lg:flex"
                       : "lg:hidden"
                   }`}
@@ -252,7 +277,7 @@ const BlogForm: React.FC = () => {
                 >
                   <div className="space-y-3 text-center">
                     <PlusIcon className="mx-auto" />
-                    <p className="text-grey-normal">Add Photo</p>
+                    <p className="text-grey-normal">Add Media</p>
                   </div>
                 </button>
               </div>
@@ -284,6 +309,13 @@ const BlogForm: React.FC = () => {
           />
         </FixedFooter>
       </form>
+
+      <GalleryModal
+        show={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+        media={combinedMedia}
+        initialIndex={activeMediaIndex}
+      />
     </InnerLayout>
   );
 };
